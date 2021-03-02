@@ -1,0 +1,6 @@
+.hover__bg:hover{
+    background-color: rgb(177, 177, 177);
+}
+.hover__bg{
+    cursor: pointer;
+}
