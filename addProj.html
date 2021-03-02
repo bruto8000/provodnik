@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./src/css/materialize.css">
+    <link rel="stylesheet" href="./src/css/style.css">
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <title>Title</title>
+</head>
+
+<body>
+
+
+    <div id="app">
+
+
+
+        <h1 class="center">Добавление проекта</h1>
+
+        <div class="row">
+            <div class="col m3 center">
+                <div class="  ">Дата спуска</div> <input  v-model.lazy="project.fdate" id="fdate" type="text" class="kalendar center" value=""
+                    placeholder="Выберите дату">
+            </div>
+
+
+            <div class="col m3 center">
+                <div class="   ">Дата запуска</div> <input v-model.lazy="project.sdate" id="sdate" type="text" class="kalendar center" value=""
+                    placeholder="Выберите дату">
+            </div>
+
+
+
+            <div class="col m6 center ">
+                <div class="  ">Название</div>
+                <input placeholder="Введите Название" v-model="project.nazvanie" id="nazvanie" type="text" class="validate">
+
+            </div>
+
+
+
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="col m3 center ">
+                <div class="  ">Вид бизнеса</div>
+                <div class="">
+                    <select v-model="project.bizness" id="bizness">
+                        <option value="" disabled selected>Вид бизнеса</option>
+                        <option value="FMC">FMC</option>
+                        <option value="B2B">B2B</option>
+                        <option value="B2C">B2C</option>
+                        <option value="ПК">ПК</option>
+                        <option value="FTTB">FTTB</option>
+                        <option value="FMC/FTTB">FMC/FTTB</option>
+                        <option value="BTB/BTC">BTB/BTC</option>
+                        <option value="FMC/B2C">FMC/B2C</option>
+
+                    </select>
+
+                </div>
+            </div>
+
+
+            <div class="col m3 center">
+
+
+                <div class="  ">Тип запуска</div>
+                <div class="">
+                    <select v-model="project.zapusk" id="zapusk">
+                        <option value="" disabled selected>Тип запуска</option>
+                        <option value="Запуск ТП">Запуск ТП</option>
+                        <option value="Перезапуск ТП">Перезапуск ТП</option>
+                        <option value="Закрытие ТП">Закрытие ТП</option>
+                        <option value="Офсет">Офсет</option>
+                        <option value="Симплификация/Репайсинг">Симплификация/Репайсинг</option>
+                        <option value="Запуск Услуги">Запуск Услуги</option>
+                        <option value="Изменение условий услиги">Изменение условий услиги</option>
+                        <option value="Закрытие условий">Закрытие условий</option>
+                        <option value="Запуск акции">Запуск акции</option>
+                        <option value="Закрытие акции">Закрытие акции</option>
+                        <option value="SMS/push/email рассылка">SMS/push/email рассылка</option>
+                        <option value="Запуск Города">Запуск Города</option>
+                        <option value="Оборудование">Оборудование</option>
+
+
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="col m6 center ">
+                <div class="  ">Описание</div>
+                <input placeholder="Введите Описание" v-model="project.opisanie" id="opisanie" type="text" class="validate">
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+        <div class="row">
+
+            <div class="col m3">
+                <div class="   center">Сопровождающий</div>
+                <select v-model="project.soprovod" id="soprovod">
+                    <option value="" disabled selected>Имя...</option>
+                    <option value="Попова Т.">Попова Т. </option>
+                    <option value="Наливкина О.">Наливкина О. </option>
+                    <option value="Шумейко А.">Шумейко А. </option>
+                    <option value="Колесникова Е.">Колесникова Е. </option>
+                    <option value="Кишкопаров И.">Кишкопаров И. </option>
+                    <option value="Федулова Е.">Федулова Е. </option>
+                    <option value="Коротков С.">Коротков С. </option>
+                    <option value="Галюшина Н.">Галюшина Н. </option>
+                    <option value="Шевелева А.">Шевелева А. </option>
+                    <option value="Данилова Е.">Данилова Е. </option>
+                    <option value="Будько Д.">Будько Д. </option>
+
+
+
+                </select>
+
+
+            </div>
+
+
+
+            <div class="col m3 center ">
+                <div class="">Статус</div>
+                <div class="">
+                    <select v-model="project.status" id="status">
+                        <option value="" disabled selected>Статус</option>
+                        <option value="В работе">В работе </option>
+                        <option value="Выполнено">Выполнено </option>
+                        <option value="Отложено">Отложено</option>
+                        <option value="Отменено">Отменено</option>
+
+
+                    </select>
+
+                </div>
+            </div>
+
+
+            <div class="col m6 center  ">
+                <div class="  ">Заказчик</div>
+                <input placeholder="Введите заказчика" v-model="project.zakazchik" id="zakazchik" type="text" class="validate">
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+        <div class="row">
+            <div @click="addProj" class="  btn-large col m12 black-text " >
+            <div class="flow-text">Добавить проект</div> 
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="./src/js/materialize.js"></script>
+    <script src="./src/js/axios.js"></script>
+    <script src="./src/js/vue.js"></script>
+    <script src="./src/js/addProj.js"></script>
+</body>
+
+</html>
