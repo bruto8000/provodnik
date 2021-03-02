@@ -30,17 +30,17 @@ let app = new Vue({
                     }
                 }
 
-            } catch {
-                e => {
+            } catch (e) {
+       
                     M.toast({
                         html:  e
                     });
-                    return;
-                }
-
+         
+                return;
+                
             }
 
-            console.log('Sennding....')
+        
             axios.post('../vendor/addProj.php', JSON.stringify(this.project))
                 .then((r) => {
                     console.log(r.data);

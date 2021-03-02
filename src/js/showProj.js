@@ -43,22 +43,24 @@ let app = new Vue({
             for (prop in this.filterInput) {
                 this.filterInput[prop] = ''
             }
+            this.sort.r = 1;
+            this.sort.column = '';
         },
         sortChange(column) {
 
             if (this.sort.column == column) {
-console.log('hmm')
+
 
 if (this.sort.r == 1) {
-console.log('1 was')
+
                     this.sort.r = -1;
                 } else {
-                    console.log('-1 was')
+    
                     this.sort.r = 1
                 }
                 this.sort.column = "";
                 this.sort.column = column;
-                console.log('FORCE')
+
             } else {
 
                 this.sort.column = column;
