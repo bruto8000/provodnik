@@ -17,6 +17,9 @@ let app = new Vue({
             opisanie: "",
             fdate: "",
             sdate: ""
+        },
+        sort: {
+            column: ""
         }
     },
     mounted: function () {
@@ -33,41 +36,85 @@ let app = new Vue({
             })
     },
     methods: {
-resetFilter : function(){
-    for (prop in this.filterSelect) {
-        this.filterSelect[prop] = ''     
-    }
-    for (prop in this.filterInput) {
-        this.filterInput[prop] = ''     
-    }
-}
+        resetFilter: function () {
+            for (prop in this.filterSelect) {
+                this.filterSelect[prop] = ''
+            }
+            for (prop in this.filterInput) {
+                this.filterInput[prop] = ''
+            }
+        },
+        sortChange(column) {
+
+            if (this.sort.column == column) {
+console.log('hmm')
+
+if (this.sort.r == 1) {
+console.log('1 was')
+                    this.sort.r = -1;
+                } else {
+                    console.log('-1 was')
+                    this.sort.r = 1
+                }
+                this.sort.column = "";
+                this.sort.column = column;
+                console.log('FORCE')
+            } else {
+
+                this.sort.column = column;
+                this.sort.r = 1;
+            }
+        }
     },
     watch: {
-       
+
     },
     computed: {
         projectsFiltred: function () {
-           return this.projects.filter((v, i, arr) => {
+            return this.projects.filter((v, i, arr) => {
 
                 for (prop in this.filterSelect) {
-                    
+
                     if (this.filterSelect[prop]) {
                         if (v[prop] != (this.filterSelect[prop])) return false;
-          
+
                     }
                 }
                 for (prop in this.filterInput) {
-                    
+
                     if (this.filterInput[prop]) {
-                        if (! v[prop].toUpperCase().includes(this.filterInput[prop].toUpperCase())) return false;
-          
+                        if (!v[prop].toUpperCase().includes(this.filterInput[prop].toUpperCase())) return false;
+
                     }
                 }
-                
-                
-                
+
+
+
                 return true;
 
+            }).sort((a, b) => {
+
+
+                if (!this.sort.column) return 0;
+
+                if (this.sort.column == 'sdate' || this.sort.column == 'fdate') {
+                    let fakeA = a[this.sort.column];
+                    let fakeB = b[this.sort.column];
+
+                    fakeA = fakeA.split(' ').reverse().join(' ');
+                    fakeB = fakeB.split(' ').reverse().join(' ');
+                    fakeA = fakeA.replace(/\s/g, '');
+                    fakeB = fakeB.replace(/\s/g, '');
+
+                    if (fakeA > fakeB) return (1 * this.sort.r);
+                    else return (-1 * this.sort.r);
+                } else {
+
+                    if (a[this.sort.column] > b[this.sort.column]) return 1 * this.sort.r;
+                    else {
+                        return -1 * this.sort.r;
+                    }
+                }
             })
 
         }

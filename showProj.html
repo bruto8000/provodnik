@@ -20,15 +20,15 @@
     <span class="btn-small" @click="resetFilter">СБРОС</span>
 </h1>
 <div class="row"> 
-    <div class="col m1">Дата спуска</div>
-    <div class="col m1">Дата запуска</div>
-    <div class="col m1">Вид бизнеса</div>
-    <div class="col m1">Тип запуска </div>
-    <div class="col m1">Название</div>
-    <div class="col m2">Описание</div>
-    <div class="col m2">Сопровождающий</div>
-    <div class="col m2">Заказчик</div>
-    <div class="col m1">Статус</div>
+    <div class="col m1" @click="sortChange('fdate')">Дата спуска</div>
+    <div class="col m1" @click="sortChange('sdate')">Дата запуска</div>
+    <div class="col m1" @click="sortChange('bizness')">Вид бизнеса</div>
+    <div class="col m1" @click="sortChange('zapusk')">Тип запуска </div>
+    <div class="col m1" @click="sortChange('nazvanie')">Название</div>
+    <div class="col m2" @click="sortChange('opisanie')">Описание</div>
+    <div class="col m2" @click="sortChange('soprovod')">Сопровождающий</div>
+    <div class="col m2" @click="sortChange('zakazchik')">Заказчик</div>
+    <div class="col m1" @click="sortChange('status')">Статус</div>
     
     
     
