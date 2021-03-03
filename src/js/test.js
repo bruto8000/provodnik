@@ -9,7 +9,7 @@ let app = new Vue({
                 date1: "",
                 date2: "",
                 tabel: '',
-                range: [],
+                range: ["01 03 2021","02 03 2021","03 03 2021","04 03 2021","05 03 2021","06 03 2021","07 03 2021","08 03 2021","09 03 2021","10 03 2021","11 03 2021","12 03 2021","13 03 2021","14 03 2021","15 03 2021","16 03 2021","17 03 2021","18 03 2021","19 03 2021","20 03 2021","21 03 2021","22 03 2021","23 03 2021","24 03 2021","25 03 2021","26 03 2021","27 03 2021","28 03 2021","29 03 2021","30 03 2021","31 03 2021"],
                 some: {
                     step: -1,
                     F: {
@@ -138,21 +138,28 @@ let app = new Vue({
                     // });
 
                 },
-                editSome: function (f, l) {
-                    let arrOfSome = []
-                    arrOfSome = this.tabelFiltred.slice(f.x, l.x);
-                    console.log(arrOfSome)
-                },
+               
                 enterSome: function (day, who) {
 
                     switch (this.some.step) {
                         case -1:
-                            console.log(-1)
+                            console.log(-1);
+                            
                             return;
                         case 0: {
                             M.toast({
                                 html: "Выберите начальный"
                             });
+
+
+                            this.some.somes.forEach(element => {
+                                element.somes.forEach(v => {
+                                    element[v] = [];
+                                })
+                            });
+
+                            this.some.somes = [];
+                            this.some.input = '';
                             this.some.step = 1;
 
                             break;
@@ -177,6 +184,8 @@ let app = new Vue({
                             break;
                         }
 
+                     
+
                     }
                 },
 
@@ -199,8 +208,28 @@ let app = new Vue({
 
 
 
-                }
+                },
+clearSome: function(){
 
+        this.some.somes.forEach(element => {
+            element.somes = [];
+        });
+this.some.step = -1;
+this.some.input = '';
+this.$forceUpdate()
+    },
+    changeOnServer : function(){
+        M.toast({html:"Синхронизирую..."})
+        axios.post('../vendor/saveTabel.php', JSON.stringify(this.tabel))
+        .then(res=>{
+            console.log(res.data)
+            if(res.data == "OK"){
+                M.toast({html:"Синхронизация успешна!"})
+            }else{
+                M.toast({html:"Синхрогизация не удалась" + res.data})
+            }
+        })
+    }
 
             },
             watch: {
@@ -223,21 +252,45 @@ let app = new Vue({
 
                         if (!this.range.length) return [];
 
-
+try{
                         return this.tabel.filter(v => {
                             if (!v.somes) v.somes = [];
                             if (this.range.indexOf(v.date) > (-1)) return true;
                             return false;
                         })
-
+                    }catch {return []}
 
                     }
-                }
-            })
+                },
+                filters : {
+                    dayOfWeek : function(val){
+                    console.log(val)
+     
+
+                    let parts = val.split(' ')
+
+
+                    let filtredDate = new Date(parts[2], parts[1] - 1, parts[0]);
+
+
+              switch(filtredDate.getDay()) {
+                  case 0: return 'ВСК';
+                  case 1: return "ПН";
+                  case 2: return "ВТ";
+                  case 3: return "СР";
+                  case 4: return "ЧТ";
+                  case 5: return "ПТ";
+                  case 6: return "СБ";
+                  case 7: return "ВСК";
+              }
+
+              console.log("help me")
+                        }
+            }
 
 
 
-
+        })
 
 
 

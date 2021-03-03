@@ -17,11 +17,26 @@
     <div id="app">
 
 
-<input type="text" class="kalendar" v-model.lazy="date1" value="01 01 2021">
-<input type="text" class="kalendar" v-model.lazy="date2" value="15 01 2021">
-<div class="btn" @click="dateRange">Сформировать</div>
-<div class="btn" @click="some.step = 0;enterSome()">Выбрать несколько</div>
-<input type="text" placeholder="Для нескольких" v-model='some.input'>
+        <div class="row">
+            <div class="col m1">Дата начала:</div>
+            <div class="col m3">
+                <input type="text" class="kalendar" v-model.lazy="date1">
+            </div>
+            <div class="col m1">Дата конца:</div>
+            <div class="col m3">
+                <input type="text" class="kalendar" v-model.lazy="date2">
+            </div>
+            <div class="col m4">
+                <div class="btn" @click="dateRange">Сформировать</div>
+            </div>
+        </div>
+
+
+        <div class="btn" @click="changeOnServer">Синхронизировать</div>
+    
+        <div class="btn" @click="clearSome">Сбросить выборку</div>
+        <div class="btn" @click="some.step = 0;enterSome()">Выбрать несколько</div>
+        <input type="text" placeholder="Для нескольких" v-model='some.input'>
 
 
 
@@ -40,50 +55,63 @@
                 <th v-for="day in tabelFiltred">{{day.date}}</th>
 
             </tr>
+            <tr>
+                <th></th>
+                <th v-for="day in tabelFiltred">{{ day.date | dayOfWeek}}</th>
+
+            </tr>
 
             <tr>
                 <td>Будько Дарья Лбвовна</td>
-                <td v-for="day in tabelFiltred" ><input @click="enterSome(day,'BDL')" type="text" v-model="day.BDL" name="" :class="{red : day.somes.indexOf('BDL')> -1}" ></td>
+                <td v-for="day in tabelFiltred"><input @click="enterSome(day,'BDL')" type="text" v-model="day.BDL"
+                        name="" :class="{red : day.somes.indexOf('BDL')> -1}"></td>
 
 
             </tr>
             <tr>
                 <td> Галошина Наталия Александровна</td>
-                <td v-for="day in tabelFiltred" > <input @click="enterSome(day,'GNA')" type="text" v-model="day.GNA" name="" :class="{red : day.somes.indexOf('GNA')> -1}"></td>
+                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'GNA')" type="text" v-model="day.GNA"
+                        name="" :class="{red : day.somes.indexOf('GNA')> -1}"></td>
             </tr>
 
             <tr>
                 <td> Данилова Елена Дмитриевна</td>
-                <td v-for="day in tabelFiltred" > <input @click="enterSome(day,'DED')" type="text" v-model="day.DED" name="" :class="{red : day.somes.indexOf('DED')> -1}"></td>
+                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'DED')" type="text" v-model="day.DED"
+                        name="" :class="{red : day.somes.indexOf('DED')> -1}"></td>
             </tr>
             <tr>
                 <td> Кишкопаров Иван Игоревич</td>
-                <td v-for="day in tabelFiltred"  > <input @click="enterSome(day,'KII')" type="text" v-model="day.KII" name="" :class="{red : day.somes.indexOf('KII')> -1}"></td>
+                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'KII')" type="text" v-model="day.KII"
+                        name="" :class="{red : day.somes.indexOf('KII')> -1}"></td>
             </tr>
             <tr>
 
                 <td> Колесникова Евгения Владимировна</td>
-                <td v-for="day in tabelFiltred" > <input @click="enterSome(day,'KEV')" type="text" v-model="day.KEV" name="" :class="{red : day.somes.indexOf('KEV')> -1}"></td>
+                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'KEV')" type="text" v-model="day.KEV"
+                        name="" :class="{red : day.somes.indexOf('KEV')> -1}"></td>
 
 
             </tr>
             <tr>
                 <td> Коротков Сергей Александрович</td>
-                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'KSA')" type="text" v-model="day.KSA" name="" :class="{red : day.somes.indexOf('KSA')> -1}" ></td>
+                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'KSA')" type="text" v-model="day.KSA"
+                        name="" :class="{red : day.somes.indexOf('KSA')> -1}"></td>
 
 
             </tr>
 
             <tr>
                 <td> Наливкина Ольга Вячеславовна</td>
-                <td v-for="day in tabelFiltred" > <input @click="enterSome(day,'NOV')" type="text" v-model="day.NOV" name="" :class="{red : day.somes.indexOf('NOV')> -1}"></td>
+                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'NOV')" type="text" v-model="day.NOV"
+                        name="" :class="{red : day.somes.indexOf('NOV')> -1}"></td>
 
 
             </tr>
 
             <tr>
                 <td> Попова Татьяна Петровна</td>
-                <td v-for="day in tabelFiltred" > <input @click="enterSome(day,'PTP')" type="text" v-model="day.PTP" name="" id="" :class="{red : day.somes.indexOf('PTP')> -1}"></td>
+                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'PTP')" type="text" v-model="day.PTP"
+                        name="" id="" :class="{red : day.somes.indexOf('PTP')> -1}"></td>
 
 
             </tr>
@@ -92,14 +120,16 @@
 
             <tr>
                 <td> Степанова Юлия Игоревна</td>
-                <td v-for="day in tabelFiltred" > <input @click="enterSome(day,'SYI')" type="text" v-model="day.SYI" name="" id="" :class="{red : day.somes.indexOf('SYI')> -1}"></td>
+                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'SYI')" type="text" v-model="day.SYI"
+                        name="" id="" :class="{red : day.somes.indexOf('SYI')> -1}"></td>
 
 
             </tr>
 
             <tr>
                 <td> Федулова Елена Николаевна</td>
-                <td v-for="day in tabelFiltred" >  <input @click="enterSome(day,'FEN')" type="text" v-model="day.FEN" name="" id="" :class="{red : day.somes.indexOf('FEN')> -1}"></td>
+                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'FEN')" type="text" v-model="day.FEN"
+                        name="" id="" :class="{red : day.somes.indexOf('FEN')> -1}"></td>
 
 
             </tr>
@@ -107,13 +137,15 @@
 
             <tr>
                 <td> Шевелева Анастасия Андреевна</td>
-                <td v-for="day in tabelFiltred" > <input @click="enterSome(day,'WAA')" type="text" v-model="day.WAA" name="" id="" :class="{red : day.somes.indexOf('WAA')> -1}"></td>
+                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'WAA')" type="text" v-model="day.WAA"
+                        name="" id="" :class="{red : day.somes.indexOf('WAA')> -1}"></td>
 
 
             </tr>
             <tr>
                 <td> Шумейко Антон Сергеевич</td>
-                <td v-for="day in tabelFiltred"  > <input @click="enterSome(day,'WAS')" type="text" v-model="day.WAS" name="" id="" :class="{red : day.somes.indexOf('WAS')> -1}"></td>
+                <td v-for="day in tabelFiltred"> <input @click="enterSome(day,'WAS')" type="text" v-model="day.WAS"
+                        name="" id="" :class="{red : day.somes.indexOf('WAS')> -1}"></td>
 
 
             </tr>
