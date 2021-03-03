@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./src/css/materialize.css">
+    <link rel="stylesheet" href="./src/css/style.css">
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <title>Title</title>
+</head>
+<body>
+    
+
+<div id="app">
+<div class="row">
+<div class="col m4">
+    Сотрудник (ФИО)
+</div>
+<div class="col m4">
+   Логин *
+</div>
+<div class="col m4">
+   Уникальный ID
+ </div>
+</div>
+
+
+<div class="row">
+    <div class="col m4">
+       <input type="text" name="" id="" v-model="full_name">
+    </div>
+    <div class="col m4">
+        <input type="text" name="" id="" v-model="login">
+    </div>
+    <div class="col m4">
+        <input type="text" name="" id="" v-model="nid">
+     </div>
+    </div>
+
+
+<div class="row center">
+    <div class="btn-large " @click="addToServ">
+        Добавить
+    </div>
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="./src/js/materialize.js"></script>
+    <script src="./src/js/axios.js"></script>
+    <script src="./src/js/vue.js"></script>
+    <script src="./src/js/addEmployee.js"></script>
+</body>
+</html>

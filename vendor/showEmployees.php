@@ -6,10 +6,9 @@ require('./connect.php');
 
 
 
-if($response = mysqli_query($connect, "SELECT * FROM `tabel`")){
+if($response = mysqli_query($connect, "SELECT * FROM `employees`")){
     $result = [];
     while ($obj = $response -> fetch_object()) {
-      $obj->body = json_decode($obj->body);
   array_push($result, $obj);
       
     };

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./src/css/materialize.css">
+    <link rel="stylesheet" href="./src/css/style.css">
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <title>Title</title>
+</head>
+
+<body>
+    <div id="app">
+
+        <div class="row">
+            <div class="col m1">Дата начала:</div>
+            <div class="col m3">
+                <input type="text" class="kalendar" v-model.lazy="date1">
+            </div>
+            <div class="col m1">Дата конца:</div>
+            <div class="col m3">
+                <input type="text" class="kalendar" v-model.lazy="date2">
+            </div>
+            <div class="col m4">
+                <div class="btn" @click="dateRange">Сформировать</div>
+            </div>
+        </div>
+    
+       
+
+        <table cellspacing="2" border="1" cellpadding="5" class="responsive-table striped">
+            <tr>
+                <th></th>
+                <th v-for="day in tabelFiltred">{{day.date}}</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th v-for="day in tabelFiltred">{{ day.date | dayOfWeek}}</th>
+
+            </tr>
+            <tr v-for="employee in employees">
+                <td>{{employee['full_name']}}</td>
+                <td v-for="day in tabelFiltred"> {{ day.body[employee.nid]}}
+                </td>
+
+            </tr>
+        </table>
+    </div>
+    <script src="./src/js/materialize.js"></script>
+    <script src="./src/js/axios.js"></script>
+    <script src="./src/js/vue.js"></script>
+    <script src="./src/js/editTable.js"></script>
+</body>
+
+</html>

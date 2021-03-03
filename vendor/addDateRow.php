@@ -1,6 +1,6 @@
 <?php
 
-
+//BACKEND для добавления дат. Сами даты приходят с Front
 
 
 require('./connect.php');
