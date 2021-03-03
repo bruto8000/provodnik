@@ -49,13 +49,9 @@ let app = new Vue({
         sortChange(column) {
 
             if (this.sort.column == column) {
-
-
-if (this.sort.r == 1) {
-
+                if (this.sort.r == 1) {
                     this.sort.r = -1;
                 } else {
-    
                     this.sort.r = 1
                 }
                 this.sort.column = "";
@@ -74,44 +70,29 @@ if (this.sort.r == 1) {
     computed: {
         projectsFiltred: function () {
             return this.projects.filter((v, i, arr) => {
-
                 for (prop in this.filterSelect) {
-
                     if (this.filterSelect[prop]) {
                         if (v[prop] != (this.filterSelect[prop])) return false;
-
                     }
                 }
                 for (prop in this.filterInput) {
-
                     if (this.filterInput[prop]) {
                         if (!v[prop].toUpperCase().includes(this.filterInput[prop].toUpperCase())) return false;
-
                     }
                 }
-
-
-
                 return true;
-
             }).sort((a, b) => {
-
-
                 if (!this.sort.column) return 0;
-
                 if (this.sort.column == 'sdate' || this.sort.column == 'fdate') {
                     let fakeA = a[this.sort.column];
                     let fakeB = b[this.sort.column];
-
                     fakeA = fakeA.split(' ').reverse().join(' ');
                     fakeB = fakeB.split(' ').reverse().join(' ');
                     fakeA = fakeA.replace(/\s/g, '');
                     fakeB = fakeB.replace(/\s/g, '');
-
                     if (fakeA > fakeB) return (1 * this.sort.r);
                     else return (-1 * this.sort.r);
                 } else {
-
                     if (a[this.sort.column] > b[this.sort.column]) return 1 * this.sort.r;
                     else {
                         return -1 * this.sort.r;
