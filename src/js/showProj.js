@@ -190,8 +190,11 @@ function kalendarSet() {
 
             },
             firstDay: 1,
-            format: "dd mm yyyy"
-
+            format: "dd mm yyyy",
+            minDate: new Date('2021 01 01'),
+            maxDate: new Date('2021 12 31'),
+            showDaysInNextAndPreviousMonths: true,
+            autoClose: true
 
 
 
