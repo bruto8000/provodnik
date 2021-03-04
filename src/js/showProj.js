@@ -39,10 +39,7 @@ let app = new Vue({
             axios.get('../vendor/showEmployees.php')
             .then(res => {
 
-                res.data.forEach(element => {
-                    element.halfName = element['full_name'].split(' ')[0] + ' ' +
-                        element['full_name'].split(' ')[1][0] + '.';
-                });
+              
                 this.employees = res.data;
              
                 Vue.nextTick(function () {

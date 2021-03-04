@@ -83,7 +83,7 @@
             <select v-model="filterSelect.soprovod" id="soprovod">
             
                 <option value="" selected>Сопровождающий</option>   
-<option v-for="employee in employees" :value="employee.halfName">{{employee.halfName}}</option>
+<option v-for="employee in employees" :value="employee['full_name']">{{employee['full_name']}}</option>
 
 
 
