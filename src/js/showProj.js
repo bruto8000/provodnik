@@ -20,12 +20,13 @@ let app = new Vue({
         },
         sort: {
             column: ""
-        }
+        },
+        employees: []
     },
     mounted: function () {
         console.log("I AM mounted");
         kalendarSet();
-        M.AutoInit();
+ 
         axios.get('../vendor/showProj.php')
             .then(res => {
                 this.projects = res.data;
@@ -33,7 +34,25 @@ let app = new Vue({
                 M.toast({
                     html: "Ошибка " + err
                 })
+            });
+
+            axios.get('../vendor/showEmployees.php')
+            .then(res => {
+
+                res.data.forEach(element => {
+                    element.halfName = element['full_name'].split(' ')[0] + ' ' +
+                        element['full_name'].split(' ')[1][0] + '.';
+                });
+                this.employees = res.data;
+             
+                Vue.nextTick(function () {
+                    M.AutoInit();
+                  })
+         
+
             })
+
+
     },
     methods: {
         resetFilter: function () {
@@ -45,6 +64,10 @@ let app = new Vue({
             }
             this.sort.r = 1;
             this.sort.column = '';
+            Vue.nextTick(function(){
+                M.AutoInit();
+            })
+        
         },
         sortChange(column) {
 

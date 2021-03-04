@@ -81,18 +81,10 @@
         <div class="col m2">
 
             <select v-model="filterSelect.soprovod" id="soprovod">
-                <option value=""  selected>Имя...</option>
-                <option value="Попова Т.">Попова Т. </option>
-                <option value="Наливкина О.">Наливкина О. </option>
-                <option value="Шумейко А.">Шумейко А. </option>
-                <option value="Колесникова Е.">Колесникова Е. </option>
-                <option value="Кишкопаров И.">Кишкопаров И. </option>
-                <option value="Федулова Е.">Федулова Е. </option>
-                <option value="Коротков С.">Коротков С. </option>
-                <option value="Галюшина Н.">Галюшина Н. </option>
-                <option value="Шевелева А.">Шевелева А. </option>
-                <option value="Данилова Е.">Данилова Е. </option>
-                <option value="Будько Д.">Будько Д. </option>
+            
+                <option value="" selected>Сопровождающий</option>   
+<option v-for="employee in employees" :value="employee.halfName">{{employee.halfName}}</option>
+
 
 
 

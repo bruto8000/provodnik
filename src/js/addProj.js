@@ -12,13 +12,30 @@ let app = new Vue({
             zapusk: "",
             soprovod: "",
             status: "",
-            zakazchik: ""
-        }
+            zakazchik: "",
+            undate: false
+        },
+        employees: []
     },
     mounted: function () {
         console.log("I AM mounted");
         kalendarSet();
-        M.AutoInit();
+
+        axios.get('../vendor/showEmployees.php')
+            .then(res => {
+
+                res.data.forEach(element => {
+                    element.halfName = element['full_name'].split(' ')[0] + ' ' +
+                        element['full_name'].split(' ')[1][0] + '.';
+                });
+                this.employees = res.data;
+                Vue.nextTick(function () {
+                    M.AutoInit();
+                  })
+         
+
+            })
+
     },
     methods: {
         addProj: function () {
@@ -31,16 +48,16 @@ let app = new Vue({
                 }
 
             } catch (e) {
-       
-                    M.toast({
-                        html:  e
-                    });
-         
+
+                M.toast({
+                    html: e
+                });
+
                 return;
-                
+
             }
 
-        
+
             axios.post('../vendor/addProj.php', JSON.stringify(this.project))
                 .then((r) => {
                     console.log(r.data);
@@ -49,12 +66,12 @@ let app = new Vue({
                             html: "Проект добавлен"
                         });
                         for (prop in this.project) {
-                         this.project[prop] = '';
-                      
+                            this.project[prop] = '';
+
                         }
 
                     } else {
-                   throw new Error(r.data)
+                        throw new Error(r.data)
                     }
 
                 })
@@ -65,7 +82,11 @@ let app = new Vue({
                 })
 
 
-        }
+        },
+        undateZapusk: function(){
+         this.project.undate =    !this.project.undate;
+         this.project.sdate = this.project.undate ? "Не определена" : "";
+        }    
     }
 })
 
@@ -160,6 +181,7 @@ function kalendarSet() {
             maxDate: new Date('2021 12 31'),
             showDaysInNextAndPreviousMonths: true,
             autoClose: true
+   
 
 
 
