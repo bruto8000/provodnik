@@ -6,6 +6,7 @@ let app = new Vue({
     el: "#app",
     data: {
         employees: [],
+        kalendar: [],
         date1: "",
         date2: "",
         tabel: '',
@@ -28,7 +29,7 @@ let app = new Vue({
     },
     mounted: function () {
         console.log("I AM mounted");
-        kalendarSet();
+       this.kalendar = kalendarSet();
         M.AutoInit();
 
 
@@ -66,14 +67,47 @@ this.employees = Eres.data;
             ///DATE
             let parts = date1.split(' ')
 
+            let startDate;
+            let endDate;
+if(parts.length === 3){
+ startDate = new Date(parts[2], parts[1] - 1, parts[0]);
 
-            let startDate = new Date(parts[2], parts[1] - 1, parts[0]);
+ parts = date2.split(' ')
+
+ endDate = new Date(parts[2], parts[1] - 1, parts[0]);
+
+
+}else if(parts.length == 2){
+  
+    if(isNaN(Number(parts[0]))){
+
+switch(parts[0]){
+
+    case 'I' : startDate = new Date(parts[1], '0', '1'); endDate = new Date(parts[1], '3', '0');   break;
+    case 'II': startDate = new Date(parts[1], '3', '1'); endDate = new Date(parts[1], '6', '0');   break;
+    case 'II': startDate = new Date(parts[1], '6', '1'); endDate = new Date(parts[1], '9', '0');   break;
+    case 'IV': startDate = new Date(parts[1], '9', '1'); endDate = new Date(parts[1], '11', '31');   break;
+
+}
+
+
+    }else{
+        //MONTH SELECTED
+
+        startDate = new Date(parts[1], parts[0] - 1, '1');
+        endDate = new Date(parts[1], parts[0], '0');
 
 
 
-            parts = date2.split(' ')
+    }
 
-            let endDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    
+}else{
+    startDate = new Date(parts[0], 0,1);
+    endDate = new Date(parts[0], 11,31);
+}
+
+
 
 
 
@@ -138,6 +172,7 @@ this.employees = Eres.data;
 
         },
         createTable: function () {
+            //THIS IS FOR BACKEND
             //             let range = this.dateRange();
 
 
@@ -248,6 +283,53 @@ this.employees = Eres.data;
                     }
                 })
         },
+
+        closeModal: function(e,v){
+        
+        this.kalendar.forEach(element => {
+           if(element.isOpen){
+               element.close();
+            
+
+           }
+     
+        });
+          
+       
+      
+        },
+        setDate: function(type){
+
+
+            this.kalendar.forEach((element,idx,arr) => {
+                if(element.isOpen){
+                    if(type == 'month'){
+                        
+                        element.setInputValue(  [1,2,3,4,5,6,7,8,9,10,11,12][element.calendars[0].month] + ' ' + element.calendars[0].year )
+                       idx = Number(!idx);
+             
+                        arr[idx].setInputValue(  [1,2,3,4,5,6,7,8,9,10,11,12][element.calendars[0].month] + ' ' + element.calendars[0].year )
+                    }else if (type == 'year'){
+
+                        element.setInputValue(element.calendars[0].year)
+                        idx = Number(!idx);
+                        arr[idx].setInputValue(element.calendars[0].year)
+                    }else{
+                        element.setInputValue( ['','I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1)/3)] + ' ' + element.calendars[0].year )
+                        idx = Number(!idx);
+                        arr[idx].setInputValue( ['','I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1)/3)] + ' ' + element.calendars[0].year )
+                    }
+                   
+                    element.close();
+                 
+     
+                }
+            })
+
+          this.dateRange();
+    
+
+        },
         exportToExcel : function(){
             
 
@@ -287,6 +369,16 @@ this.employees = Eres.data;
                 });
             }
 
+        },
+        date1: function(n,o){
+            if( n.split(' ').length==3 && this.date2.split(' ').length==3){
+                this.dateRange();
+            }
+        },
+             date2: function(n,o){
+            if( n.split(' ').length==3 && this.date1.split(' ').length==3){
+                this.dateRange();
+            }
         }
     },
     computed: {
@@ -312,7 +404,7 @@ this.employees = Eres.data;
     },
     filters: {
         dayOfWeek: function (val) {
-            console.log(val)
+          
 
 
             let parts = val.split(' ')
@@ -359,7 +451,7 @@ this.employees = Eres.data;
 
 
 function kalendarSet() {
-    M.Datepicker.init(document.querySelectorAll('.kalendar'),
+  return  M.Datepicker.init(document.querySelectorAll('.kalendar'),
 
         {
 
@@ -373,7 +465,7 @@ function kalendarSet() {
                     'Апрель',
                     'Май',
                     'Июнь',
-                    'Июдь',
+                    'Июль',
                     'Август',
                     'Сентябрь',
                     'Октябрь',

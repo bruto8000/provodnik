@@ -71,7 +71,7 @@ let app = new Vue({
     },
     methods: {
 
-        closeModalDate: function(e,v){
+        closeModal: function(e,v){
             console.log(M.Datepicker)
         this.kalendar.forEach(element => {
            if(element.isOpen){
@@ -118,7 +118,7 @@ let app = new Vue({
 
         addProj: function () {
             try {
- 
+            
 
                 for (prop in this.project) {
                     if (!this.project[prop]) {
@@ -143,7 +143,7 @@ let app = new Vue({
 
             }
 
-this.project.opisanieBody = this.editor.html.get();
+this.project.opisanieBody = this.editor.html.get().replace(/'/ig, '"');
 
             axios.post('../vendor/addProj.php', JSON.stringify(this.project))
                 .then((r) => {
@@ -155,7 +155,8 @@ this.project.opisanieBody = this.editor.html.get();
                         for (prop in this.project) {
                             this.project[prop] = '';
 
-                        }
+                        };
+                        this.editor.html.set('')
 
                     } else {
                         throw new Error(r.data)
@@ -206,7 +207,7 @@ function kalendarSet() {
                     'Апрель',
                     'Май',
                     'Июнь',
-                    'Июдь',
+                    'Июль',
                     'Август',
                     'Сентябрь',
                     'Октябрь',

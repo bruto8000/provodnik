@@ -38,40 +38,25 @@
 <body>
 
 
-    <div id="app">
-
-
-
+    <div id="app" class="container">
         <h1 class="center">Добавление проекта</h1>
-
         <div class="row">
             <div class="col m3 center">
-                <div class="  ">Дата спуска</div> <input  v-model.lazy="project.fdate" id="fdate" type="text" class="kalendar center" value=""
-                    placeholder="Выберите дату">
+                <div class="  ">Дата спуска</div> <input v-model.lazy="project.fdate" id="fdate" type="text"
+                    class="kalendar center" value="" placeholder="Выберите дату">
             </div>
-
-
             <div class="col m3 center">
-                <div class="   " @click="undateZapusk">Дата запуска</div> <input :disabled="undate" v-model.lazy="project.sdate" id="sdate" type="text" class="kalendar center" value=""
+                <div class="   " @click="undateZapusk">Дата запуска</div> <input :disabled="undate"
+                    v-model.lazy="project.sdate" id="sdate" type="text" class="kalendar center" value=""
                     placeholder="Выберите дату">
             </div>
-
-
-
             <div class="col m6 center ">
                 <div class="  ">Название</div>
-                <input placeholder="Введите Название" v-model="project.nazvanie" id="nazvanie" type="text" class="validate">
-
+                <input placeholder="Введите Название" v-model="project.nazvanie" id="nazvanie" type="text"
+                    class="validate">
             </div>
-
-
-
-
         </div>
-
-
         <div class="row">
-
             <div class="col m3 center ">
                 <div class="  ">Вид бизнеса</div>
                 <div class="">
@@ -85,16 +70,10 @@
                         <option value="FMC/FTTB">FMC/FTTB</option>
                         <option value="BTB/BTC">BTB/BTC</option>
                         <option value="FMC/B2C">FMC/B2C</option>
-
                     </select>
-
                 </div>
             </div>
-
-
             <div class="col m3 center">
-
-
                 <div class="  ">Тип запуска</div>
                 <div class="">
                     <select v-model="project.zapusk" id="zapusk">
@@ -112,43 +91,23 @@
                         <option value="SMS/push/email рассылка">SMS/push/email рассылка</option>
                         <option value="Запуск Города">Запуск Города</option>
                         <option value="Оборудование">Оборудование</option>
-
-
-
                     </select>
-
                 </div>
-
             </div>
-
             <div class="col m6 center ">
                 <div class="  ">Описание</div>
-                <input placeholder="Введите Описание" v-model="project.opisanie" id="opisanie" type="text" class="validate">
+                <input placeholder="Введите Описание" v-model="project.opisanie" id="opisanie" type="text"
+                    class="validate">
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
         </div>
-
         <div class="row">
-
             <div class="col m3">
                 <div class="   center">Сопровождающий</div>
                 <select v-model="project.soprovod" id="soprovod">
-                 
-<option value="" selected>Сопровождающий</option>
-<option v-for="employee in employees" :value="employee['full_name']">{{employee['full_name']}}</option>
 
-
+                    <option value="" selected>Сопровождающий</option>
+                    <option v-for="employee in employees" :value="employee['full_name']">{{employee['full_name']}}
+                    </option>
 
                 </select>
 
@@ -176,99 +135,55 @@
 
             <div class="col m6 center  ">
                 <div class="  ">Заказчик</div>
-                <input placeholder="Введите заказчика" v-model="project.zakazchik" id="zakazchik" type="text" class="validate">
-
+                <input placeholder="Введите заказчика" v-model="project.zakazchik" id="zakazchik" type="text"
+                    class="validate">
             </div>
-
-
-
         </div>
-
-
-
-<div class="row">
-
-    <div class="col m12">
-
-        <div class="froala">
-            <label for="pbody">Описание</label>
-            <textarea class="form-control" rows="7" wrap="hard" id="pbody" name="pbody" ></textarea>
-        </div>
-    </div>
-
-
-
-
-
-</div>
-
         <div class="row">
-            <div @click="addProj" class="  btn-large col m12 black-text " >
-            <div class="flow-text">Добавить проект</div> 
+
+            <div class="col m12">
+
+                <div class="froala">
+                    <label for="pbody">Описание</label>
+                    <textarea class="form-control" rows="7" wrap="hard" id="pbody" name="pbody"></textarea>
+                </div>
             </div>
         </div>
-
-
-
-
-
+        <div class="row">
+            <div @click="addProj" class="  btn-large col m12 black-text ">
+                <div class="flow-text">Добавить проект</div>
+            </div>
+        </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <script type="text/javascript" src="./src/js/froala_editor.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/align.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/code_beautifier.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/code_view.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/colors.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/draggable.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/emoticons.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/font_size.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/font_family.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/image.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/file.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/image_manager.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/line_breaker.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/link.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/lists.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/paragraph_format.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/paragraph_style.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/video.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/table.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/url.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/entities.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/char_counter.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/inline_style.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/save.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/fullscreen.min.js"></script>
-<script type="text/javascript" src="./src/js/froala/quote.min.js"></script>
-
-<script type="text/javascript" src="./src/js/froala/cleave.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/align.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/code_beautifier.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/code_view.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/colors.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/draggable.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/emoticons.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/font_size.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/font_family.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/image.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/file.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/image_manager.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/line_breaker.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/link.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/lists.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/paragraph_format.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/paragraph_style.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/video.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/table.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/url.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/entities.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/char_counter.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/inline_style.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/save.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/fullscreen.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/quote.min.js"></script>
+    <script type="text/javascript" src="./src/js/froala/cleave.min.js"></script>
     <script type="text/javascript" src="./src/js/froala/ru.js"></script>
-    
-
-
-
 
     <script src="./src/js/materializeWithKvartal.js"></script>
     <script src="./src/js/axios.js"></script>
