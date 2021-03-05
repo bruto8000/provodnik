@@ -13,8 +13,12 @@ let app = new Vue({
             soprovod: "",
             status: "",
             zakazchik: "",
-            undate: false
+          //  opisanieBody: "", Will added Automaticly
+          
         },
+        
+        editor: '',
+        undate: false,
         employees: []
     },
     mounted: function () {
@@ -24,17 +28,45 @@ let app = new Vue({
         axios.get('../vendor/showEmployees.php')
             .then(res => {
 
-                res.data.forEach(element => {
-                    element.halfName = element['full_name'].split(' ')[0] + ' ' +
-                        element['full_name'].split(' ')[1][0] + '.';
-                });
+                // res.data.forEach(element => {
+                //     element.halfName = element['full_name'].split(' ')[0] + ' ' +
+                //         element['full_name'].split(' ')[1][0] + '.';
+                // });
                 this.employees = res.data;
                 Vue.nextTick(function () {
                     M.AutoInit();
                   })
          
 
+
+                  
+
+            this.editor = new FroalaEditor('#pbody', {
+                // Set the file upload URL.
+    
+                toolbarButtons: [
+                    ['bold', 'italic', 'underline', '|', 'fontSize', 'color', 'formatOL', 'formatUL',
+                        'insertLink', 'insertTable', 'insertImage', 'html', 'insertFileRR'
+                    ]
+                ],
+                fileUploadURL: 'upload_file.php',
+                fileUploadParams: {
+                    id: 'my_editor'
+                },
+                imageUploadURL: 'upload_image.php',
+                imageUploadParams: {
+                    id: 'my_editor2'
+                },
+                language: 'ru'
             })
+
+            });
+
+    
+    
+          
+
+
 
     },
     methods: {
@@ -86,12 +118,20 @@ let app = new Vue({
 
         addProj: function () {
             try {
+ 
+
                 for (prop in this.project) {
                     if (!this.project[prop]) {
 
-                        throw new Error("Пусто, чего-то не хватает");
+                        throw new Error("Пусто, чего-то не хватает: " + prop);
                     }
                 }
+
+
+            if( this.editor.html.get().length < 50){
+
+                throw new Error("Описание слишком короткое.");
+            }
 
             } catch (e) {
 
@@ -103,6 +143,7 @@ let app = new Vue({
 
             }
 
+this.project.opisanieBody = this.editor.html.get();
 
             axios.post('../vendor/addProj.php', JSON.stringify(this.project))
                 .then((r) => {
@@ -130,8 +171,8 @@ let app = new Vue({
 
         },
         undateZapusk: function(){
-         this.project.undate =    !this.project.undate;
-         this.project.sdate = this.project.undate ? "Не определена" : "";
+         this.undate =    !this.undate;
+         this.project.sdate = this.undate ? "Не определена" : "";
         }    
     }
 })

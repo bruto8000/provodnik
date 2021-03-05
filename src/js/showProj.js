@@ -4,7 +4,7 @@
 let app = new Vue({
     el: "#app",
     data: {
-        kalendar : "",
+        kalendar: "",
         projects: [],
         filterSelect: {
             bizness: "",
@@ -18,89 +18,106 @@ let app = new Vue({
             zakazchik: "",
             nazvanie: "",
             opisanie: "",
-          
-         
+
+
         },
         sort: {
             column: ""
         },
-        employees: []
+        employees: [],
+        modal: {
+            project: {
+
+            }
+        }
     },
     mounted: function () {
         console.log("I AM mounted");
-       this.kalendar = kalendarSet();
- console.log(this.kalendar)
+        this.kalendar = kalendarSet();
         axios.get('../vendor/showProj.php')
             .then(res => {
-                this.projects = res.data;
+                this.projects = res.data.reverse();
             }, err => {
                 M.toast({
                     html: "Ошибка " + err
                 })
             });
 
-            axios.get('../vendor/showEmployees.php')
+        axios.get('../vendor/showEmployees.php')
             .then(res => {
 
-              
+
                 this.employees = res.data;
-             
+
                 Vue.nextTick(function () {
                     M.AutoInit();
-                  })
-         
+                })
+
 
             })
+
+            this.modal.modal = M.Modal.init(document.getElementById('projectModal'), {
+                dismissible: false
+            });
 
 
     },
     methods: {
 
-        closeModalDate: function(e,v){
-            console.log(M.Datepicker)
-        this.kalendar.forEach(element => {
-           if(element.isOpen){
-               element.close();
-            
+        closeModal: function (e) {
+            console.log(e)
+          if(e == 'projectModal'){
+              console.log(e)
+              this.modal.modal.close();
+          }else {
 
-           }
-     
-        });
-          
-       
-      
+            this.kalendar.forEach(element => {
+                if (element.isOpen) {
+                    element.close();
+
+
+                }
+
+            });
+
+          }
+
+
+
+
+
         },
-        setDate: function(type){
+        setDate: function (type) {
 
 
             this.kalendar.forEach(element => {
-                if(element.isOpen){
-                    if(type == 'month'){
-                        
-                        element.setInputValue(element.calendars[0].month + ' ' + element.calendars[0].year )
-              //          element.el.value = element.calendars[0].month + ' ' + element.calendars[0].year 
-                    }else if (type == 'year'){
+                if (element.isOpen) {
+                    if (type == 'month') {
+
+                        element.setInputValue(element.calendars[0].month + ' ' + element.calendars[0].year)
+                        //          element.el.value = element.calendars[0].month + ' ' + element.calendars[0].year 
+                    } else if (type == 'year') {
 
                         element.setInputValue(element.calendars[0].year)
-   
-                    }else{
-                        element.setInputValue(    element.el.value = ['','I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1)/3)] + ' ' + element.calendars[0].year )
-                    
+
+                    } else {
+                        element.setInputValue(element.el.value = ['', 'I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1) / 3)] + ' ' + element.calendars[0].year)
+
                     }
                     console.log(element)
                     console.log(element.el)
                     console.log(element.calendars)
                     element.close();
-                 
-     
+
+
                 }
             })
 
-          
-    
 
-        }
-        ,resetFilter: function () {
+
+
+        },
+        resetFilter: function () {
             for (prop in this.filterSelect) {
                 this.filterSelect[prop] = ''
             }
@@ -109,10 +126,10 @@ let app = new Vue({
             }
             this.sort.r = 1;
             this.sort.column = '';
-            Vue.nextTick(function(){
+            Vue.nextTick(function () {
                 M.AutoInit();
             })
-        
+
         },
         sortChange(column) {
 
@@ -130,6 +147,11 @@ let app = new Vue({
                 this.sort.column = column;
                 this.sort.r = 1;
             }
+        },
+        openProject(project){
+this.modal.project = project;
+this.modal.modal.open();
+
         }
     },
     watch: {
@@ -150,7 +172,7 @@ let app = new Vue({
                 }
                 return true;
             }).sort((a, b) => {
-                if (!this.sort.column) return 0;
+                if (!this.sort.column) return  1;
                 if (this.sort.column == 'sdate' || this.sort.column == 'fdate') {
                     let fakeA = a[this.sort.column];
                     let fakeB = b[this.sort.column];
@@ -187,7 +209,7 @@ let app = new Vue({
 
 
 function kalendarSet() {
-  return  M.Datepicker.init(document.querySelectorAll('.kalendar'),
+    return M.Datepicker.init(document.querySelectorAll('.kalendar'),
 
         {
 
@@ -263,7 +285,7 @@ function kalendarSet() {
             maxDate: new Date('2021 12 31'),
             showDaysInNextAndPreviousMonths: true,
             autoClose: true,
-            onOpen: function(){
+            onOpen: function () {
                 var elems = document.querySelectorAll('.dropdown-trigger');
                 var instances = M.Dropdown.init(elems);
             }

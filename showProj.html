@@ -113,7 +113,7 @@
 <div style="max-height: 500px; overflow: auto;">
    
         
-        <div class="row hover__bg" v-for="project in projectsFiltred" >
+        <div class="row hover__bg" v-for="project in projectsFiltred" @click="openProject(project)">
             <div class="col m1">{{project.fdate}}</div>
             <div class="col m1">{{project.sdate}}</div>
             <div class="col m1">{{project.bizness}}</div>
@@ -126,12 +126,28 @@
 
         </div>
     </div>
+
+
+
+
+
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+          <h4>{{modal.project.nazvanie}}</h4>
+         <p>{{modal.project.opisanie}} </p>
+          <div v-html="modal.project.opisanieBody">
+
+          </div>
+    
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat" @click="closeModal('projectModal')">Закрыть</a>
+        </div>
+      </div>
+    
+
+
 </div>
-
-
-
-
-
 
 
 
