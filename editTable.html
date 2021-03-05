@@ -32,6 +32,9 @@
         <div class="btn" @click="some.step = 0;enterSome()">Выбрать несколько</div>
         <div class="btn" @click="moveSome">Переместить выборку</div>
         <input type="text" placeholder="Для нескольких" v-model='some.input'>
+        <div class="col m12" style="overflow: auto;">
+
+  
         <table cellspacing="2" border="1" cellpadding="5" class="responsive-table striped">
             <tr>
                 <th></th>
@@ -44,7 +47,8 @@
             </tr>
             <tr v-for="employee in employees">
                 <td>{{employee['full_name']}}</td>
-                <td v-for="day in tabelFiltred" :class="{red : day.somes.includes(employee.nid)}"><input :class="{
+                <td v-for="day in tabelFiltred" :class="{red : day.somes.includes(employee.nid),
+                     ' pink accent-1' :  day.presomes.includes(employee.nid) }"><input :class="{
                     
                     green : day.body[employee.nid] == 'В',
                     blue : day.body[employee.nid] == 'О',
@@ -52,12 +56,13 @@
                 }
                 
                 
-                " @click="enterSome(day, employee.nid)" type="text"
+                " @click="enterSome(day, employee.nid)" @mouseover="preEnterSome(day,employee.nid)" type="text"
                         v-model="day.body[employee.nid]" name="" >
                 </td>
 
             </tr>
         </table>
+    </div>
     </div>
     <script src="./src/js/materializeWithKvartal.js"></script>
     <script src="./src/js/axios.js"></script>

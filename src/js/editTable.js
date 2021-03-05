@@ -22,7 +22,12 @@ let app = new Vue({
                 X: '',
                 Y: ''
             },
+            PRE: {
+                X: "",
+                Y: ""
+            },
             somes: [],
+            presomes: [],
             input: ""
         }
 
@@ -40,18 +45,18 @@ let app = new Vue({
         ]).then(axios.spread((Eres, Tres) => {
             console.log(Tres.data[0].body)
             Tres.data.forEach(dt => {
-
+                dt.presomes = [];
 
                 Eres.data.forEach(em => {
                     if (!dt.body[em.nid]) {
                         dt.body[em.nid] = '';
-                        
+
                     }
 
-                 
+
                 })
             })
-            Eres.data.forEach(em=>{
+            Eres.data.forEach(em => {
                 this.trueNID.push(em.nid)
             })
 
@@ -223,6 +228,7 @@ let app = new Vue({
 
                     this.some.somes.forEach(element => {
                         element.somes = [];
+                        element.presomes = [];
                     });
 
                     this.some.step = 1;
@@ -233,7 +239,7 @@ let app = new Vue({
                 }
                 case 1: {
                     this.some.F.X = this.tabelFiltred.indexOf(day);
-                    this.some.F.Y = Object.keys(day.body).indexOf(who);
+                    this.some.F.Y = this.trueNID.indexOf(who);
                     M.toast({
                         html: "Выберите конечный"
                     });
@@ -242,7 +248,7 @@ let app = new Vue({
                 }
                 case 2: {
                     this.some.L.X = this.tabelFiltred.indexOf(day);
-                    this.some.L.Y =this.trueNID.indexOf(who);
+                    this.some.L.Y = this.trueNID.indexOf(who);
                     this.modifSome();
                     M.toast({
                         html: "Подсчет"
@@ -260,16 +266,95 @@ let app = new Vue({
                     this.some.F.Y = this.trueNID.indexOf(who);
                     this.some.L.X = this.some.F.X + x;
                     this.some.L.Y = this.some.F.Y + y;
+                    let oldinput = this.some.input;
 
-this.clearSome();
-this.some.step =  3;
+
+                    this.some.somes.forEach(element => {
+                        element.somes.forEach((v, idx, arr) => {
+                            element.body[v] = " ";
+                            element.presomes = [];
+                        })
+                    });
+
+
+
+                    this.clearSome();
+                    this.some.step = 3;
                     this.modifSome();
+                    Vue.nextTick(e => {
+
+                        this.some.input = oldinput;
+                    })
+
                     break;
                 }
 
 
 
             }
+        },
+        preEnterSome: function (day, nid) {
+
+            if (!(this.some.step == 2 || this.some.step == 4)) {
+                return;
+            }
+
+
+
+
+
+
+            if (this.some.step == 2) {
+
+                this.some.PRE.X = this.tabelFiltred.indexOf(day);
+                this.some.PRE.Y = this.trueNID.indexOf(nid);
+
+                this.tabelFiltred.forEach((element, idx) => {
+                    element.presomes = [];
+                    if (idx >= this.some.F.X && idx <= this.some.PRE.X) {
+
+
+                        this.some.presomes.push(element);
+
+                        element.presomes = this.trueNID.slice(this.some.F.Y, this.some.PRE.Y + 1);
+                    } else {
+                        return;
+                    }
+                })
+
+            } else {
+
+
+
+                this.some.PRE.X = this.tabelFiltred.indexOf(day);
+                this.some.PRE.Y = this.trueNID.indexOf(nid);
+let x = this.some.L.X - this.some.F.X;
+let y = this.some.L.Y - this.some.F.Y;
+
+                this.tabelFiltred.forEach((element, idx) => {
+                    element.presomes = [];
+                    if (idx >= this.some.PRE.X && idx <= this.some.PRE.X + x) {
+
+
+                        this.some.presomes.push(element);
+
+                        element.presomes = this.trueNID.slice(this.some.PRE.Y, this.some.PRE.Y + y + 1);
+
+
+                    }else{return;}
+
+
+                    this.$forceUpdate()
+
+                });
+
+
+
+            }
+
+
+
+
         },
         moveSome: function (day, who) {
             if (this.some.step == 4) {
@@ -308,18 +393,19 @@ this.some.step =  3;
             this.tabelFiltred.forEach((element, idx) => {
                 element.somes = [];
                 if (idx >= this.some.F.X && idx <= this.some.L.X) {
-    
+
 
                     this.some.somes.push(element);
-                    console.log(this.some.F.Y,"TRUENUD")
+                    console.log(this.some.F.Y, "TRUENUD")
                     console.log(this.some.L.Y + 1, "TRUENUD")
-                  
+
                     element.somes = this.trueNID.slice(this.some.F.Y, this.some.L.Y + 1);
+                    element.presomes = [];
                 }
-      
-                    
-                    this.$forceUpdate()
-            
+
+
+                this.$forceUpdate()
+
             });
 
 
@@ -329,9 +415,11 @@ this.some.step =  3;
 
             this.some.somes.forEach(element => {
                 element.somes = [];
+                element.presomes = [];
             });
             this.some.step = -1;
-     
+
+            this.some.input = '';
             this.some.somes = [];
             this.$forceUpdate()
         },
