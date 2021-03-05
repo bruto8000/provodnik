@@ -4,6 +4,7 @@
 let app = new Vue({
     el: "#app",
     data: {
+        kalendar : "",
         projects: [],
         filterSelect: {
             bizness: "",
@@ -25,8 +26,8 @@ let app = new Vue({
     },
     mounted: function () {
         console.log("I AM mounted");
-        kalendarSet();
- 
+       this.kalendar = kalendarSet();
+ console.log(this.kalendar)
         axios.get('../vendor/showProj.php')
             .then(res => {
                 this.projects = res.data;
@@ -52,7 +53,46 @@ let app = new Vue({
 
     },
     methods: {
-        resetFilter: function () {
+
+        closeModalDate: function(e,v){
+            console.log(M.Datepicker)
+        this.kalendar.forEach(element => {
+           if(element.isOpen){
+               element.close();
+            
+
+           }
+     
+        });
+          
+       
+      
+        },
+        setDate: function(type){
+
+
+            this.kalendar.forEach(element => {
+                if(element.isOpen){
+                    if(type == 'month'){
+                        element.el.value = element.calendars[0].month + ' ' + element.calendars[0].year 
+                    }else if (type == 'year'){
+                        element.el.value =element.calendars[0].year 
+                    }else{
+                        element.el.value = ['','I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1)/3)] + ' ' + element.calendars[0].year 
+                    }
+                    console.log(element.el)
+                    console.log(element.calendars)
+                    element.close();
+                 
+     
+                }
+            })
+
+          
+    
+
+        }
+        ,resetFilter: function () {
             for (prop in this.filterSelect) {
                 this.filterSelect[prop] = ''
             }
@@ -139,7 +179,7 @@ let app = new Vue({
 
 
 function kalendarSet() {
-    M.Datepicker.init(document.querySelectorAll('.kalendar'),
+  return  M.Datepicker.init(document.querySelectorAll('.kalendar'),
 
         {
 
@@ -214,7 +254,11 @@ function kalendarSet() {
             minDate: new Date('2021 01 01'),
             maxDate: new Date('2021 12 31'),
             showDaysInNextAndPreviousMonths: true,
-            autoClose: true
+            autoClose: true,
+            onOpen: function(){
+                var elems = document.querySelectorAll('.dropdown-trigger');
+                var instances = M.Dropdown.init(elems);
+            }
 
 
 
