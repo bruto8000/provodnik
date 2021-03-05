@@ -27,9 +27,10 @@
                 <div class="btn" @click="dateRange">Сформировать</div>
             </div>
         </div>
-        <div class="btn" @click="changeOnServer">Синхронизировать</div>
+        <div class="btn" @click="changeOnServer">Сохранить</div>
         <div class="btn" @click="clearSome">Сбросить выборку</div>
         <div class="btn" @click="some.step = 0;enterSome()">Выбрать несколько</div>
+        <div class="btn" @click="moveSome">Переместить выборку</div>
         <input type="text" placeholder="Для нескольких" v-model='some.input'>
         <table cellspacing="2" border="1" cellpadding="5" class="responsive-table striped">
             <tr>
@@ -43,7 +44,7 @@
             </tr>
             <tr v-for="employee in employees">
                 <td>{{employee['full_name']}}</td>
-                <td v-for="day in tabelFiltred" :class="{red : day.somes.indexOf(employee.nid)> -1,}"><input :class="{
+                <td v-for="day in tabelFiltred" :class="{red : day.somes.includes(employee.nid)}"><input :class="{
                     
                     green : day.body[employee.nid] == 'В',
                     blue : day.body[employee.nid] == 'О',

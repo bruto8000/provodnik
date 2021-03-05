@@ -5,6 +5,7 @@
 let app = new Vue({
     el: "#app",
     data: {
+        trueNID: [],
         employees: [],
         kalendar: [],
         date1: "",
@@ -25,35 +26,41 @@ let app = new Vue({
             input: ""
         }
 
- 
+
     },
     mounted: function () {
         console.log("I AM mounted");
-       this.kalendar = kalendarSet();
+        this.kalendar = kalendarSet();
         M.AutoInit();
 
 
         axios.all([
             axios.get('../vendor/showEmployees.php'),
             axios.get('../vendor/showTabel.php')
-          ]).then(axios.spread((Eres, Tres) => {
-          console.log(Tres.data[0].body) 
-Tres.data.forEach(dt=>{
-
- 
-Eres.data.forEach(em=>{
-if(!dt.body[em.nid]){
-    dt.body[em.nid] = '';
-}
-})
-})
+        ]).then(axios.spread((Eres, Tres) => {
+            console.log(Tres.data[0].body)
+            Tres.data.forEach(dt => {
 
 
-this.tabel = Tres.data;
-this.employees = Eres.data;
-          }) )
+                Eres.data.forEach(em => {
+                    if (!dt.body[em.nid]) {
+                        dt.body[em.nid] = '';
+                        
+                    }
 
-  },
+                 
+                })
+            })
+            Eres.data.forEach(em=>{
+                this.trueNID.push(em.nid)
+            })
+
+
+            this.tabel = Tres.data;
+            this.employees = Eres.data;
+        }))
+
+    },
     methods: {
         dateRange: function () {
 
@@ -69,43 +76,55 @@ this.employees = Eres.data;
 
             let startDate;
             let endDate;
-if(parts.length === 3){
- startDate = new Date(parts[2], parts[1] - 1, parts[0]);
+            if (parts.length === 3) {
+                startDate = new Date(parts[2], parts[1] - 1, parts[0]);
 
- parts = date2.split(' ')
+                parts = date2.split(' ')
 
- endDate = new Date(parts[2], parts[1] - 1, parts[0]);
-
-
-}else if(parts.length == 2){
-  
-    if(isNaN(Number(parts[0]))){
-
-switch(parts[0]){
-
-    case 'I' : startDate = new Date(parts[1], '0', '1'); endDate = new Date(parts[1], '3', '0');   break;
-    case 'II': startDate = new Date(parts[1], '3', '1'); endDate = new Date(parts[1], '6', '0');   break;
-    case 'II': startDate = new Date(parts[1], '6', '1'); endDate = new Date(parts[1], '9', '0');   break;
-    case 'IV': startDate = new Date(parts[1], '9', '1'); endDate = new Date(parts[1], '11', '31');   break;
-
-}
+                endDate = new Date(parts[2], parts[1] - 1, parts[0]);
 
 
-    }else{
-        //MONTH SELECTED
+            } else if (parts.length == 2) {
 
-        startDate = new Date(parts[1], parts[0] - 1, '1');
-        endDate = new Date(parts[1], parts[0], '0');
+                if (isNaN(Number(parts[0]))) {
+
+                    switch (parts[0]) {
+
+                        case 'I':
+                            startDate = new Date(parts[1], '0', '1');
+                            endDate = new Date(parts[1], '3', '0');
+                            break;
+                        case 'II':
+                            startDate = new Date(parts[1], '3', '1');
+                            endDate = new Date(parts[1], '6', '0');
+                            break;
+                        case 'II':
+                            startDate = new Date(parts[1], '6', '1');
+                            endDate = new Date(parts[1], '9', '0');
+                            break;
+                        case 'IV':
+                            startDate = new Date(parts[1], '9', '1');
+                            endDate = new Date(parts[1], '11', '31');
+                            break;
+
+                    }
+
+
+                } else {
+                    //MONTH SELECTED
+
+                    startDate = new Date(parts[1], parts[0] - 1, '1');
+                    endDate = new Date(parts[1], parts[0], '0');
 
 
 
-    }
+                }
 
-    
-}else{
-    startDate = new Date(parts[0], 0,1);
-    endDate = new Date(parts[0], 11,31);
-}
+
+            } else {
+                startDate = new Date(parts[0], 0, 1);
+                endDate = new Date(parts[0], 11, 31);
+            }
 
 
 
@@ -190,6 +209,7 @@ switch(parts[0]){
 
         enterSome: function (day, who) {
 
+            console.log(this.some.step);
             switch (this.some.step) {
                 case -1:
                     console.log(-1);
@@ -222,7 +242,7 @@ switch(parts[0]){
                 }
                 case 2: {
                     this.some.L.X = this.tabelFiltred.indexOf(day);
-                    this.some.L.Y = Object.keys(day.body).indexOf(who);
+                    this.some.L.Y =this.trueNID.indexOf(who);
                     this.modifSome();
                     M.toast({
                         html: "Подсчет"
@@ -230,27 +250,76 @@ switch(parts[0]){
                     this.some.step = 3;
                     break;
                 }
+                case 4: {
+
+                    let x = this.some.L.X - this.some.F.X;
+                    let y = this.some.L.Y - this.some.F.Y;
+
+
+                    this.some.F.X = this.tabelFiltred.indexOf(day);
+                    this.some.F.Y = this.trueNID.indexOf(who);
+                    this.some.L.X = this.some.F.X + x;
+                    this.some.L.Y = this.some.F.Y + y;
+
+this.clearSome();
+this.some.step =  3;
+                    this.modifSome();
+                    break;
+                }
 
 
 
             }
         },
+        moveSome: function (day, who) {
+            if (this.some.step == 4) {
+                M.toast({
+                    html: "Выберите новое начаало"
+                })
+                return;
+            }
+            if (!(this.some.step == 3)) {
+                M.toast({
+                    html: "Сначала отметье"
+                })
+                return;
+            }
+
+
+            this.some.step = 4;
+            M.toast({
+                html: "Выберите новое начало"
+            });
+
+
+
+
+
+
+
+        },
 
         modifSome: function () {
             // slice(this.some.F.X, this.some.L.X)
             console.log(this.some.F.X, 'X1')
-            console.log(this.some.L.X, "Y1")
+            console.log(this.some.F.Y, 'Y1')
+            console.log(this.some.L.X, "X2")
+            console.log(this.some.L.Y, "Y2")
             this.tabelFiltred.forEach((element, idx) => {
                 element.somes = [];
                 if (idx >= this.some.F.X && idx <= this.some.L.X) {
-                    // console.log(element)
+    
 
                     this.some.somes.push(element);
-                    // console.log(Object.keys(element))
-                    // console.log(this.some.F.Y, this.some.L.Y)
-                    element.somes = Object.keys(element.body).slice(this.some.F.Y, this.some.L.Y + 1);
+                    console.log(this.some.F.Y,"TRUENUD")
+                    console.log(this.some.L.Y + 1, "TRUENUD")
+                  
+                    element.somes = this.trueNID.slice(this.some.F.Y, this.some.L.Y + 1);
                 }
-                this.$forceUpdate()
+      
+                    
+                    this.$forceUpdate()
+            
             });
 
 
@@ -262,7 +331,8 @@ switch(parts[0]){
                 element.somes = [];
             });
             this.some.step = -1;
-            this.some.input = '';
+     
+            this.some.somes = [];
             this.$forceUpdate()
         },
         changeOnServer: function () {
@@ -284,78 +354,78 @@ switch(parts[0]){
                 })
         },
 
-        closeModal: function(e,v){
-        
-        this.kalendar.forEach(element => {
-           if(element.isOpen){
-               element.close();
-            
+        closeModal: function (e, v) {
 
-           }
-     
-        });
-          
-       
-      
+            this.kalendar.forEach(element => {
+                if (element.isOpen) {
+                    element.close();
+
+
+                }
+
+            });
+
+
+
         },
-        setDate: function(type){
+        setDate: function (type) {
 
 
-            this.kalendar.forEach((element,idx,arr) => {
-                if(element.isOpen){
-                    if(type == 'month'){
-                        
-                        element.setInputValue(  [1,2,3,4,5,6,7,8,9,10,11,12][element.calendars[0].month] + ' ' + element.calendars[0].year )
-                       idx = Number(!idx);
-             
-                        arr[idx].setInputValue(  [1,2,3,4,5,6,7,8,9,10,11,12][element.calendars[0].month] + ' ' + element.calendars[0].year )
-                    }else if (type == 'year'){
+            this.kalendar.forEach((element, idx, arr) => {
+                if (element.isOpen) {
+                    if (type == 'month') {
+
+                        element.setInputValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12][element.calendars[0].month] + ' ' + element.calendars[0].year)
+                        idx = Number(!idx);
+
+                        arr[idx].setInputValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12][element.calendars[0].month] + ' ' + element.calendars[0].year)
+                    } else if (type == 'year') {
 
                         element.setInputValue(element.calendars[0].year)
                         idx = Number(!idx);
                         arr[idx].setInputValue(element.calendars[0].year)
-                    }else{
-                        element.setInputValue( ['','I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1)/3)] + ' ' + element.calendars[0].year )
+                    } else {
+                        element.setInputValue(['', 'I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1) / 3)] + ' ' + element.calendars[0].year)
                         idx = Number(!idx);
-                        arr[idx].setInputValue( ['','I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1)/3)] + ' ' + element.calendars[0].year )
+                        arr[idx].setInputValue(['', 'I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1) / 3)] + ' ' + element.calendars[0].year)
                     }
-                   
+
                     element.close();
-                 
-     
+
+
                 }
             })
 
-          this.dateRange();
-    
+            this.dateRange();
+
 
         },
-        exportToExcel : function(){
-            
+        exportToExcel: function () {
 
-    var tableToExcel = (function () {
-        var uri = 'data:application/vnd.ms-excel;base64,',
-          template =
-          '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
-          base64 = function (s) {
-            return window.btoa(unescape(encodeURIComponent(s)))
-          },
-          format = function (s, c) {
-            return s.replace(/{(\w+)}/g, function (m, p) {
-              return c[p];
-            })
-          }
-        return function (table, name) {
-          if (!table.nodeType) table = document.getElementById(table)
-          var ctx = {
-            worksheet: name || 'Worksheet',
-            table: table.innerHTML
-          }
-          window.location.href = uri + base64(format(template, ctx))
-        }
-      })()
 
-      tableToExcel (document.getElementById('allTable'), 'Табель вывод' + this.range[0] + '-' + this.range[this.range.length-1])
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,',
+                    template =
+                    '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+                    base64 = function (s) {
+                        return window.btoa(unescape(encodeURIComponent(s)))
+                    },
+                    format = function (s, c) {
+                        return s.replace(/{(\w+)}/g, function (m, p) {
+                            return c[p];
+                        })
+                    }
+                return function (table, name) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = {
+                        worksheet: name || 'Worksheet',
+                        table: table.innerHTML
+                    }
+                    window.location.href = uri + base64(format(template, ctx))
+                }
+            })()
+
+            tableToExcel(document.getElementById('allTable'), 'Табель вывод' + this.range[0] + '-' + this.range[this.range.length - 1])
         }
 
     },
@@ -370,13 +440,13 @@ switch(parts[0]){
             }
 
         },
-        date1: function(n,o){
-            if( n.split(' ').length==3 && this.date2.split(' ').length==3){
+        date1: function (n, o) {
+            if (n.split(' ').length == 3 && this.date2.split(' ').length == 3) {
                 this.dateRange();
             }
         },
-             date2: function(n,o){
-            if( n.split(' ').length==3 && this.date1.split(' ').length==3){
+        date2: function (n, o) {
+            if (n.split(' ').length == 3 && this.date1.split(' ').length == 3) {
                 this.dateRange();
             }
         }
@@ -404,7 +474,7 @@ switch(parts[0]){
     },
     filters: {
         dayOfWeek: function (val) {
-          
+
 
 
             let parts = val.split(' ')
@@ -432,7 +502,7 @@ switch(parts[0]){
                     return "ВСК";
             }
 
-           
+
         }
     }
 
@@ -451,7 +521,7 @@ switch(parts[0]){
 
 
 function kalendarSet() {
-  return  M.Datepicker.init(document.querySelectorAll('.kalendar'),
+    return M.Datepicker.init(document.querySelectorAll('.kalendar'),
 
         {
 
