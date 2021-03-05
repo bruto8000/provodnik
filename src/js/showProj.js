@@ -10,14 +10,16 @@ let app = new Vue({
             bizness: "",
             zapusk: "",
             status: "",
+            fdate: "",
+            sdate: ""
 
         },
         filterInput: {
             zakazchik: "",
             nazvanie: "",
             opisanie: "",
-            fdate: "",
-            sdate: ""
+          
+         
         },
         sort: {
             column: ""
@@ -74,12 +76,18 @@ let app = new Vue({
             this.kalendar.forEach(element => {
                 if(element.isOpen){
                     if(type == 'month'){
-                        element.el.value = element.calendars[0].month + ' ' + element.calendars[0].year 
+                        
+                        element.setInputValue(element.calendars[0].month + ' ' + element.calendars[0].year )
+              //          element.el.value = element.calendars[0].month + ' ' + element.calendars[0].year 
                     }else if (type == 'year'){
-                        element.el.value =element.calendars[0].year 
+
+                        element.setInputValue(element.calendars[0].year)
+   
                     }else{
-                        element.el.value = ['','I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1)/3)] + ' ' + element.calendars[0].year 
+                        element.setInputValue(    element.el.value = ['','I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1)/3)] + ' ' + element.calendars[0].year )
+                    
                     }
+                    console.log(element)
                     console.log(element.el)
                     console.log(element.calendars)
                     element.close();
