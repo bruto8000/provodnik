@@ -43,8 +43,16 @@
             </tr>
             <tr v-for="employee in employees">
                 <td>{{employee['full_name']}}</td>
-                <td v-for="day in tabelFiltred"><input @click="enterSome(day, employee.nid)" type="text"
-                        v-model="day.body[employee.nid]" name="" :class="{red : day.somes.indexOf(employee.nid)> -1}">
+                <td v-for="day in tabelFiltred" :class="{red : day.somes.indexOf(employee.nid)> -1,}"><input :class="{
+                    
+                    green : day.body[employee.nid] == 'В',
+                    blue : day.body[employee.nid] == 'О',
+                    yellow : day.body[employee.nid] == 'Б',
+                }
+                
+                
+                " @click="enterSome(day, employee.nid)" type="text"
+                        v-model="day.body[employee.nid]" name="" >
                 </td>
 
             </tr>
