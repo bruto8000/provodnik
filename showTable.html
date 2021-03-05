@@ -33,19 +33,19 @@
     
        
 
-        <table cellspacing="2" border="1" cellpadding="5" class="responsive-table striped" id="allTable">
+        <table cellspacing="2" border="1" cellpadding="5" class="responsive-table striped center" id="allTable">
             <tr>
                 <th></th>
-                <th v-for="day in tabelFiltred">{{day.date}}</th>
+                <th v-for="day in tabelFiltred" class="center" >{{day.date}}</th>
             </tr>
             <tr>
                 <th></th>
-                <th v-for="day in tabelFiltred">{{ day.date | dayOfWeek}}</th>
+                <th v-for="day in tabelFiltred" class="center" >{{ day.date | dayOfWeek}}</th>
 
             </tr>
             <tr v-for="employee in employees">
                 <td>{{employee['full_name']}}</td>
-                <td v-for="day in tabelFiltred" :class="{
+                <td v-for="day in tabelFiltred" class="center"  :class="{
                     green : day.body[employee.nid] == 'В',
                     blue : day.body[employee.nid] == 'О',
                     yellow : day.body[employee.nid] == 'Б',

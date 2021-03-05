@@ -38,17 +38,17 @@
         <table cellspacing="2" border="1" cellpadding="5" class="responsive-table striped">
             <tr>
                 <th></th>
-                <th v-for="day in tabelFiltred">{{day.date}}</th>
+                <th v-for="day in tabelFiltred" class="center" >{{day.date}}</th>
             </tr>
             <tr>
                 <th></th>
-                <th v-for="day in tabelFiltred">{{ day.date | dayOfWeek}}</th>
+                <th v-for="day in tabelFiltred" class="center" >{{ day.date | dayOfWeek}}</th>
 
             </tr>
             <tr v-for="employee in employees">
                 <td>{{employee['full_name']}}</td>
-                <td v-for="day in tabelFiltred" :class="{red : day.somes.includes(employee.nid),
-                     ' pink accent-1' :  day.presomes.includes(employee.nid) }"><input :class="{
+                <td v-for="day in tabelFiltred" class="center"  :class="{red : day.somes.includes(employee.nid),
+                     ' pink accent-1' :  day.presomes.includes(employee.nid) }" @mouseover="preEnterSome(day,employee.nid)"><input class="center"  :class="{
                     
                     green : day.body[employee.nid] == 'В',
                     blue : day.body[employee.nid] == 'О',
@@ -56,7 +56,7 @@
                 }
                 
                 
-                " @click="enterSome(day, employee.nid)" @mouseover="preEnterSome(day,employee.nid)" type="text"
+                " @click="enterSome(day, employee.nid)"  type="text"
                         v-model="day.body[employee.nid]" name="" >
                 </td>
 

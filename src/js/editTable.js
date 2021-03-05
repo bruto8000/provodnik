@@ -41,17 +41,25 @@ let app = new Vue({
 
         axios.all([
             axios.get('../vendor/showEmployees.php'),
-            axios.get('../vendor/showTabel.php')
-        ]).then(axios.spread((Eres, Tres) => {
+            axios.get('../vendor/showTabel.php'),
+            axios.get('https://isdayoff.ru/api/getdata?year=2021&pre=0&delimeter=DAY')
+        ]).then(axios.spread((Eres, Tres,Dres) => {
             console.log(Tres.data[0].body)
-            Tres.data.forEach(dt => {
+        let datesFromApi = Dres.data.split('DAY');
+        console.log(datesFromApi)
+            Tres.data.forEach((dt,idxOfDay) => {
                 dt.presomes = [];
 
                 Eres.data.forEach(em => {
                     if (!dt.body[em.nid]) {
                         dt.body[em.nid] = '';
-
                     }
+                    // console.log((dt.body[em.nid] == '') && ((datesFromApi[idxOfDay] == '0')) )
+         
+                    if((dt.body[em.nid] == '') && ((datesFromApi[idxOfDay]) == '1')){
+                        dt.body[em.nid] = "В";
+                    }
+
 
 
                 })
@@ -63,6 +71,7 @@ let app = new Vue({
 
             this.tabel = Tres.data;
             this.employees = Eres.data;
+          //  this.changeOnServer();
         }))
 
     },
