@@ -17,11 +17,11 @@
         <div class="row">
             <div class="col m1">Дата начала:</div>
             <div class="col m3">
-                <input type="text" class="kalendar" v-model.lazy="date1">
+                <input type="text" class="datepicker" v-model.lazy="date1">
             </div>
             <div class="col m1">Дата конца:</div>
             <div class="col m3">
-                <input type="text" class="kalendar" v-model.lazy="date2">
+                <input type="text" class="datepicker" v-model.lazy="date2">
             </div>
             <div class="col m2">
                 <div class="btn" @click="dateRange">Сформировать</div>
@@ -58,6 +58,8 @@
             </tr>
         </table>
     </div>
+
+    <script src="./src/js/kalendar.js"></script>
     <script src="./src/js/materializeWithKvartal.js"></script>
     <script src="./src/js/axios.js"></script>
     <script src="./src/js/vue.js"></script>

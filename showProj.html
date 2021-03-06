@@ -36,8 +36,8 @@
 
 
     <div class="row"> 
-        <div class="col m1"><input type="text" class="kalendar" v-model.lazy="filterSelect.fdate"></div>
-        <div class="col m1"><input type="text" class="kalendar" v-model.lazy="filterSelect.sdate"></div>
+        <div class="col m1"><input type="text" class="datepicker" v-model.lazy="filterSelect.fdate"></div>
+        <div class="col m1"><input type="text" class="datepicker" v-model.lazy="filterSelect.sdate"></div>
         <div class="col m1">
             <select v-model="filterSelect.bizness" id="bizness">
                 <option value=""  selected>Вид бизнеса</option>
@@ -81,14 +81,9 @@
         <div class="col m2">
 
             <select v-model="filterSelect.soprovod" id="soprovod">
-            
-                <option value="" selected>Сопровождающий</option>   
+<option value="" selected>Сопровождающий</option>   
 <option v-for="employee in employees" :value="employee['full_name']">{{employee['full_name']}}</option>
-
-
-
-
-            </select>
+</select>
 
 
         </div>
@@ -129,8 +124,6 @@
 
 
 
-
-
     <div id="projectModal" class="modal">
         <div class="modal-content">
           <h4>{{modal.project.nazvanie}}</h4>
@@ -141,7 +134,7 @@
     
         </div>
         <div class="modal-footer">
-          <a href="#!" class="modal-close waves-effect waves-green btn-flat" @click="closeModal('projectModal')">Закрыть</a>
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat">Закрыть</a>
         </div>
       </div>
     
@@ -158,8 +151,8 @@
 
 
 
-
-    <script src="./src/js/materializeWithKvartal.js"></script>
+<script src="./src/js/kalendar.js"></script>
+<script src="./src/js/materializeWithKvartal.js"></script>
     <script src="./src/js/axios.js"></script>
     <script src="./src/js/vue.js"></script>
     <script src="./src/js/showProj.js"></script>

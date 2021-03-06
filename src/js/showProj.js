@@ -11,7 +11,8 @@ let app = new Vue({
             zapusk: "",
             status: "",
             fdate: "",
-            sdate: ""
+            sdate: "",
+            soprovod: ""
 
         },
         filterInput: {
@@ -32,62 +33,44 @@ let app = new Vue({
         }
     },
     mounted: function () {
-        console.log("I AM mounted");
-        this.kalendar = kalendarSet();
+
         axios.get('../vendor/showProj.php')
-            .then(res => {
-                this.projects = res.data.reverse();
-            }, err => {
+        .then(res => {
+            this.projects = res.data.reverse();
+        }, err => {
                 M.toast({
                     html: "Ошибка " + err
                 })
             });
-
-        axios.get('../vendor/showEmployees.php')
+            
+            axios.get('../vendor/showEmployees.php')
             .then(res => {
-
-
+                
+                
                 this.employees = res.data;
-
-                Vue.nextTick(function () {
-                    M.AutoInit();
+                
+                Vue.nextTick( ()=> {
+                    this.kalendar = Kalendar.set();
+                    M.FormSelect.init(document.querySelectorAll('select'))
+                  
                 })
-
-
+                
+                
             })
-
-            this.modal.modal = M.Modal.init(document.getElementById('projectModal'), {
-                dismissible: false
-            });
-
-
+            
+            this.modal.modal = M.Modal.init(document.getElementById('projectModal'));
+            this.modal.modal.$overlay[0].onclick  = ()=>{
+                this.modal.modal.close();
+            }
+      
+            
+      
     },
     methods: {
 
-        closeModal: function (e) {
-            console.log(e)
-          if(e == 'projectModal'){
-              console.log(e)
-              this.modal.modal.close();
-          }else {
-
-            this.kalendar.forEach(element => {
-                if (element.isOpen) {
-                    element.close();
-
-
-                }
-
-            });
-
-          }
-
-
-
-
-
-        },
+    
         setDate: function (type) {
+
 
 
             this.kalendar.forEach(element => {
@@ -104,9 +87,7 @@ let app = new Vue({
                         element.setInputValue(element.el.value = ['', 'I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1) / 3)] + ' ' + element.calendars[0].year)
 
                     }
-                    console.log(element)
-                    console.log(element.el)
-                    console.log(element.calendars)
+           
                     element.close();
 
 
@@ -127,7 +108,7 @@ let app = new Vue({
             this.sort.r = 1;
             this.sort.column = '';
             Vue.nextTick(function () {
-                M.AutoInit();
+                M.FormSelect.init(document.querySelectorAll('select'))
             })
 
         },
@@ -151,6 +132,8 @@ let app = new Vue({
         openProject(project){
 this.modal.project = project;
 this.modal.modal.open();
+
+
 
         }
     },
@@ -205,97 +188,5 @@ this.modal.modal.open();
 
 
 
-//КАЛЕНДАРИ
 
 
-function kalendarSet() {
-    return M.Datepicker.init(document.querySelectorAll('.kalendar'),
-
-        {
-
-
-            i18n: {
-
-                months: [
-                    'Январь',
-                    'Февраль',
-                    'Март',
-                    'Апрель',
-                    'Май',
-                    'Июнь',
-                    'Июль',
-                    'Август',
-                    'Сентябрь',
-                    'Октябрь',
-                    'Ноябрь',
-                    'Декабрь'
-                ],
-
-                monthsShort: [
-                    'Январь',
-                    'Февраль',
-                    'Март',
-                    'Апрель',
-                    'Май',
-                    'Июнь',
-                    'Июль',
-                    'Август',
-                    'Сентябрь',
-                    'Октябрь',
-                    'Ноябрь',
-                    'Декабрь'
-                ],
-                weekdays: [
-                    'Понедельник',
-                    'Вторник',
-                    'Среда',
-                    'Четверг',
-                    'Пятница',
-                    'Суббота',
-                    'Воскресенье'
-                ],
-                weekdaysShort: ['Вс',
-                    'Пн',
-                    'Вт',
-                    'Ср',
-                    'Чт',
-                    'Пт ',
-                    'Сб ',
-
-                ],
-                weekdaysAbbrev: ['Вс',
-                    'Пн',
-                    'Вт',
-                    'Ср',
-                    'Чт',
-                    'Пт ',
-                    'Сб ',
-
-                ],
-                cancel: "Отмена",
-                clear: "Очистить",
-                done: "ОК"
-
-
-
-            },
-            firstDay: 1,
-            format: "dd mm yyyy",
-            minDate: new Date('2021 01 01'),
-            maxDate: new Date('2021 12 31'),
-            showDaysInNextAndPreviousMonths: true,
-            autoClose: true,
-            onOpen: function () {
-                var elems = document.querySelectorAll('.dropdown-trigger');
-                var instances = M.Dropdown.init(elems);
-            }
-
-
-
-        }
-
-
-    );
-    //КАЛЕНДАРИ
-
-}
