@@ -305,7 +305,10 @@ let app = new Vue({
                         });
 
                         // this.some.input = oldinput;
-                        this.history.write = true;
+                        Vue.nextTick(()=>{
+
+                            this.history.write = true;
+                        })
                     })
 
                     break;
