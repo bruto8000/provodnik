@@ -71,50 +71,8 @@ let app = new Vue({
     },
     methods: {
 
-        closeModal: function(e,v){
-            console.log(M.Datepicker)
-        this.kalendar.forEach(element => {
-           if(element.isOpen){
-               element.close();
-            
-
-           }
-     
-        });
-          
-       
       
-        },
-        setDate: function(type){
-
-
-            this.kalendar.forEach(element => {
-                if(element.isOpen){
-                    if(type == 'month'){
-                        
-                        element.setInputValue(element.calendars[0].month + ' ' + element.calendars[0].year )
-              //          element.el.value = element.calendars[0].month + ' ' + element.calendars[0].year 
-                    }else if (type == 'year'){
-
-                        element.setInputValue(element.calendars[0].year)
-   
-                    }else{
-                        element.setInputValue(    element.el.value = ['','I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1)/3)] + ' ' + element.calendars[0].year )
-                    
-                    }
-                    console.log(element)
-                    console.log(element.el)
-                    console.log(element.calendars)
-                    element.close();
-                 
      
-                }
-            })
-
-          
-    
-
-        },
 
         addProj: function () {
             try {

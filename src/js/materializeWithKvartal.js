@@ -9339,6 +9339,9 @@ $jscomp.polyfill = function (e, r, p, m) {
         this._handleInputChangeBound = this._handleInputChange.bind(this);
         this._handleCalendarClickBound = this._handleCalendarClick.bind(this);
         this._finishSelectionBound = this._finishSelection.bind(this);
+        this._monthSelectBound = this._monthSelect.bind(this);
+        this._kvartalSelectBound = this._kvartalSelect.bind(this);
+        this._yearSelectBound = this._yearSelect.bind(this);
         this._handleMonthChange = this._handleMonthChange.bind(this);
         this._closeBound = this.close.bind(this);
 
@@ -9347,6 +9350,11 @@ $jscomp.polyfill = function (e, r, p, m) {
         this.el.addEventListener('change', this._handleInputChangeBound);
         this.calendarEl.addEventListener('click', this._handleCalendarClickBound);
         this.doneBtn.addEventListener('click', this._finishSelectionBound);
+
+        this.monthBtn.addEventListener('click', this._monthSelectBound);
+        this.kvartalBtn.addEventListener('click', this._kvartalSelectBound);
+        this.yearBtn.addEventListener('click', this._yearSelectBound);
+
         this.cancelBtn.addEventListener('click', this._closeBound);
 
         if (this.options.showClearBtn) {
@@ -9370,6 +9378,12 @@ $jscomp.polyfill = function (e, r, p, m) {
           this.clearBtn = this.modalEl.querySelector('.datepicker-clear');
         }
         this.doneBtn = this.modalEl.querySelector('.datepicker-done');
+        this.monthBtn = this.modalEl.querySelector('.datepicker-month');
+        this.kvartalBtn = this.modalEl.querySelector('.datepicker-kvartal');
+        this.yearBtn = this.modalEl.querySelector('.datepicker-year');
+        
+
+
         this.cancelBtn = this.modalEl.querySelector('.datepicker-cancel');
 
         this.formats = {
@@ -9536,7 +9550,31 @@ $jscomp.polyfill = function (e, r, p, m) {
         this.setInputValue();
         this.close();
       }
+    },
+    {
+        key: "_monthSelect",
+        value: function _monthSelect() {
+          this.setInputValue(this.calendars[0].month + ' ' + this.calendars[0].year);
+          this.close();
+        }
+      },
+      
+      
 
+      {
+          key: "_kvartalSelect",
+          value: function _kvartalSelect() {
+            this.setInputValue(['', 'I', 'II', "III", "IV"][Math.ceil((this.calendars[0].month + 1) / 3)] + ' ' + this.calendars[0].year);
+            this.close();
+          }
+        },   
+        {    
+            key: "_yearSelect",
+            value: function _yearSelect() {
+              this.setInputValue(this.calendars[0].year);
+              this.close();
+            }
+          
       /**
        * Open Datepicker
        */
@@ -9642,11 +9680,11 @@ $jscomp.polyfill = function (e, r, p, m) {
 
   Datepicker._template = ['<div class= "modal datepicker-modal">', '<div class="modal-content datepicker-container">', '<div class="datepicker-date-display">', '<span class="year-text"></span>', '<span class="date-text"></span>', `
 <br>
-  <div class="btn" style="margin: 10px" onclick="app.setDate('month')">Месяц</div>
+  <div class="btn datepicker-month" style="margin: 10px" >Месяц</div>
   <br>
-  <div class="btn" style="margin: 10px" onclick="app.setDate('kvartal')">Квартал</div>
+  <div class="btn datepicker-kvartal" style="margin: 10px" >Квартал</div>
   <br>
-  <div class="btn" style="margin: 10px" onclick="app.setDate('year')">Год</div>
+  <div class="btn datepicker-year" style="margin: 10px" >Год</div>
 
 </ul>
 

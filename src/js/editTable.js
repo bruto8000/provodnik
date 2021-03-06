@@ -466,38 +466,7 @@ let y = this.some.L.Y - this.some.F.Y;
 
 
         },
-        setDate: function (type) {
-
-
-            this.kalendar.forEach((element, idx, arr) => {
-                if (element.isOpen) {
-                    if (type == 'month') {
-
-                        element.setInputValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12][element.calendars[0].month] + ' ' + element.calendars[0].year)
-                        idx = Number(!idx);
-
-                        arr[idx].setInputValue([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12][element.calendars[0].month] + ' ' + element.calendars[0].year)
-                    } else if (type == 'year') {
-
-                        element.setInputValue(element.calendars[0].year)
-                        idx = Number(!idx);
-                        arr[idx].setInputValue(element.calendars[0].year)
-                    } else {
-                        element.setInputValue(['', 'I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1) / 3)] + ' ' + element.calendars[0].year)
-                        idx = Number(!idx);
-                        arr[idx].setInputValue(['', 'I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1) / 3)] + ' ' + element.calendars[0].year)
-                    }
-
-                    element.close();
-
-
-                }
-            })
-
-            this.dateRange();
-
-
-        },
+  
         exportToExcel: function () {
 
 

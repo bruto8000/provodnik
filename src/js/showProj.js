@@ -69,35 +69,7 @@ let app = new Vue({
     methods: {
 
     
-        setDate: function (type) {
-
-
-
-            this.kalendar.forEach(element => {
-                if (element.isOpen) {
-                    if (type == 'month') {
-
-                        element.setInputValue(element.calendars[0].month + ' ' + element.calendars[0].year)
-                        //          element.el.value = element.calendars[0].month + ' ' + element.calendars[0].year 
-                    } else if (type == 'year') {
-
-                        element.setInputValue(element.calendars[0].year)
-
-                    } else {
-                        element.setInputValue(element.el.value = ['', 'I', 'II', "III", "IV"][Math.ceil((element.calendars[0].month + 1) / 3)] + ' ' + element.calendars[0].year)
-
-                    }
-           
-                    element.close();
-
-
-                }
-            })
-
-
-
-
-        },
+     
         resetFilter: function () {
             for (prop in this.filterSelect) {
                 this.filterSelect[prop] = ''
