@@ -436,6 +436,8 @@ let y = this.some.L.Y - this.some.F.Y;
 console.log(keepHistory)
 if(!keepHistory){
     this.history.arrOfHistory = [];
+    this.history.isLast = true;
+    this.history.isFirst = true;
 }
             this.some.somes.forEach(element => {
                 element.somes = [];
@@ -642,6 +644,8 @@ console.log("Forwar")
             let arr = []
             this.some.somes.forEach(e=>{
                 e.somes.forEach(ie=>{
+               
+                    e.body[ie] =  e.body[ie].toUpperCase();
                     arr.push(e.body[ie]);
                 })
             })

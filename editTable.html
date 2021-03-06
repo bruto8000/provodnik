@@ -51,8 +51,8 @@
             </tr>
             <tr v-for="employee in employees">
                 <td>{{employee['full_name']}}</td>
-                <td v-for="day in tabelFiltred" class="center"  :class="{red : day.somes.includes(employee.nid),
-                     ' pink accent-1' :  day.presomes.includes(employee.nid) }" @mouseover="preEnterSome(day,employee.nid)"><input class="center"  :class="{
+                <td v-for="day in tabelFiltred" class="center"  :class="{red : day.somes.includes(employee.nid.trim()),
+                     ' pink accent-1' :  day.presomes.includes(employee.nid.trim()) }" @mouseover="preEnterSome(day,employee.nid.trim())"><input class="center"  :class="{
                     
                     green : day.body[employee.nid] == 'В',
                     blue : day.body[employee.nid] == 'О',
@@ -61,7 +61,7 @@
                 
                 
                 " @click="enterSome(day, employee.nid)"  type="text"
-                        v-model="day.body[employee.nid]" name="" >
+                        v-model.trim="day.body[employee.nid]" name="" >
                 </td>
 
             </tr>
