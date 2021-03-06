@@ -5,6 +5,14 @@
 let app = new Vue({
     el: "#app",
     data: {
+        history: {
+            write: true,
+            arrOfHistory:  [],
+            copy: false,
+            isLast: true,
+            isFirst: true,
+            diff: 0
+          },
         trueNID: [],
         employees: [],
         kalendar: [],
@@ -54,15 +62,9 @@ let app = new Vue({
                     if (!dt.body[em.nid]) {
                         dt.body[em.nid] = '';
                     }
-                    // console.log((dt.body[em.nid] == '') && ((datesFromApi[idxOfDay] == '0')) )
-         
-                    if((dt.body[em.nid] == '') && ((datesFromApi[idxOfDay]) == '1')){
+                     if((dt.body[em.nid] == '') && ((datesFromApi[idxOfDay]) == '1')){
                         dt.body[em.nid] = "В";
-                    }
-
-
-
-                })
+                    } })
             })
             Eres.data.forEach(em => {
                 this.trueNID.push(em.nid)
@@ -235,14 +237,9 @@ let app = new Vue({
                     });
 
 
-                    this.some.somes.forEach(element => {
-                        element.somes = [];
-                        element.presomes = [];
-                    });
-
-                    this.some.step = 1;
-                    this.some.somes = [];
-                    this.some.input = '';
+              this.clearSome(false);
+              this.some.step = 1;
+          
 
                     break;
                 }
@@ -275,24 +272,40 @@ let app = new Vue({
                     this.some.F.Y = this.trueNID.indexOf(who);
                     this.some.L.X = this.some.F.X + x;
                     this.some.L.Y = this.some.F.Y + y;
-                    let oldinput = this.some.input;
+                    // let oldinput = this.some.input;
 
+                    if(!this.history.copy){
 
+               
                     this.some.somes.forEach(element => {
                         element.somes.forEach((v, idx, arr) => {
                             element.body[v] = " ";
                             element.presomes = [];
                         })
                     });
-
-
-
-                    this.clearSome();
+                }
+                    this.history.write = false;
+                    this.history.copy= false;
+                    this.clearSome(true);
                     this.some.step = 3;
                     this.modifSome();
                     Vue.nextTick(e => {
 
-                        this.some.input = oldinput;
+                        let i = 0;
+        
+                        this.some.somes.forEach(element => {
+                            element.somes.forEach((v, idx, arr) => {
+                                element.body[v] = this.history.arrOfHistory[this.history.arrOfHistory.length-1][i];
+                                // console.log(this.history[this.history.arrOfHistory.length-1][i])
+                          console.log(this.history.arrOfHistory[this.history.arrOfHistory.length-1][i])
+                                console.log([i])
+                                element.presomes = [];
+                                i++;
+                            })
+                        });
+
+                        // this.some.input = oldinput;
+                        this.history.write = true;
                     })
 
                     break;
@@ -405,8 +418,7 @@ let y = this.some.L.Y - this.some.F.Y;
 
 
                     this.some.somes.push(element);
-                    console.log(this.some.F.Y, "TRUENUD")
-                    console.log(this.some.L.Y + 1, "TRUENUD")
+             
 
                     element.somes = this.trueNID.slice(this.some.F.Y, this.some.L.Y + 1);
                     element.presomes = [];
@@ -420,8 +432,11 @@ let y = this.some.L.Y - this.some.F.Y;
 
 
         },
-        clearSome: function () {
-
+        clearSome: function (keepHistory) {
+console.log(keepHistory)
+if(!keepHistory){
+    this.history.arrOfHistory = [];
+}
             this.some.somes.forEach(element => {
                 element.somes = [];
                 element.presomes = [];
@@ -493,6 +508,64 @@ let y = this.some.L.Y - this.some.F.Y;
             })()
 
             tableToExcel(document.getElementById('allTable'), 'Табель вывод' + this.range[0] + '-' + this.range[this.range.length - 1])
+        },
+        moveHistory: function(direction) {
+
+            if(this.some.step != 3 ){   M.toast({html: "История работает только для множества"})   ;return;}
+            if(!direction){
+                //BACK
+                console.log("BACK")
+                this.history.isLast = false;
+
+
+         
+ this.history.diff ++;
+ if(((this.history.arrOfHistory.length - 1) -this.history.diff ) == 0){
+     this.history.isFirst = true;
+ }
+                this.history.write = false;
+                let i = 0;
+        
+                this.some.somes.forEach(element => {
+                    element.somes.forEach((v, idx, arr) => {
+                        element.body[v] = this.history.arrOfHistory[(this.history.arrOfHistory.length-1)-this.history.diff][i];
+                            i++;
+                    })
+                });
+
+                // this.some.input = oldinput;
+                Vue.nextTick(()=>{
+                    this.history.write = true;
+                })
+       
+
+
+            }else{
+               
+console.log("Forwar")
+ this.history.diff--;
+ if(this.history.diff == 0){
+    this.history.isLast = true;
+ }
+ this.history.isFirst = false;
+                this.history.write = false;
+                let i = 0;
+        
+                this.some.somes.forEach(element => {
+                    element.somes.forEach((v, idx, arr) => {
+                        element.body[v] = this.history.arrOfHistory[(this.history.arrOfHistory.length-1)-this.history.diff][i];
+                            i++;
+                    })
+                });
+
+                Vue.nextTick(()=>{
+                    this.history.write = true;
+                })
+       
+
+
+
+            }
         }
 
     },
@@ -510,12 +583,39 @@ let y = this.some.L.Y - this.some.F.Y;
         date1: function (n, o) {
             if (n.split(' ').length == 3 && this.date2.split(' ').length == 3) {
                 this.dateRange();
+                return;
             }
+            if(n.split(' ').length == 2 || n.split(' ').length == 1){
+                this.date2 = n;
+                this.dateRange();
+            }
+            return;
         },
         date2: function (n, o) {
             if (n.split(' ').length == 3 && this.date1.split(' ').length == 3) {
                 this.dateRange();
+                return;
             }
+            if(n.split(' ').length == 2 || n.split(' ').length == 1){
+                this.date1 = n;
+                this.dateRange();
+                return;
+            }
+            return;
+        },
+        someArrInput: function(n,o){
+            if(!this.history.write || !n.length) return;
+            console.log("NEW")
+            console.log('isLast', this.history.isLast)
+            if(!(this.history.isLast)){
+                console.log(this.history.arrOfHistory.slice(0, - (this.history.diff)))
+                this.history.arrOfHistory = this.history.arrOfHistory.slice(0, - (this.history.diff))
+            }
+            this.history.arrOfHistory.push(n);
+            this.history.isLast = true;
+            this.history.isFirst = false;
+            this.history.diff = 0;
+            if(this.history.arrOfHistory.length==1){this.history.isFirst = true;}else{this.history.isFirst = false;} 
         }
     },
     computed: {
@@ -537,6 +637,15 @@ let y = this.some.L.Y - this.some.F.Y;
                 return []
             }
 
+        },
+        someArrInput: function(){
+            let arr = []
+            this.some.somes.forEach(e=>{
+                e.somes.forEach(ie=>{
+                    arr.push(e.body[ie]);
+                })
+            })
+            return arr;
         }
     },
     filters: {
@@ -584,4 +693,3 @@ let y = this.some.L.Y - this.some.F.Y;
 
 
 
-//КАЛЕНДАРИ
