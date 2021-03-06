@@ -4,3 +4,7 @@
 .hover__bg{
     cursor: pointer;
 }
+
+thead {
+    width: 45vh;
+}

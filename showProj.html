@@ -14,12 +14,57 @@
 
 <div id="app">
 
+    <div class="row">
+
+
 <h1 class="center">
     Проекты
    
     <span class="btn-small" @click="resetFilter">СБРОС</span>
+    <div class="btn z-depth-3" style="width: 40px; padding: 0;" @click="exportToExcel"> <img src="./EX.png" width="100%" alt=""></div>
 </h1>
-<div class="row"> 
+
+</div>
+
+<table id="allTable" v-show="false" v-if="table.created">
+
+        <tr>
+         
+                <th class="" @click="sortChange('fdate')">Дата спуска</th>
+                <th class="" @click="sortChange('sdate')">Дата запуска</th>
+                <th class="" @click="sortChange('bizness')">Вид бизнеса</th>
+                <th class="" @click="sortChange('zapusk')">Тип запуска </th>
+                <th class="" @click="sortChange('nazvanie')">Название</th>
+                <th class="" @click="sortChange('opisanie')">Описание</th>
+                <th class="" @click="sortChange('soprovod')">Сопровождающий</th>
+                <th class="" @click="sortChange('zakazchik')">Заказчик</th>
+                <th class="" @click="sortChange('status')">Статус</th>
+     
+        </tr>
+
+      
+ 
+
+
+
+        <tr class="row hover__bg" v-for="project in projectsFiltred" @click="openProject(project)">
+            <td class="">{{project.fdate}}</td>
+            <td class="">{{project.sdate}}</td>
+            <td class="">{{project.bizness}}</td>
+            <td class="">{{project.zapusk}}</td>
+            <td class="">{{project.nazvanie}}</td>
+            <td class="">{{project.opisanie}}</td>
+            <td class="">{{project.soprovod}}</td>
+            <td class="">{{project.zakazchik}}</td>
+            <td class="">{{project.status}}</td>
+
+        </tr>
+
+
+
+</table> 
+
+<div class="row" style="padding-right:16px"> 
     <div class="col m1" @click="sortChange('fdate')">Дата спуска</div>
     <div class="col m1" @click="sortChange('sdate')">Дата запуска</div>
     <div class="col m1" @click="sortChange('bizness')">Вид бизнеса</div>
@@ -32,10 +77,10 @@
     
     
     
-    </div>
+    </div> 
 
 
-    <div class="row"> 
+    <div class="row" style="padding-right:16px" > 
         <div class="col m1"><input type="text" class="datepicker" v-model.lazy="filterSelect.fdate"></div>
         <div class="col m1"><input type="text" class="datepicker" v-model.lazy="filterSelect.sdate"></div>
         <div class="col m1">
@@ -104,8 +149,8 @@
         
         
         
-        </div>
-<div style="max-height: 500px; overflow: auto;">
+        </div> 
+ <div style="max-height: 70vh; overflow: auto;">
    
         
         <div class="row hover__bg" v-for="project in projectsFiltred" @click="openProject(project)">
@@ -120,7 +165,7 @@
             <div class="col m1">{{project.status}}</div>
 
         </div>
-    </div>
+    </div> 
 
 
 

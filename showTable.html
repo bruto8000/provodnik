@@ -46,9 +46,9 @@
             <tr v-for="employee in employees">
                 <td>{{employee['full_name']}}</td>
                 <td v-for="day in tabelFiltred" class="center"  :class="{
-                    green : day.body[employee.nid] == 'В',
-                    blue : day.body[employee.nid] == 'О',
-                    yellow : day.body[employee.nid] == 'Б',
+                    green : day.body[employee.nid].trim() == 'В',
+                    blue : day.body[employee.nid].trim() == 'О',
+                    yellow : day.body[employee.nid].trim() == 'Б',
                 }
                 
                 

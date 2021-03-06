@@ -21,6 +21,7 @@ let app = new Vue({
         tabel: '',
         range: ["01 03 2021", "02 03 2021", "03 03 2021", "04 03 2021", "05 03 2021", "06 03 2021", "07 03 2021", "08 03 2021", "09 03 2021", "10 03 2021", "11 03 2021", "12 03 2021", "13 03 2021", "14 03 2021", "15 03 2021", "16 03 2021", "17 03 2021", "18 03 2021", "19 03 2021", "20 03 2021", "21 03 2021", "22 03 2021", "23 03 2021", "24 03 2021", "25 03 2021", "26 03 2021", "27 03 2021", "28 03 2021", "29 03 2021", "30 03 2021", "31 03 2021"],
         some: {
+            OFF: false,
             step: -1,
             F: {
                 X: '',
@@ -143,7 +144,12 @@ let app = new Vue({
             }
 
 
-
+if(endDate < startDate){
+    let y;
+    y = startDate;
+    startDate = endDate;
+    endDate = y;
+}
 
 
             let dates = []
@@ -319,6 +325,12 @@ let app = new Vue({
             }
         },
         preEnterSome: function (day, nid) {
+console.log('s')
+            if(this.some.OFF) return;
+this.some.OFF = true;
+setTimeout(() => {
+    this.some.OFF = false; 
+}, 0);
 
             if (!(this.some.step == 2 || this.some.step == 4)) {
                 return;
@@ -333,9 +345,10 @@ let app = new Vue({
 
                 this.some.PRE.X = this.tabelFiltred.indexOf(day);
                 this.some.PRE.Y = this.trueNID.indexOf(nid);
-
+                this.some.presomes = [];
                 this.tabelFiltred.forEach((element, idx) => {
                     element.presomes = [];
+                 
                     if (idx >= this.some.F.X && idx <= this.some.PRE.X) {
 
 
@@ -346,7 +359,7 @@ let app = new Vue({
                         return;
                     }
                 })
-
+             
             } else {
 
 
@@ -355,7 +368,7 @@ let app = new Vue({
                 this.some.PRE.Y = this.trueNID.indexOf(nid);
 let x = this.some.L.X - this.some.F.X;
 let y = this.some.L.Y - this.some.F.Y;
-
+this.some.presomes = [];
                 this.tabelFiltred.forEach((element, idx) => {
                     element.presomes = [];
                     if (idx >= this.some.PRE.X && idx <= this.some.PRE.X + x) {
@@ -369,7 +382,7 @@ let y = this.some.L.Y - this.some.F.Y;
                     }else{return;}
 
 
-                    this.$forceUpdate()
+           
 
                 });
 
@@ -444,8 +457,12 @@ if(!keepHistory){
 }
             this.some.somes.forEach(element => {
                 element.somes = [];
+              
+            });
+            this.some.presomes.forEach(element => {
                 element.presomes = [];
             });
+            
             this.some.step = -1;
 
             this.some.input = '';
@@ -571,6 +588,9 @@ console.log("Forwar")
 
 
             }
+        },
+        filterInput: function(day,emp){
+         day.body[emp] = day.body[emp].toUpperCase()
         }
 
     },
@@ -579,7 +599,7 @@ console.log("Forwar")
             if (this.some.step === 3) {
                 this.some.somes.forEach(element => {
                     element.somes.forEach(v => {
-                        element.body[v] = n;
+                        element.body[v] = n.toUpperCase();
                     })
                 });
             }
@@ -648,7 +668,7 @@ console.log("Forwar")
             this.some.somes.forEach(e=>{
                 e.somes.forEach(ie=>{
                
-                    e.body[ie] =  e.body[ie].toUpperCase();
+                   
                     arr.push(e.body[ie]);
                 })
             })
