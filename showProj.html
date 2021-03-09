@@ -195,7 +195,7 @@
 
 
 
-    <div id="projectModal" class="modal">
+    <!-- <div id="projectModal" class="modal">
         <div class="modal-content">
           <h4>{{modal.project.nazvanie}}</h4>
          <p>{{modal.project.opisanie}} </p>
@@ -207,9 +207,9 @@
         <div class="modal-footer">
           <a href="#!" class="modal-close waves-effect waves-green btn-flat">Закрыть</a>
         </div>
-      </div>
+      </div> -->
     
-
+<project-modal :project="projectForModal"></project-modal>
 
 </div>
 
@@ -221,7 +221,7 @@
 
 
 
-
+<script src="./src/js/components/projectModal.js"></script>
 <script src="./src/js/kalendar.js"></script>
 <script src="./src/js/materializeWithKvartal.js"></script>
     <script src="./src/js/axios.js"></script>

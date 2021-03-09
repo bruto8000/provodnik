@@ -34,7 +34,7 @@ let app = new Vue({
                 // });
                 this.employees = res.data;
                 Vue.nextTick(function () {
-                    M.AutoInit();
+                    M.FormSelect.init(document.querySelectorAll('select'));
                   })
          
 

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./src/css/materialize.css">
+    <link rel="stylesheet" href="./src/css/style.css">
+
+
+
+
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <title>Title</title>
+</head>
+<body>
+    
+
+<div id="app">
+
+ 
+<div class="row">
+    <div class="col m5">
+        <calendar  language="ru" :data-source="dataSource" enable-range-selection='true' render-style='border' @select-range="setRange" @mouse-on-day="setDay" render-style="background" class="table-no-100"></calendar>
+    </div>
+    <div class="col m7" v-show="currentProjects.length" style="overflow: auto; max-height: 95vh;">
+        <h3 v-show='!selected' >
+            Активности на выбранный день {{currentProjects.length }}:
+        </h3>
+        <h3 v-show='selected'>
+            Активности на выбранный период {{currentProjects.length }}:
+        </h3>
+
+<table>
+        <tr>
+         
+            <th class="" >Дата спуска</th>
+            <th class="" >Дата запуска</th>
+            <th class="" >Вид бизнеса</th>
+            <th class="" >Тип запуска </th>
+            <th class="" >Название</th>
+            <th class="" >Описание</th>
+            <th class="" >Сопровождающий</th>
+            <th class="" >Заказчик</th>
+            <th class="" >Статус</th>
+ 
+    </tr>
+
+
+
+            <tr class="row hover__bg" v-for="project in currentProjects" :key="project.id" @click="openProject(project)" >
+                <td class="">{{project.fdate}}</td>
+                <td class="">{{project.sdate}}</td>
+                <td class="">{{project.bizness}}</td>
+                <td class="">{{project.zapusk}}</td>
+                <td class="">{{project.nazvanie}}</td>
+                <td class="">{{project.opisanie}}</td>
+                <td class="">{{project.soprovod}}</td>
+                <td class="">{{project.zakazchik}}</td>
+                <td class="">{{project.status}}</td>
+    
+            </tr>
+    
+    
+    
+
+   
+
+</table>
+
+
+
+    </div>
+</div>
+   
+
+<project-modal :project='projectForModal'></project-modal>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/src/js/components/projectModal.js"></script>
+<script src="/src/js/components/Calendar.js"></script>
+<script src="/src/js/components/Calendar-lang.js"></script>
+   <script src="./src/js/materialize.js"></script>
+    <script src="./src/js/axios.js"></script>
+    <script src="./src/js/vue.js"></script>
+    <script src="./src/js/test.js"></script>
+</body>
+</html>

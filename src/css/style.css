@@ -18,3 +18,7 @@ thead {
 .sort__button {
     cursor:pointer;
 }
+
+.table-no-100 table{
+    width: auto;
+}

@@ -30,10 +30,10 @@ let app = new Vue({
             r: ''
         },
         employees: [],
-        modal: {
-            project: {
+     
+            projectForModal: {
 
-            }
+    
         }
     },
     mounted: function () {
@@ -62,10 +62,10 @@ let app = new Vue({
                 
             })
             
-            this.modal.modal = M.Modal.init(document.getElementById('projectModal'));
-            this.modal.modal.$overlay[0].onclick  = ()=>{
-                this.modal.modal.close();
-            }
+            // this.modal.modal = M.Modal.init(document.getElementById('projectModal'));
+            // this.modal.modal.$overlay[0].onclick  = ()=>{
+            //     this.modal.modal.close();
+            // }
       
             
       
@@ -106,8 +106,9 @@ let app = new Vue({
             }
         },
         openProject(project){
-this.modal.project = project;
-this.modal.modal.open();
+this.projectForModal = project;
+
+
 
 
 
@@ -181,6 +182,9 @@ this.modal.modal.open();
             })
 
         }
+    },
+    components: {
+        projectModal : projectModal
     }
 })
 
