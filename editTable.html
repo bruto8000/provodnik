@@ -36,37 +36,40 @@
         <button class="btn" @click="moveHistory(false)" :disabled="history.isFirst"> <i class="material-icons">arrow_back</i></button>
         <button class="btn" @click="moveHistory(true)" :disabled="history.isLast"><i class="material-icons">arrow_forward</i></button>
         <input type="text" placeholder="Для нескольких"   v-model='some.input'>
+        <div class="row">
+
+        </div>
         <div class="col m12" style="overflow: auto;">
 
   
-        <table cellspacing="2" border="1" cellpadding="5" class="responsive-table striped">
-            <tr>
-                <th></th>
-                <th v-for="day in tabelFiltred" class="center" >{{day.date}}</th>
-            </tr>
-            <tr>
-                <th></th>
-                <th v-for="day in tabelFiltred" class="center" >{{ day.date | dayOfWeek}}</th>
-
-            </tr>
-            <tr v-for="employee in employees">
-                <td>{{employee['full_name']}}</td>
-                <td v-for="day in tabelFiltred" class="center"  :class="{red : day.somes.includes(employee.nid),
-                     ' pink accent-1' :  day.presomes.includes(employee.nid) }" @mouseover="preEnterSome(day,employee.nid)"><input class="center"  :class="{
+            <table cellspacing="2" border="1" cellpadding="5" class="responsive-table striped">
+                <tr>
+                    <th></th>
+                    <th v-for="day in tabelFiltred" class="center" >{{day.date}}</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th v-for="day in tabelFiltred" class="center" >{{ day.date | dayOfWeek}}</th>
+    
+                </tr>
+                <tr v-for="employee in employees">
+                    <td>{{employee['full_name']}}</td>
+                    <td v-for="day in tabelFiltred" class="center"  :class="{red : day.somes.includes(employee.nid),
+                         ' pink accent-1' :  day.presomes.includes(employee.nid) }" @mouseover="preEnterSome(day,employee.nid)"><input class="center"  :class="{
+                        
+                        green : day.body[employee.nid].trim() == 'В',
+                        blue : day.body[employee.nid].trim() == 'О',
+                        yellow : day.body[employee.nid].trim() == 'Б',
+                    }
                     
-                    green : day.body[employee.nid].trim() == 'В',
-                    blue : day.body[employee.nid].trim() == 'О',
-                    yellow : day.body[employee.nid].trim() == 'Б',
-                }
-                
-                
-                " @click="enterSome(day, employee.nid)"  type="text"
-                        v-model="day.body[employee.nid]" name="" @input="filterInput(day, employee.nid)">
-                </td>
-
-            </tr>
-        </table>
-    </div>
+                    
+                    " @click="enterSome(day, employee.nid)"  type="text"
+                            v-model="day.body[employee.nid]" name="" @input="filterInput(day, employee.nid)">
+                    </td>
+    
+                </tr>
+            </table>
+        </div>
     </div>
     <script src="./src/js/kalendar.js"></script>
     <script src="./src/js/materializeWithKvartal.js"></script>

@@ -27,11 +27,14 @@
                 <div class="btn" @click="dateRange">Сформировать</div>
             </div>
             <div class="col m2">
-                <div class="btn" @click="exportToExcel">Экспортировать в Excell</div>
+                <div class="btn z-depth-3" style="width: 40px; padding: 0;border-radius: 50%;" @click="exportToExcel"> <img src="./EX.png" width="100%" style="border-radius: 50%;" alt=""></div>
+           
             </div>
         </div>
     
        
+<div class="col m12" style="overflow: auto;">
+
 
         <table cellspacing="2" border="1" cellpadding="5" class="responsive-table striped center" id="allTable">
             <tr>
@@ -57,6 +60,7 @@
 
             </tr>
         </table>
+    </div>
     </div>
 
     <script src="./src/js/kalendar.js"></script>

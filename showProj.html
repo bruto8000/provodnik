@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./src/css/materialize.css">
     <link rel="stylesheet" href="./src/css/style.css">
+    <link rel="stylesheet" href="./src/css/icons.css">
     <meta http-equiv="Cache-Control" content="no-cache" />
     <title>Title</title>
 </head>
@@ -21,7 +22,7 @@
     Проекты
    
     <span class="btn-small" @click="resetFilter">СБРОС</span>
-    <div class="btn z-depth-3" style="width: 40px; padding: 0;" @click="exportToExcel"> <img src="./EX.png" width="100%" alt=""></div>
+    <div class="btn z-depth-3" style="width: 40px; padding: 0; border-radius: 50%;" @click="exportToExcel"> <img src="./EX.png" width="100%" style="border-radius: 50%;" alt=""></div>
 </h1>
 
 </div>
@@ -64,16 +65,41 @@
 
 </table> 
 
+
+
+
+
+
+<div class="row p0 m0" style="padding-right:16px"> 
+
+
+    <div class="col m1 center" > <i v-show="sort.column == 'fdate' && sort.r ==1" class="material-icons">expand_less</i>  <i  v-show="sort.column == 'fdate' && sort.r ==-1"  class="material-icons">expand_more</i>  <i> </i> </div>
+    <div class="col m1 center"> <i  v-show="sort.column == 'sdate' && sort.r ==1" class="material-icons">expand_less</i> <i v-show="sort.column == 'sdate' && sort.r ==-1" class="material-icons">expand_more</i> </div>
+    <div class="col m1 center"> <i  v-show="sort.column == 'bizness' && sort.r ==1" class="material-icons">expand_less</i> <i  v-show="sort.column == 'bizness' && sort.r == -1" class="material-icons">expand_more</i></div>
+    <div class="col m1 center"><i   v-show="sort.column == 'zapusk' && sort.r ==1" class="material-icons">expand_less</i><i  v-show="sort.column == 'zapusk' && sort.r ==-1" class="material-icons">expand_more</i> </div>
+    <div class="col m1 center"><i v-show="sort.column == 'nazvanie' && sort.r ==1"  class="material-icons">expand_less</i><i  v-show="sort.column == 'nazvanie' && sort.r ==-1"  class="material-icons">expand_more</i> </div>
+    <div class="col m2 center"><i  v-show="sort.column == 'opisanie' && sort.r ==1" class="material-icons">expand_less</i><i v-show="sort.column == 'opisanie' && sort.r ==-1" class="material-icons">expand_more</i> </div>
+    <div class="col m2 center"><i  v-show="sort.column == 'soprovod' && sort.r ==1" class="material-icons">expand_less</i> <i  v-show="sort.column == 'soprovod' && sort.r ==-1"  class="material-icons">expand_more</i></div>
+    <div class="col m2 center"><i  v-show="sort.column == 'zakazchik' && sort.r ==1" class="material-icons">expand_less</i><i v-show="sort.column == 'zakazchik' && sort.r == -1" class="material-icons">expand_more</i> </div>
+    <div class="col m1 center"><i  v-show="sort.column == 'status' && sort.r ==1" class="material-icons">expand_less</i><i  v-show="sort.column == 'status' && sort.r ==-1" class="material-icons">expand_more</i> </div>
+    
+    
+    
+    </div> 
+
+
 <div class="row" style="padding-right:16px"> 
-    <div class="col m1" @click="sortChange('fdate')">Дата спуска</div>
-    <div class="col m1" @click="sortChange('sdate')">Дата запуска</div>
-    <div class="col m1" @click="sortChange('bizness')">Вид бизнеса</div>
-    <div class="col m1" @click="sortChange('zapusk')">Тип запуска </div>
-    <div class="col m1" @click="sortChange('nazvanie')">Название</div>
-    <div class="col m2" @click="sortChange('opisanie')">Описание</div>
-    <div class="col m2" @click="sortChange('soprovod')">Сопровождающий</div>
-    <div class="col m2" @click="sortChange('zakazchik')">Заказчик</div>
-    <div class="col m1" @click="sortChange('status')">Статус</div>
+
+
+    <div class="col m1 sort__button" @click="sortChange('fdate')" > <p class="p0 m0"> Дата спуска </p>  </div>
+    <div class="col m1 sort__button" @click="sortChange('sdate')">Дата запуска</div>
+    <div class="col m1 sort__button" @click="sortChange('bizness')">Вид бизнеса</div>
+    <div class="col m1 sort__button" @click="sortChange('zapusk')">Тип запуска </div>
+    <div class="col m1 sort__button" @click="sortChange('nazvanie')">Название</div>
+    <div class="col m2 sort__button" @click="sortChange('opisanie')">Описание</div>
+    <div class="col m2 sort__button" @click="sortChange('soprovod')">Сопровождающий</div>
+    <div class="col m2 sort__button" @click="sortChange('zakazchik')">Заказчик</div>
+    <div class="col m1 sort__button" @click="sortChange('status')">Статус</div>
     
     
     

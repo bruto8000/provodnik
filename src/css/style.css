@@ -8,3 +8,13 @@
 thead {
     width: 45vh;
 }
+
+.p0 {
+    padding: 0;
+}
+.m0{
+    margin: 0;
+}
+.sort__button {
+    cursor:pointer;
+}

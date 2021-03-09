@@ -26,7 +26,8 @@ let app = new Vue({
 
         },
         sort: {
-            column: ""
+            column: "",
+            r: ''
         },
         employees: [],
         modal: {
