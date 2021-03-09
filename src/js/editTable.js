@@ -525,6 +525,8 @@ if(!keepHistory){
                         worksheet: name || 'Worksheet',
                         table: table.innerHTML
                     }
+                    console.log(table)
+                    console.log(ctx)
                     window.location.href = uri + base64(format(template, ctx))
                 }
             })()
@@ -707,6 +709,9 @@ console.log("Forwar")
 
 
         }
+    },
+    components: {
+        preloader: preloader
     }
 
 

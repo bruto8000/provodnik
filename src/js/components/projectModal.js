@@ -2,21 +2,34 @@ let projectModal = {props: ['project'],
 
 data(){
     return {
-modal: {}
+modal: {},
+projectinside: {}
     }
 },
 watch :{
-project : function(n,o){
+
+project:function(n,o){
+
+    if(!n.id)return;
     this.modal.open();
-}
+},
+
 },
 computed: {
+ 
    
 }
 ,
 mounted(){
 
-    this.modal = M.Modal.init(document.getElementById('projectModal'));
+    this.modal = M.Modal.init(document.getElementById('projectModal'),{
+        inDuration: 0,
+        outDuration: 0,
+        onCloseEnd: function(){
+            console.log(this)
+            this.$emit('change-project-to-null')
+        }.bind(this)
+    });
 
         this.modal.$overlay[0].onclick  = ()=>{
             this.modal.close();
@@ -39,7 +52,7 @@ template : `
 
 </div>
 <div class="modal-footer">
-  <a href="#!" class="modal-close waves-effect waves-green btn-flat">Закрыть</a>
+  <a href="#!" class="modal-close  btn-flat">Закрыть</a>
 </div>
 </div>
 

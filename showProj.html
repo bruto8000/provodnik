@@ -14,7 +14,7 @@
     
 
 <div id="app">
-
+    <preloader ms="0"></preloader>
     <div class="row">
 
 
@@ -209,7 +209,7 @@
         </div>
       </div> -->
     
-<project-modal :project="projectForModal"></project-modal>
+<project-modal :project="projectForModal" @change-project-to-null='openProject({id:null})'></project-modal>
 
 </div>
 
@@ -220,7 +220,7 @@
 
 
 
-
+<script src="./src/js/components/preloader.js"></script>
 <script src="./src/js/components/projectModal.js"></script>
 <script src="./src/js/kalendar.js"></script>
 <script src="./src/js/materializeWithKvartal.js"></script>

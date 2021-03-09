@@ -14,7 +14,7 @@
 
 <body>
     <div id="app">
-
+        <preloader ms="0"></preloader>
         <div class="row">
             <div class="col m1">Дата начала:</div>
             <div class="col m3">
@@ -42,7 +42,7 @@
         <div class="col m12" style="overflow: auto;">
 
   
-            <table cellspacing="2" border="1" cellpadding="5" class="responsive-table striped">
+            <table  class="responsive-table striped">
                 <tr>
                     <th></th>
                     <th v-for="day in tabelFiltred" class="center" >{{day.date}}</th>
@@ -70,7 +70,10 @@
                 </tr>
             </table>
         </div>
+   
     </div>
+
+    <script src="./src/js/components/preloader.js"></script>
     <script src="./src/js/kalendar.js"></script>
     <script src="./src/js/materializeWithKvartal.js"></script>
     <script src="./src/js/axios.js"></script>

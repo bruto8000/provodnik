@@ -133,6 +133,9 @@ this.project.opisanieBody = this.editor.html.get().replace(/'/ig, '"');
          this.undate =    !this.undate;
          this.project.sdate = this.undate ? "Не определена" : "";
         }    
+    },
+    components: {
+        preloader: preloader
     }
 })
 

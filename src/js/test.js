@@ -104,6 +104,7 @@ this.projectForModal = project;
     },
     components: {
         calendar : Calendar,
-        projectModal: projectModal
+        projectModal: projectModal,
+        preloader: preloader
     }
 })

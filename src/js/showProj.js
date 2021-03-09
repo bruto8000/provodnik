@@ -106,11 +106,8 @@ let app = new Vue({
             }
         },
         openProject(project){
+            console.log(project)
 this.projectForModal = project;
-
-
-
-
 
         },
         exportToExcel: function () {
@@ -184,7 +181,9 @@ this.projectForModal = project;
         }
     },
     components: {
-        projectModal : projectModal
+        projectModal : projectModal,
+            preloader: preloader
+   
     }
 })
 
