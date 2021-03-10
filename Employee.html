@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./src/css/materialize.css">
+    <link rel="stylesheet" href="./src/css/style.css">
+    <link rel="stylesheet" href="./src/css/icons.css">
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <title>Title</title>
+</head>
+<body>
+    
+
+<div id="app" class="container">
+    <preloader ms="0"></preloader>
+
+
+<div>
+    <h3 class="center">Добавление сотрудника</h3>
+<br>
+
+    <div class="row">
+        <div class="col m4">
+            Сотрудник (ФИО)
+        </div>
+        <div class="col m4">
+           Логин *
+        </div>
+        <div class="col m4">
+           Уникальный ID
+         </div>
+        </div>
+        
+        
+        <div class="row">
+            <div class="col m4">
+               <input type="text" name="" id="" v-model="full_name">
+            </div>
+            <div class="col m4">
+                <input type="text" name="" id="" v-model="login">
+            </div>
+            <div class="col m4">
+                <input type="text" name="" id="" v-model="nid">
+             </div>
+            </div>
+        
+        
+        <div class="row center">
+            <div class="btn-large " @click="addToServ">
+                Добавить
+            </div>
+        </div>
+        
+        
+
+</div>
+
+<div class="row">
+    <h3 class="center">
+        Список сотрудников
+    </h3>
+</div>
+<div class="row" v-for="employee in employees">
+
+    <div class="col m5"> {{employee.full_name}}</div>
+    <div class="col m3"> {{employee.login}} </div>
+    <div class="col m3">  {{employee.nid}}</div>
+    <div class="col m1"> <i class="material-icons" style="cursor: pointer;" @click="editModalOpen(employee)">edit</i>  <i @click="deleteModalOpen(employee)" class="material-icons" style="cursor: pointer;">delete</i></div>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-content">
+      <h4>Редактирование сотрудника</h4>
+      <div class="row">
+        <div class="col m4">
+            Сотрудник (ФИО)
+        </div>
+        <div class="col m4">
+           Логин
+        </div>
+        <div class="col m4">
+           Уникальный ID
+         </div>
+        </div>
+        
+        
+        <div class="row">
+            <div class="col m4">
+               <input type="text" name="" id="" v-model="EditableEmployee.full_name">
+            </div>
+            <div class="col m4">
+                <input type="text" name="" id="" v-model="EditableEmployee.login">
+            </div>
+            <div class="col m4">
+                <input type="text" name="" id="" v-model="EditableEmployee.nid" disabled>
+             </div>
+            </div>
+
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" waves-green btn-flat modal-close" @click='editOnServ'>Изменить</a>
+      <a href="#!" class=" waves-green btn-flat modal-close">Закрыть</a>
+    </div>
+  </div>
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <h4>Удаление сотрудника</h4>
+      <p>Внимание, сотрудник будет удален! Данные связанные с сотрудником останутся, но отображаться не будут. Вы уверены?</p>
+
+      <div class="row">
+        <div class="col m4">
+            Сотрудник (ФИО)
+        </div>
+        <div class="col m4">
+           Логин
+        </div>
+        <div class="col m4">
+           Уникальный ID
+         </div>
+        </div>
+        <div class="row">
+            <div class="col m4">
+              {{EditableEmployee.full_name}}
+            </div>
+            <div class="col m4">
+                {{EditableEmployee.login}}
+            </div>
+            <div class="col m4">
+                {{EditableEmployee.nid}}
+             </div>
+            </div>
+
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close btn-flat" @click="deleteFromServ">Удалить</a>
+      <a href="#!" class="modal-close btn-flat">Закрыть</a>
+    </div>
+  </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="./src/js/components/preloader.js"></script>
+    <script src="./src/js/materialize.js"></script>
+    <script src="./src/js/axios.js"></script>
+    <script src="./src/js/vue.js"></script>
+    <script src="./src/js/Employee.js"></script>
+</body>
+</html>

@@ -13,18 +13,26 @@ let app = new Vue({
             soprovod: "",
             status: "",
             zakazchik: "",
-          //  opisanieBody: "", Will added Automaticly
-          
+            //  opisanieBody: "", Will added Automaticly
+
         },
-        
+
         editor: '',
         undate: false,
-        employees: []
+        employees: [],
+        kalendar: []
     },
     mounted: function () {
         console.log("I AM mounted");
-        this.kalendar =  Kalendar.set();
-        console.log(  this.kalendar);
+        this.kalendar[0] = Kalendar.set({
+            showMonthBtn: true
+        }, '#sdate');
+        this.kalendar[1] = Kalendar.set({
+
+        }, '#fdate');
+
+
+        console.log(this.kalendar);
         axios.get('../vendor/showEmployees.php')
             .then(res => {
 
@@ -35,48 +43,48 @@ let app = new Vue({
                 this.employees = res.data;
                 Vue.nextTick(function () {
                     M.FormSelect.init(document.querySelectorAll('select'));
-                  })
-         
+                })
 
 
-                  
 
-            this.editor = new FroalaEditor('#pbody', {
-                // Set the file upload URL.
-    
-                toolbarButtons: [
-                    ['bold', 'italic', 'underline', '|', 'fontSize', 'color', 'formatOL', 'formatUL',
-                        'insertLink', 'insertTable', 'insertImage', 'html', 'insertFileRR'
-                    ]
-                ],
-                fileUploadURL: 'upload_file.php',
-                fileUploadParams: {
-                    id: 'my_editor'
-                },
-                imageUploadURL: 'upload_image.php',
-                imageUploadParams: {
-                    id: 'my_editor2'
-                },
-                language: 'ru'
-            })
+
+
+                this.editor = new FroalaEditor('#pbody', {
+                    // Set the file upload URL.
+
+                    toolbarButtons: [
+                        ['bold', 'italic', 'underline', '|', 'fontSize', 'color', 'formatOL', 'formatUL',
+                            'insertLink', 'insertTable', 'insertImage', 'html', 'insertFileRR'
+                        ]
+                    ],
+                    fileUploadURL: 'upload_file.php',
+                    fileUploadParams: {
+                        id: 'my_editor'
+                    },
+                    imageUploadURL: 'upload_image.php',
+                    imageUploadParams: {
+                        id: 'my_editor2'
+                    },
+                    language: 'ru'
+                })
 
             });
 
-    
-    
-          
+
+
+
 
 
 
     },
     methods: {
 
-      
-     
+
+
 
         addProj: function () {
             try {
-            
+
 
                 for (prop in this.project) {
                     if (!this.project[prop]) {
@@ -86,10 +94,10 @@ let app = new Vue({
                 }
 
 
-            if( this.editor.html.get().length < 50){
+                if (this.editor.html.get().length < 50) {
 
-                throw new Error("Описание слишком короткое.");
-            }
+                    throw new Error("Описание слишком короткое.");
+                }
 
             } catch (e) {
 
@@ -101,7 +109,7 @@ let app = new Vue({
 
             }
 
-this.project.opisanieBody = this.editor.html.get().replace(/'/ig, '"');
+            this.project.opisanieBody = this.editor.html.get().replace(/'/ig, '"');
 
             axios.post('../vendor/addProj.php', JSON.stringify(this.project))
                 .then((r) => {
@@ -129,10 +137,10 @@ this.project.opisanieBody = this.editor.html.get().replace(/'/ig, '"');
 
 
         },
-        undateZapusk: function(){
-         this.undate =    !this.undate;
-         this.project.sdate = this.undate ? "Не определена" : "";
-        }    
+        undateZapusk: function () {
+            this.undate = !this.undate;
+            this.project.sdate = this.undate ? "Не определена" : "";
+        }
     },
     components: {
         preloader: preloader
@@ -151,4 +159,3 @@ this.project.opisanieBody = this.editor.html.get().replace(/'/ig, '"');
 
 
 //КАЛЕНДАРИ
-

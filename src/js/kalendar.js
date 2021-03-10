@@ -2,17 +2,18 @@
 
 let Kalendar = (()=>{
 
+console.log()
 
 
 
 
-
-    function kalendarSet() {
-        return M.Datepicker.init(document.querySelectorAll('.datepicker'),
+    function kalendarSet(prop, querySelector) {
+        return M.Datepicker.init(document.querySelectorAll( querySelector || '.datepicker'),
     
             {
+                ...prop,
     
-    
+            
                 i18n: {
     
                     months: [
@@ -96,7 +97,7 @@ let Kalendar = (()=>{
     }
 
 
-
+console.log(kalendarSet)
     return  {
 set: kalendarSet
     }

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./src/css/materialize.css">
     <link rel="stylesheet" href="./src/css/style.css">
+    <link rel="stylesheet" href="./src/css/calendar.css">
 
 
 
@@ -21,15 +22,24 @@
  
 <div class="row">
     <div class="col m5">
-        <calendar  language="ru" :data-source="dataSource" enable-range-selection='true' render-style='border' @select-range="setRange" @mouse-on-day="setDay" render-style="background" class="table-no-100"></calendar>
+        <calendar  language="ru" :data-source="dataSource"
+     
+         enable-range-selection='true'
+        render-style='border' 
+        @select-range="setRange" 
+        @mouse-on-day="setDay" 
+      
+        display-week-number="true"
+        class="table-no-100">
+    </calendar>
     </div>
     <div class="col m7" v-show="currentProjects.length" style="overflow: auto; max-height: 95vh;">
-        <h3 v-show='!selected' >
-            Активности на выбранный день {{currentProjects.length }}:
+        <h3 v-if='currentProjects.length' >
+            {{header}}
+         
+        
         </h3>
-        <h3 v-show='selected'>
-            Активности на выбранный период {{currentProjects.length }}:
-        </h3>
+    
 
 <table>
         <tr>
@@ -74,7 +84,7 @@
 </div>
    
 
-<project-modal :project='projectForModal' @change-project-to-null='openProject({id:null})'></project-modal>
+<project-modal :project='projectForModal' @change-project-to-null='openProject({id:null})' ></project-modal>
 
 </div>
 
@@ -99,6 +109,6 @@
    <script src="./src/js/materialize.js"></script>
     <script src="./src/js/axios.js"></script>
     <script src="./src/js/vue.js"></script>
-    <script src="./src/js/test.js"></script>
+    <script src="./src/js/showCalendar.js"></script>
 </body>
 </html>

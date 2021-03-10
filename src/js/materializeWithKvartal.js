@@ -8901,6 +8901,18 @@ $jscomp.polyfill = function (e, r, p, m) {
           $(this.clearBtn).css({ visibility: '' });
           this.clearBtn.innerHTML = this.options.i18n.clear;
         }
+        if (this.options.showYearBtn) {
+          $(this.yearBtn).css({ visibility: '' });
+          this.yearBtn.innerHTML = "Год";
+        }
+        if (this.options.showKvartalBtn) {
+          $(this.kvartalBtn).css({ visibility: '' });
+          this.kvartalBtn.innerHTML = "Квартал";
+        }
+        if (this.options.showMonthBtn) {
+          $(this.monthBtn).css({ visibility: '' });
+          this.monthBtn.innerHTML = "Месяц";
+        }
 
         this.doneBtn.innerHTML = this.options.i18n.done;
         this.cancelBtn.innerHTML = this.options.i18n.cancel;
@@ -9339,21 +9351,33 @@ $jscomp.polyfill = function (e, r, p, m) {
         this._handleInputChangeBound = this._handleInputChange.bind(this);
         this._handleCalendarClickBound = this._handleCalendarClick.bind(this);
         this._finishSelectionBound = this._finishSelection.bind(this);
-        this._monthSelectBound = this._monthSelect.bind(this);
-        this._kvartalSelectBound = this._kvartalSelect.bind(this);
-        this._yearSelectBound = this._yearSelect.bind(this);
+ 
+        
         this._handleMonthChange = this._handleMonthChange.bind(this);
         this._closeBound = this.close.bind(this);
-
+        
         this.el.addEventListener('click', this._handleInputClickBound);
         this.el.addEventListener('keydown', this._handleInputKeydownBound);
         this.el.addEventListener('change', this._handleInputChangeBound);
         this.calendarEl.addEventListener('click', this._handleCalendarClickBound);
         this.doneBtn.addEventListener('click', this._finishSelectionBound);
+        
+        
 
-        this.monthBtn.addEventListener('click', this._monthSelectBound);
-        this.kvartalBtn.addEventListener('click', this._kvartalSelectBound);
+        if (this.options.showYearBtn) {
+          this._yearSelectBound = this._yearSelect.bind(this);
         this.yearBtn.addEventListener('click', this._yearSelectBound);
+        }
+        if (this.options.showMonthBtn) {
+          this._monthSelectBound = this._monthSelect.bind(this);
+          this.monthBtn.addEventListener('click', this._monthSelectBound);
+        }
+        if (this.options.showkvartalBtn) {
+       
+          this._kvartalSelectBound = this._kvartalSelect.bind(this);
+          this.kvartalBtn.addEventListener('click', this._kvartalSelectBound);
+        }
+
 
         this.cancelBtn.addEventListener('click', this._closeBound);
 
@@ -9377,10 +9401,20 @@ $jscomp.polyfill = function (e, r, p, m) {
         if (this.options.showClearBtn) {
           this.clearBtn = this.modalEl.querySelector('.datepicker-clear');
         }
+        if (this.options.showYearBtn) {
+          this.yearBtn = this.modalEl.querySelector('.datepicker-year');
+        }
+        if (this.options.showKvartalBtn) {
+          this.kvartalBtn = this.modalEl.querySelector('.datepicker-kvartal');
+        }
+
+        if (this.options.showMonthBtn) {
+          this.monthBtn = this.modalEl.querySelector('.datepicker-month');
+        }
         this.doneBtn = this.modalEl.querySelector('.datepicker-done');
-        this.monthBtn = this.modalEl.querySelector('.datepicker-month');
-        this.kvartalBtn = this.modalEl.querySelector('.datepicker-kvartal');
-        this.yearBtn = this.modalEl.querySelector('.datepicker-year');
+
+
+     
         
 
 
@@ -9554,7 +9588,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     {
         key: "_monthSelect",
         value: function _monthSelect() {
-          this.setInputValue(this.calendars[0].month + ' ' + this.calendars[0].year);
+          this.setInputValue(this.calendars[0].month+1 + ' ' + this.calendars[0].year);
           this.close();
         }
       },
@@ -9680,12 +9714,13 @@ $jscomp.polyfill = function (e, r, p, m) {
 
   Datepicker._template = ['<div class= "modal datepicker-modal">', '<div class="modal-content datepicker-container">', '<div class="datepicker-date-display">', '<span class="year-text"></span>', '<span class="date-text"></span>', `
 <br>
-  <div class="btn datepicker-month" style="margin: 10px" >Месяц</div>
-  <br>
-  <div class="btn datepicker-kvartal" style="margin: 10px" >Квартал</div>
-  <br>
-  <div class="btn datepicker-year" style="margin: 10px" >Год</div>
+<div style="display: grid">
+  <div class="btn datepicker-month" style="margin: 10px; visibility: hidden; "></div>
 
+  <div class="btn datepicker-kvartal" style="margin: 10px; visibility: hidden;" ></div>
+  
+  <div class="btn datepicker-year" style="margin: 10px; visibility: hidden;" ></div>
+</div>
 </ul>
 
 

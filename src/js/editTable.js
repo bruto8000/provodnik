@@ -44,8 +44,12 @@ let app = new Vue({
     },
     mounted: function () {
         console.log("I AM mounted");
- console.log(Kalendar)
-        this.kalendar = Kalendar.set();
+
+        this.kalendar = Kalendar.set({
+            showMonthBtn: true,
+            showKvartalBtn: true,
+            showYearBtn: true
+        });
 
 
         axios.all([
@@ -115,7 +119,7 @@ let app = new Vue({
                             startDate = new Date(parts[1], '3', '1');
                             endDate = new Date(parts[1], '6', '0');
                             break;
-                        case 'II':
+                        case 'III':
                             startDate = new Date(parts[1], '6', '1');
                             endDate = new Date(parts[1], '9', '0');
                             break;
@@ -486,22 +490,6 @@ if(!keepHistory){
                         })
                     }
                 })
-        },
-
-        closeModal: function (e, v) {
-
-            console.log(e)
-            this.kalendar.forEach(element => {
-                if (element.isOpen) {
-                    element.close();
-
-
-                }
-
-            });
-
-
-
         },
   
         exportToExcel: function () {

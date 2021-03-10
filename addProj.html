@@ -39,16 +39,16 @@
 
 
     <div id="app" class="container">
-        
+
         <preloader ms="0"></preloader>
         <h1 class="center">Добавление проекта</h1>
         <div class="row">
-            <div class="col m3 center">
-                <div class="  ">Дата спуска</div> <input v-model.lazy="project.fdate" id="fdate" type="text"
+            <div class="col m3 ">
+                <div class="center">Дата спуска</div> <input v-model.lazy="project.fdate" id="fdate" type="text"
                     class="datepicker center" value="" placeholder="Выберите дату">
             </div>
-            <div class="col m3 center">
-                <div class="   " @click="undateZapusk">Дата запуска</div> <input :disabled="undate"
+            <div class="col m3">
+                <div class="center" @click="undateZapusk">Дата запуска</div> <input :disabled="undate"
                     v-model.lazy="project.sdate" id="sdate" type="text" class="datepicker center" value=""
                     placeholder="Выберите дату">
             </div>

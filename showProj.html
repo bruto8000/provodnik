@@ -70,7 +70,7 @@
 
 
 
-<div class="row p0 m0" style="padding-right:16px"> 
+<div class=" p0 m0" style="padding-right:16px"> 
 
 
     <div class="col m1 center" > <i v-show="sort.column == 'fdate' && sort.r ==1" class="material-icons">expand_less</i>  <i  v-show="sort.column == 'fdate' && sort.r ==-1"  class="material-icons">expand_more</i>  <i> </i> </div>
@@ -91,22 +91,22 @@
 <div class="row" style="padding-right:16px"> 
 
 
-    <div class="col m1 sort__button" @click="sortChange('fdate')" > <p class="p0 m0"> Дата спуска </p>  </div>
-    <div class="col m1 sort__button" @click="sortChange('sdate')">Дата запуска</div>
-    <div class="col m1 sort__button" @click="sortChange('bizness')">Вид бизнеса</div>
-    <div class="col m1 sort__button" @click="sortChange('zapusk')">Тип запуска </div>
-    <div class="col m1 sort__button" @click="sortChange('nazvanie')">Название</div>
-    <div class="col m2 sort__button" @click="sortChange('opisanie')">Описание</div>
-    <div class="col m2 sort__button" @click="sortChange('soprovod')">Сопровождающий</div>
-    <div class="col m2 sort__button" @click="sortChange('zakazchik')">Заказчик</div>
-    <div class="col m1 sort__button" @click="sortChange('status')">Статус</div>
+    <div class="col m1 sort__button  btn red" @click="sortChange('fdate')" > <p class="p0 m0"> Дата спуска </p>  </div>
+    <div class="col m1 sort__button  btn red" @click="sortChange('sdate')">Дата запуска</div>
+    <div class="col m1 sort__button  btn red" @click="sortChange('bizness')">Вид бизнеса</div>
+    <div class="col m1 sort__button  btn red" @click="sortChange('zapusk')">Тип запуска </div>
+    <div class="col m1 sort__button  btn red" @click="sortChange('nazvanie')">Название</div>
+    <div class="col m2 sort__button  btn red" @click="sortChange('opisanie')">Описание</div>
+    <div class="col m2 sort__button  btn red" @click="sortChange('soprovod')">Сопровождающий</div>
+    <div class="col m2 sort__button  btn red" @click="sortChange('zakazchik')">Заказчик</div>
+    <div class="col m1 sort__button  btn red" @click="sortChange('status')">Статус</div>
     
     
     
     </div> 
 
 
-    <div class="row" style="padding-right:16px" > 
+    <div class="row" style="padding-right:16px"  > 
         <div class="col m1"><input type="text" class="datepicker" v-model.lazy="filterSelect.fdate"></div>
         <div class="col m1"><input type="text" class="datepicker" v-model.lazy="filterSelect.sdate"></div>
         <div class="col m1">
