@@ -198,8 +198,9 @@
                         }, {
                             key: "_initializeDatasourceColors",
                             value: function e() {
-                          
-                                for (var t = 0; t < this._dataSource.length; t++) {
+       ///COLOR ININ BRUTO                  
+ console.log(this._dataSource)
+       for (var t = 0; t < this._dataSource.length; t++) {
                                     if (this._dataSource[t].color == null) {
                                         this._dataSource[t].color = D.colors[t % D.colors.length]
                                     }
@@ -476,7 +477,7 @@
                             key: "_renderDataSourceDay",
                             value: function e(t, n, a) {
 
-                                console.log(t,n,a)
+                                 console.log(t,a)
                                 var i = t.parentElement;
                                 switch (this.options.style) {
                                     case "border":
@@ -486,17 +487,22 @@
                                         } else if (a.length <= 3) {
                                             r = 2
                                         } else {
-                                            i.style.boxShadow = "inset 0 -4px 0 0 black"
+                                         r = 2
                                         }
                                         if (r > 0) {
                                             var s = "";
-                                            for (var o = 0; o < a.length; o++) {
-                                                console.log(o)
+                                            var usedColors = [];
+                                            for (var o = 0; o <a.length; o++) {
+                                            if(usedColors.includes(a[o].color) || usedColors.length >=3){
+                                                continue;
+                                            }
+                                            usedColors.push(a[o].color)
                                                 if (s != "") {
                                                     s += ","
                                                 }
-                                                s += "inset 0 -".concat((o + 1) * r, "px 0 0 ").concat(a[o].color)
+                                                s += "inset 0 -".concat((usedColors.length + 1) * 2, "px 0 0 ").concat(a[o].color)
                                             }
+                                            console.log(usedColors)
                                             i.style.boxShadow = s
                                         }
                                         break;

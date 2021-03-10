@@ -13,6 +13,7 @@ let app = new Vue({
             soprovod: "",
             status: "",
             zakazchik: "",
+            flags: []
             //  opisanieBody: "", Will added Automaticly
 
         },
@@ -119,10 +120,13 @@ let app = new Vue({
                             html: "Проект добавлен"
                         });
                         for (prop in this.project) {
+                            if(prop == 'flags'){this.project[prop] = []; return;}
+              
                             this.project[prop] = '';
 
                         };
-                        this.editor.html.set('')
+                        this.editor.html.set('');
+                        delete this.project["opisanieBody"];
 
                     } else {
                         throw new Error(r.data)

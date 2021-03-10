@@ -135,11 +135,29 @@
             </div>
 
 
-            <div class="col m6 center  ">
+            <div class="col m3 center  ">
                 <div class="  ">Заказчик</div>
                 <input placeholder="Введите заказчика" v-model="project.zakazchik" id="zakazchik" type="text"
                     class="validate">
             </div>
+
+            <div class="col m3 center  ">
+                <div class="  ">Флаги</div>
+                <select placeholder="Флаги" v-model="project.flags" id="zakazchik" type="text"
+                    class="validate"
+                    multiple>
+                   
+                <option disabled value="">Выбор</option>
+                <option value="Влияние">Влияние</option>
+                <option value="Экстренный запуск">Экстренный запуск</option>
+                <option value="ДПП">ДПП</option>
+                <option value="Конфиденциальность">Конфиденциальность</option>
+                
+                
+                </select>
+
+            </div>
+
         </div>
         <div class="row">
 

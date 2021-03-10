@@ -9,6 +9,7 @@ require('./connect.php');
 if($response = mysqli_query($connect, "SELECT * FROM `projects`")){
     $result = [];
     while ($obj = $response -> fetch_object()) {
+      $obj->flags = json_decode(  $obj->flags, JSON_UNESCAPED_UNICODE);
   array_push($result, $obj);
       
     };

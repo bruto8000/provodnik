@@ -22,3 +22,6 @@ thead {
 .table-no-100 table{
     width: auto;
 }
+.fs-sm, .fs-sm>i{
+    font-size: 16px;
+}

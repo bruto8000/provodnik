@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,27 +11,29 @@
     <meta http-equiv="Cache-Control" content="no-cache" />
     <title>Title</title>
 </head>
+
 <body>
-    
-
-<div id="app">
-    <preloader ms="0"></preloader>
-    <div class="row">
 
 
-<h1 class="center">
-    Проекты
-   
-    <span class="btn-small" @click="resetFilter">СБРОС</span>
-    <div class="btn z-depth-3" style="width: 40px; padding: 0; border-radius: 50%;" @click="exportToExcel"> <img src="./EX.png" width="100%" style="border-radius: 50%;" alt=""></div>
-</h1>
+    <div id="app">
+        <preloader ms="0"></preloader>
+        <div class="row">
 
-</div>
 
-<table id="allTable" v-show="false" v-if="table.created">
+            <h1 class="center">
+                Проекты
 
-        <tr>
-         
+                <span class="btn-small" @click="resetFilter">СБРОС</span>
+                <div class="btn z-depth-3" style="width: 40px; padding: 0; border-radius: 50%;" @click="exportToExcel">
+                    <img src="./EX.png" width="100%" style="border-radius: 50%;" alt=""></div>
+            </h1>
+
+        </div>
+
+        <table id="allTable" v-show="false" v-if="table.created">
+
+            <tr>
+
                 <th class="" @click="sortChange('fdate')">Дата спуска</th>
                 <th class="" @click="sortChange('sdate')">Дата запуска</th>
                 <th class="" @click="sortChange('bizness')">Вид бизнеса</th>
@@ -40,162 +43,190 @@
                 <th class="" @click="sortChange('soprovod')">Сопровождающий</th>
                 <th class="" @click="sortChange('zakazchik')">Заказчик</th>
                 <th class="" @click="sortChange('status')">Статус</th>
-     
-        </tr>
 
-      
- 
-
-
-
-        <tr class="row hover__bg" v-for="project in projectsFiltred" @click="openProject(project)">
-            <td class="">{{project.fdate}}</td>
-            <td class="">{{project.sdate}}</td>
-            <td class="">{{project.bizness}}</td>
-            <td class="">{{project.zapusk}}</td>
-            <td class="">{{project.nazvanie}}</td>
-            <td class="">{{project.opisanie}}</td>
-            <td class="">{{project.soprovod}}</td>
-            <td class="">{{project.zakazchik}}</td>
-            <td class="">{{project.status}}</td>
-
-        </tr>
-
-
-
-</table> 
+            </tr>
 
 
 
 
 
 
-<div class=" p0 m0" style="padding-right:16px"> 
+            <tr class="row hover__bg" v-for="project in projectsFiltred" @click="openProject(project)">
+                <td class="">{{project.fdate}}</td>
+                <td class="">{{project.sdate}}</td>
+                <td class="">{{project.bizness}}</td>
+                <td class="">{{project.zapusk}}</td>
+                <td class="">{{project.nazvanie}}</td>
+                <td class="">{{project.opisanie}}</td>
+                <td class="">{{project.soprovod}}</td>
+                <td class="">{{project.zakazchik}}</td>
+                <td class="">{{project.status}}</td>
 
-
-    <div class="col m1 center" > <i v-show="sort.column == 'fdate' && sort.r ==1" class="material-icons">expand_less</i>  <i  v-show="sort.column == 'fdate' && sort.r ==-1"  class="material-icons">expand_more</i>  <i> </i> </div>
-    <div class="col m1 center"> <i  v-show="sort.column == 'sdate' && sort.r ==1" class="material-icons">expand_less</i> <i v-show="sort.column == 'sdate' && sort.r ==-1" class="material-icons">expand_more</i> </div>
-    <div class="col m1 center"> <i  v-show="sort.column == 'bizness' && sort.r ==1" class="material-icons">expand_less</i> <i  v-show="sort.column == 'bizness' && sort.r == -1" class="material-icons">expand_more</i></div>
-    <div class="col m1 center"><i   v-show="sort.column == 'zapusk' && sort.r ==1" class="material-icons">expand_less</i><i  v-show="sort.column == 'zapusk' && sort.r ==-1" class="material-icons">expand_more</i> </div>
-    <div class="col m1 center"><i v-show="sort.column == 'nazvanie' && sort.r ==1"  class="material-icons">expand_less</i><i  v-show="sort.column == 'nazvanie' && sort.r ==-1"  class="material-icons">expand_more</i> </div>
-    <div class="col m2 center"><i  v-show="sort.column == 'opisanie' && sort.r ==1" class="material-icons">expand_less</i><i v-show="sort.column == 'opisanie' && sort.r ==-1" class="material-icons">expand_more</i> </div>
-    <div class="col m2 center"><i  v-show="sort.column == 'soprovod' && sort.r ==1" class="material-icons">expand_less</i> <i  v-show="sort.column == 'soprovod' && sort.r ==-1"  class="material-icons">expand_more</i></div>
-    <div class="col m2 center"><i  v-show="sort.column == 'zakazchik' && sort.r ==1" class="material-icons">expand_less</i><i v-show="sort.column == 'zakazchik' && sort.r == -1" class="material-icons">expand_more</i> </div>
-    <div class="col m1 center"><i  v-show="sort.column == 'status' && sort.r ==1" class="material-icons">expand_less</i><i  v-show="sort.column == 'status' && sort.r ==-1" class="material-icons">expand_more</i> </div>
-    
-    
-    
-    </div> 
-
-
-<div class="row" style="padding-right:16px"> 
-
-
-    <div class="col m1 sort__button  btn red" @click="sortChange('fdate')" > <p class="p0 m0"> Дата спуска </p>  </div>
-    <div class="col m1 sort__button  btn red" @click="sortChange('sdate')">Дата запуска</div>
-    <div class="col m1 sort__button  btn red" @click="sortChange('bizness')">Вид бизнеса</div>
-    <div class="col m1 sort__button  btn red" @click="sortChange('zapusk')">Тип запуска </div>
-    <div class="col m1 sort__button  btn red" @click="sortChange('nazvanie')">Название</div>
-    <div class="col m2 sort__button  btn red" @click="sortChange('opisanie')">Описание</div>
-    <div class="col m2 sort__button  btn red" @click="sortChange('soprovod')">Сопровождающий</div>
-    <div class="col m2 sort__button  btn red" @click="sortChange('zakazchik')">Заказчик</div>
-    <div class="col m1 sort__button  btn red" @click="sortChange('status')">Статус</div>
-    
-    
-    
-    </div> 
-
-
-    <div class="row" style="padding-right:16px"  > 
-        <div class="col m1"><input type="text" class="datepicker" v-model.lazy="filterSelect.fdate"></div>
-        <div class="col m1"><input type="text" class="datepicker" v-model.lazy="filterSelect.sdate"></div>
-        <div class="col m1">
-            <select v-model="filterSelect.bizness" id="bizness">
-                <option value=""  selected>Вид бизнеса</option>
-                <option value="FMC">FMC</option>
-                <option value="B2B">B2B</option>
-                <option value="B2C">B2C</option>
-                <option value="ПК">ПК</option>
-                <option value="FTTB">FTTB</option>
-                <option value="FMC/FTTB">FMC/FTTB</option>
-                <option value="BTB/BTC">BTB/BTC</option>
-                <option value="FMC/B2C">FMC/B2C</option>
-
-            </select>
-
-        </div>
-        <div class="col m1">
-        
-            <select v-model="filterSelect.zapusk" id="zapusk">
-                <option value="" selected>Тип запуска</option>
-                <option value="Запуск ТП">Запуск ТП</option>
-                <option value="Перезапуск ТП">Перезапуск ТП</option>
-                <option value="Закрытие ТП">Закрытие ТП</option>
-                <option value="Офсет">Офсет</option>
-                <option value="Симплификация/Репайсинг">Симплификация/Репайсинг</option>
-                <option value="Запуск Услуги">Запуск Услуги</option>
-                <option value="Изменение условий услиги">Изменение условий услиги</option>
-                <option value="Закрытие условий">Закрытие условий</option>
-                <option value="Запуск акции">Запуск акции</option>
-                <option value="Закрытие акции">Закрытие акции</option>
-                <option value="SMS/push/email рассылка">SMS/push/email рассылка</option>
-                <option value="Запуск Города">Запуск Города</option>
-                <option value="Оборудование">Оборудование</option>
+            </tr>
 
 
 
-            </select>
+        </table>
 
-        </div>
-        <div class="col m1"><input type="text" v-model="filterInput.nazvanie"></div>
-        <div class="col m2"><input type="text" v-model="filterInput.opisanie"></div>
-        <div class="col m2">
 
-            <select v-model="filterSelect.soprovod" id="soprovod">
-<option value="" selected>Сопровождающий</option>   
-<option v-for="employee in employees" :value="employee['full_name']">{{employee['full_name']}}</option>
-</select>
+
+
+
+
+        <div class="row p0 m0" style="padding-right:16px">
+
+
+            <div class="col m1 center fs-sm"> <i v-show="sort.column == 'fdate' && sort.r ==1"
+                    class="material-icons">expand_less</i> <i v-show="sort.column == 'fdate' && sort.r ==-1"
+                    class="material-icons">expand_more</i> <i> </i> </div>
+            <div class="col m1 center fs-sm"> <i v-show="sort.column == 'sdate' && sort.r ==1"
+                    class="material-icons">expand_less</i> <i v-show="sort.column == 'sdate' && sort.r ==-1"
+                    class="material-icons">expand_more</i> </div>
+            <div class="col m1 center fs-sm"> <i v-show="sort.column == 'bizness' && sort.r ==1"
+                    class="material-icons">expand_less</i> <i v-show="sort.column == 'bizness' && sort.r == -1"
+                    class="material-icons">expand_more</i></div>
+            <div class="col m1 center fs-sm"><i v-show="sort.column == 'zapusk' && sort.r ==1"
+                    class="material-icons">expand_less</i><i v-show="sort.column == 'zapusk' && sort.r ==-1"
+                    class="material-icons">expand_more</i> </div>
+            <div class="col m1 center fs-sm"><i v-show="sort.column == 'nazvanie' && sort.r ==1"
+                    class="material-icons">expand_less</i><i v-show="sort.column == 'nazvanie' && sort.r ==-1"
+                    class="material-icons">expand_more</i> </div>
+            <div class="col m2 center fs-sm"><i v-show="sort.column == 'opisanie' && sort.r ==1"
+                    class="material-icons">expand_less</i><i v-show="sort.column == 'opisanie' && sort.r ==-1"
+                    class="material-icons">expand_more</i> </div>
+            <div class="col m2 center fs-sm"><i v-show="sort.column == 'soprovod' && sort.r ==1"
+                    class="material-icons">expand_less</i> <i v-show="sort.column == 'soprovod' && sort.r ==-1"
+                    class="material-icons">expand_more</i></div>
+            <div class="col m2 center fs-sm"><i v-show="sort.column == 'zakazchik' && sort.r ==1"
+                    class="material-icons">expand_less</i><i v-show="sort.column == 'zakazchik' && sort.r == -1"
+                    class="material-icons">expand_more</i> </div>
+            <div class="col m1 center fs-sm"><i v-show="sort.column == 'status' && sort.r ==1"
+                    class="material-icons">expand_less</i><i v-show="sort.column == 'status' && sort.r ==-1"
+                    class="material-icons">expand_more</i> </div>
+
 
 
         </div>
-        <div class="col m2"><input type="text" v-model="filterInput.zakazchik"></div>
 
 
+        <div class="row center" style="padding-right:16px">
 
 
-        <div class="col m1">   <select v-model="filterSelect.status" id="status">
-            <option value="" selected>Статус</option>
-            <option value="В работе">В работе </option>
-            <option value="Выполнено">Выполнено </option>
-            <option value="Отложено">Отложено</option>
-            <option value="Отменено">Отменено</option>
+            <div class="col m1 sort__button  " @click="sortChange('fdate')"> <button class="btn-small ">Дата спуска
+                </button> </div>
+            <div class="col m1 sort__button  " @click="sortChange('sdate')"> <button class="btn-small ">Дата
+                    запуска</button> </div>
+            <div class="col m1 sort__button  " @click="sortChange('bizness')"> <button class="btn-small "> Вид
+                    бизнеса</button></div>
+            <div class="col m1 sort__button  " @click="sortChange('zapusk')"> <button class="btn-small ">Тип
+                    запуска</button> </div>
+            <div class="col m1 sort__button  " @click="sortChange('nazvanie')"> <button
+                    class="btn-small ">Название</button> </div>
+            <div class="col m2 sort__button  " @click="sortChange('opisanie')"> <button
+                    class="btn-small ">Описание</button> </div>
+            <div class="col m2 sort__button  " @click="sortChange('soprovod')"> <button
+                    class="btn-small ">Сопровождающий</button> </div>
+            <div class="col m2 sort__button  " @click="sortChange('zakazchik')"> <button
+                    class="btn-small ">Заказчик</button> </div>
+            <div class="col m1 sort__button  " @click="sortChange('status')"> <button
+                    class="btn-small ">Статус</button> </div>
 
 
-        </select></div>
-        
-        
-        
-        </div> 
- <div style="max-height: 70vh; overflow: auto;">
-   
-        
-        <div class="row hover__bg" v-for="project in projectsFiltred" @click="openProject(project)">
-            <div class="col m1">{{project.fdate}}</div>
-            <div class="col m1">{{project.sdate}}</div>
-            <div class="col m1">{{project.bizness}}</div>
-            <div class="col m1">{{project.zapusk}}</div>
-            <div class="col m1">{{project.nazvanie}}</div>
-            <div class="col m2">{{project.opisanie}}</div>
-            <div class="col m2">{{project.soprovod}}</div>
-            <div class="col m2">{{project.zakazchik}}</div>
-            <div class="col m1">{{project.status}}</div>
 
         </div>
-    </div> 
+
+
+        <div class="row" style="padding-right:16px; border-bottom: 2px solid #26a69a; padding-bottom: 10px; margin-bottom: 5px;">
+            <div class="col m1"><input type="text" class="datepicker" v-model.lazy="filterSelect.fdate"></div>
+            <div class="col m1"><input type="text" class="datepicker" v-model.lazy="filterSelect.sdate"></div>
+            <div class="col m1">
+                <select v-model="filterSelect.bizness" id="bizness">
+                    <option value="" selected>Вид бизнеса</option>
+                    <option value="FMC">FMC</option>
+                    <option value="B2B">B2B</option>
+                    <option value="B2C">B2C</option>
+                    <option value="ПК">ПК</option>
+                    <option value="FTTB">FTTB</option>
+                    <option value="FMC/FTTB">FMC/FTTB</option>
+                    <option value="BTB/BTC">BTB/BTC</option>
+                    <option value="FMC/B2C">FMC/B2C</option>
+
+                </select>
+
+            </div>
+            <div class="col m1">
+
+                <select v-model="filterSelect.zapusk" id="zapusk">
+                    <option value="" selected>Тип запуска</option>
+                    <option value="Запуск ТП">Запуск ТП</option>
+                    <option value="Перезапуск ТП">Перезапуск ТП</option>
+                    <option value="Закрытие ТП">Закрытие ТП</option>
+                    <option value="Офсет">Офсет</option>
+                    <option value="Симплификация/Репайсинг">Симплификация/Репайсинг</option>
+                    <option value="Запуск Услуги">Запуск Услуги</option>
+                    <option value="Изменение условий услиги">Изменение условий услиги</option>
+                    <option value="Закрытие условий">Закрытие условий</option>
+                    <option value="Запуск акции">Запуск акции</option>
+                    <option value="Закрытие акции">Закрытие акции</option>
+                    <option value="SMS/push/email рассылка">SMS/push/email рассылка</option>
+                    <option value="Запуск Города">Запуск Города</option>
+                    <option value="Оборудование">Оборудование</option>
 
 
 
-    <!-- <div id="projectModal" class="modal">
+                </select>
+
+            </div>
+            <div class="col m1"><input type="text" v-model="filterInput.nazvanie"></div>
+            <div class="col m2"><input type="text" v-model="filterInput.opisanie"></div>
+            <div class="col m2">
+
+                <select v-model="filterSelect.soprovod" id="soprovod">
+                    <option value="" selected>Сопровождающий</option>
+                    <option v-for="employee in employees" :value="employee['full_name']">{{employee['full_name']}}
+                    </option>
+                </select>
+
+
+            </div>
+            <div class="col m2"><input type="text" v-model="filterInput.zakazchik"></div>
+
+
+
+
+            <div class="col m1"> <select v-model="filterSelect.status" id="status">
+                    <option value="" selected>Статус</option>
+                    <option value="В работе">В работе </option>
+                    <option value="Выполнено">Выполнено </option>
+                    <option value="Отложено">Отложено</option>
+                    <option value="Отменено">Отменено</option>
+
+
+                </select></div>
+
+
+
+        </div>
+        <div style="max-height: 70vh; overflow: auto;">
+
+
+            <div class="row hover__bg" v-for="project in projectsFiltred" @click="openProject(project)">
+                <div class="col m1">{{project.fdate}}</div>
+                <div class="col m1">{{project.sdate}}</div>
+                <div class="col m1">{{project.bizness}}</div>
+                <div class="col m1">{{project.zapusk}}</div>
+                <div class="col m1">{{project.nazvanie}}</div>
+                <div class="col m2">{{project.opisanie}}</div>
+                <div class="col m2">{{project.soprovod}}</div>
+                <div class="col m2">{{project.zakazchik}}</div>
+                <div class="col m1">{{project.status}}</div>
+
+            </div>
+        </div>
+
+
+
+        <!-- <div id="projectModal" class="modal">
         <div class="modal-content">
           <h4>{{modal.project.nazvanie}}</h4>
          <p>{{modal.project.opisanie}} </p>
@@ -208,24 +239,25 @@
           <a href="#!" class="modal-close waves-effect waves-green btn-flat">Закрыть</a>
         </div>
       </div> -->
-    
-<project-modal :project="projectForModal" @change-project-to-null='openProject({id:null})'></project-modal>
 
-</div>
+        <project-modal :project="projectForModal" @change-project-to-null='openProject({id:null})'></project-modal>
 
-
+    </div>
 
 
 
 
 
 
-<script src="./src/js/components/preloader.js"></script>
-<script src="./src/js/components/projectModal.js"></script>
-<script src="./src/js/kalendar.js"></script>
-<script src="./src/js/materializeWithKvartal.js"></script>
+
+
+    <script src="./src/js/components/preloader.js"></script>
+    <script src="./src/js/components/projectModal.js"></script>
+    <script src="./src/js/kalendar.js"></script>
+    <script src="./src/js/materializeWithKvartal.js"></script>
     <script src="./src/js/axios.js"></script>
     <script src="./src/js/vue.js"></script>
     <script src="./src/js/showProj.js"></script>
 </body>
+
 </html>
