@@ -12,27 +12,29 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" >
         <preloader ms="0"></preloader>
-        <div class="row">
-            <div class="col m1">Дата начала:</div>
-            <div class="col m3">
+        <div class="row container">
+            <div class="col m2 center offset-m2">Дата начала:
                 <input type="text" class="datepicker" v-model.lazy="date1">
             </div>
-            <div class="col m1">Дата конца:</div>
-            <div class="col m3">
+         
+            <div class="col m2 center">Дата конца:
                 <input type="text" class="datepicker" v-model.lazy="date2">
             </div>
-            <div class="col m2">
+       
+            <div class="col m2 offset-m1" style="margin-top:20px;">
                 <div class="btn" @click="dateRange">Сформировать</div>
             </div>
-            <div class="col m2">
-                <div class="btn z-depth-3" style="width: 40px; padding: 0;border-radius: 50%;" @click="exportToExcel"> <img src="./EX.png" width="100%" style="border-radius: 50%;" alt=""></div>
-           
-            </div>
+        
         </div>
     
        
+
+        <h3 class="center">Табель 
+            <div class="btn z-depth-3" style="width: 40px; padding: 0;border-radius: 50%;" @click="exportToExcel('allTable')"> <img src="./EX.png" width="100%" style="border-radius: 50%;" alt=""></div>
+           
+        </h3>
 <div class="col m12" style="overflow: auto;">
 
 
@@ -52,6 +54,7 @@
                     green : day.body[employee.nid].trim() == 'В',
                     blue : day.body[employee.nid].trim() == 'О',
                     yellow : day.body[employee.nid].trim() == 'Б',
+                    indigo : day.body[employee.nid].trim() == 'З',
                 }
                 
                 
@@ -61,6 +64,41 @@
             </tr>
         </table>
     </div>
+
+    <hr>
+<br>
+<br>
+<br>
+
+
+<div class="row">
+
+<h4 class="center fluid-text">
+    План/Факт 
+    <div class="btn z-depth-3" style="width: 40px; padding: 0;border-radius: 50%;" @click="exportToExcel('planFact')"> <img src="./EX.png" width="100%" style="border-radius: 50%;" alt=""></div>
+     
+</h4>
+      
+    <table cellspacing="2" border="1" cellpadding="5" class="col m6 offset-m3 center striped" id="planFact">
+      
+
+
+        <tr>
+            <th>ФИО</th>
+            <th>План</th>
+            <th>Факт без замещения</th>
+            <th>Общий Факт</th>
+        </tr>
+      
+        <tr v-for="employee in employees">
+            <td>{{employee['full_name']}}</td>
+            <td>{{plan | filterDotZeroZero}}</td>
+            <td>{{employee.factWithoutZ | filterDotZeroZero}}</td>
+            <td>{{employee.fact | filterDotZeroZero}}</td>
+        </tr>
+    </table>
+</div>
+
 
     </div>
 

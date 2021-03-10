@@ -56,7 +56,7 @@
                     <td>{{employee['full_name']}}</td>
                     <td v-for="day in tabelFiltred" class="center"  :class="{red : day.somes.includes(employee.nid),
                          ' pink accent-1' :  day.presomes.includes(employee.nid) }" @mouseover="preEnterSome(day,employee.nid)"><input class="center"  :class="{
-                        
+                            indigo : day.body[employee.nid].trim() == 'З',
                         green : day.body[employee.nid].trim() == 'В',
                         blue : day.body[employee.nid].trim() == 'О',
                         yellow : day.body[employee.nid].trim() == 'Б',

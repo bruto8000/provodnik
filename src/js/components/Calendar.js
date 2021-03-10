@@ -202,6 +202,7 @@
  console.log(this._dataSource)
        for (var t = 0; t < this._dataSource.length; t++) {
                                     if (this._dataSource[t].color == null) {
+                                        console.log('NULL COLLOR')
                                         this._dataSource[t].color = D.colors[t % D.colors.length]
                                     }
                                 }
@@ -487,22 +488,35 @@
                                         } else if (a.length <= 3) {
                                             r = 2
                                         } else {
-                                         r = 2
+                                         r = 4
                                         }
                                         if (r > 0) {
                                             var s = "";
                                             var usedColors = [];
-                                            for (var o = 0; o <a.length; o++) {
+                                            for (let o = 0; o <a.length; o++) {
                                             if(usedColors.includes(a[o].color) || usedColors.length >=3){
                                                 continue;
                                             }
                                             usedColors.push(a[o].color)
-                                                if (s != "") {
-                                                    s += ","
-                                                }
-                                                s += "inset 0 -".concat((usedColors.length + 1) * 2, "px 0 0 ").concat(a[o].color)
+                               
+                                             
+
+
                                             }
-                                            console.log(usedColors)
+
+                                            for (let o = 0; o <usedColors.length; o++) {
+                                                
+                                                
+                                                    if (s != "") {
+                                                        s += ","
+                                                    }
+    
+                                                    s += "inset 0 -".concat(3/usedColors.length +( o+1)*(1) , "px 0 0 ").concat(usedColors[o])
+                                                }
+
+                                        
+                                            console.log(...usedColors)
+                                            console.log(usedColors.length)
                                             i.style.boxShadow = s
                                         }
                                         break;

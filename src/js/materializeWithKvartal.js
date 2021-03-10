@@ -9372,8 +9372,9 @@ $jscomp.polyfill = function (e, r, p, m) {
           this._monthSelectBound = this._monthSelect.bind(this);
           this.monthBtn.addEventListener('click', this._monthSelectBound);
         }
-        if (this.options.showkvartalBtn) {
-       
+
+        if (this.options.showKvartalBtn) {
+ 
           this._kvartalSelectBound = this._kvartalSelect.bind(this);
           this.kvartalBtn.addEventListener('click', this._kvartalSelectBound);
         }
@@ -9598,6 +9599,7 @@ $jscomp.polyfill = function (e, r, p, m) {
       {
           key: "_kvartalSelect",
           value: function _kvartalSelect() {
+      
             this.setInputValue(['', 'I', 'II', "III", "IV"][Math.ceil((this.calendars[0].month + 1) / 3)] + ' ' + this.calendars[0].year);
             this.close();
           }

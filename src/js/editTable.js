@@ -2,6 +2,7 @@
 
 
 
+
 let app = new Vue({
     el: "#app",
     data: {
@@ -18,7 +19,7 @@ let app = new Vue({
         kalendar: [],
         date1: "",
         date2: "",
-        tabel: '',
+        tabel: [],
         range: ["01 03 2021", "02 03 2021", "03 03 2021", "04 03 2021", "05 03 2021", "06 03 2021", "07 03 2021", "08 03 2021", "09 03 2021", "10 03 2021", "11 03 2021", "12 03 2021", "13 03 2021", "14 03 2021", "15 03 2021", "16 03 2021", "17 03 2021", "18 03 2021", "19 03 2021", "20 03 2021", "21 03 2021", "22 03 2021", "23 03 2021", "24 03 2021", "25 03 2021", "26 03 2021", "27 03 2021", "28 03 2021", "29 03 2021", "30 03 2021", "31 03 2021"],
         some: {
             OFF: false,
@@ -38,7 +39,8 @@ let app = new Vue({
             somes: [],
             presomes: [],
             input: ""
-        }
+        },
+        datesFromApi : []
 
 
     },
@@ -57,17 +59,39 @@ let app = new Vue({
             axios.get('../vendor/showTabel.php'),
             axios.get('https://isdayoff.ru/api/getdata?year=2021&pre=0&delimeter=DAY')
         ]).then(axios.spread((Eres, Tres,Dres) => {
-            console.log(Tres.data[0].body)
-        let datesFromApi = Dres.data.split('DAY');
-        console.log(datesFromApi)
-            Tres.data.forEach((dt,idxOfDay) => {
+       
+            this.datesFromApi = Dres.data.split('DAY');
+  
+ 
+            Tres.data.forEach((dt,idxOfDay,dateArr) => {
                 dt.presomes = [];
+dt.vixod = this.datesFromApi[idxOfDay] == 1 ;
+
+
+
+
+
+if(dt.vixod ){
+    if(idxOfDay==0)return;
+   
+    dateArr[idxOfDay-1].isNextDayVixod = true;
+}else{
+    dateArr[idxOfDay-1].isNextDayVixod = false;
+}
+
+if((idxOfDay) == (dateArr.length -1)){
+   dt.isNextDayVixod = true;
+}
+
+
+
+
 
                 Eres.data.forEach(em => {
                     if (!dt.body[em.nid]) {
                         dt.body[em.nid] = '';
                     }
-                     if((dt.body[em.nid] == '') && ((datesFromApi[idxOfDay]) == '1')){
+                     if((dt.body[em.nid] == '') && ((dt.vixod ))){
                         dt.body[em.nid] = "В";
                     } })
             })
@@ -202,7 +226,7 @@ if(endDate < startDate){
 
 
             // dates //
-            console.log(dates)
+
             this.range = dates;
             return dates;
 
@@ -235,10 +259,10 @@ if(endDate < startDate){
 
         enterSome: function (day, who) {
 
-            console.log(this.some.step);
+ 
             switch (this.some.step) {
                 case -1:
-                    console.log(-1);
+            
 
                     return;
                 case 0: {
@@ -307,8 +331,8 @@ if(endDate < startDate){
                             element.somes.forEach((v, idx, arr) => {
                                 element.body[v] = this.history.arrOfHistory[this.history.arrOfHistory.length-1][i];
                                 // console.log(this.history[this.history.arrOfHistory.length-1][i])
-                          console.log(this.history.arrOfHistory[this.history.arrOfHistory.length-1][i])
-                                console.log([i])
+                    
+                    
                                 element.presomes = [];
                                 i++;
                             })
@@ -329,7 +353,7 @@ if(endDate < startDate){
             }
         },
         preEnterSome: function (day, nid) {
-console.log('s')
+
             if(this.some.OFF) return;
 this.some.OFF = true;
 setTimeout(() => {
@@ -428,10 +452,7 @@ this.some.presomes = [];
 
         modifSome: function () {
             // slice(this.some.F.X, this.some.L.X)
-            console.log(this.some.F.X, 'X1')
-            console.log(this.some.F.Y, 'Y1')
-            console.log(this.some.L.X, "X2")
-            console.log(this.some.L.Y, "Y2")
+        
             this.tabelFiltred.forEach((element, idx) => {
                 element.somes = [];
                 if (idx >= this.some.F.X && idx <= this.some.L.X) {
@@ -453,7 +474,7 @@ this.some.presomes = [];
 
         },
         clearSome: function (keepHistory) {
-console.log(keepHistory)
+
 if(!keepHistory){
     this.history.arrOfHistory = [];
     this.history.isLast = true;
@@ -492,7 +513,7 @@ if(!keepHistory){
                 })
         },
   
-        exportToExcel: function () {
+        exportToExcel: function (id) {
 
 
             var tableToExcel = (function () {
@@ -519,7 +540,7 @@ if(!keepHistory){
                 }
             })()
 
-            tableToExcel(document.getElementById('allTable'), 'Табель вывод' + this.range[0] + '-' + this.range[this.range.length - 1])
+            tableToExcel(document.getElementById(id), 'Табель вывод' + this.range[0] + '-' + this.range[this.range.length - 1])
         },
         moveHistory: function(direction) {
 
@@ -581,6 +602,49 @@ console.log("Forwar")
         },
         filterInput: function(day,emp){
          day.body[emp] = day.body[emp].toUpperCase()
+        },
+        planFactCalculate(){
+            this.plan = 0;
+this.employees.forEach(em=>{
+    em.fact = 0;
+    em.factWithoutZ = 0;
+})
+
+            this.tabelFiltred.forEach((v,idx)=>{
+           
+           
+                    this.employees.forEach((em,eidx)=>{
+
+                        for(let nid in v.body) {
+                            if(em.nid == nid){
+                              
+                                if(v.body[nid].trim().toUpperCase() == 'З' ){
+                                    if(v.isNextDayVixod){
+                                        em.fact +=7;
+                                     
+                                    }else{
+                                        em.fact +=  8.25;
+                                    
+                                    }
+                                }else if( ! isNaN(Number(v.body[nid].trim().replace(',', '.')))){
+                                    em.fact +=  Number(v.body[nid].trim().replace(',', '.'))  ;
+                                    em.factWithoutZ  +=  Number(v.body[nid].trim().replace(',', '.'))  ;
+                                }
+                            }
+                        }
+                    })
+                    if(! v.vixod){
+               
+                  if(v.isNextDayVixod){
+                       this.plan += 7;
+
+                    }else{
+                       this.plan += 8.25;
+                    }
+                }
+                
+            })
+ 
         }
 
     },
@@ -620,8 +684,8 @@ console.log("Forwar")
         },
         someArrInput: function(n,o){
             if(!this.history.write || !n.length) return;
-            console.log("NEW")
-            console.log('isLast', this.history.isLast)
+         
+
             if(!(this.history.isLast)){
                 console.log(this.history.arrOfHistory.slice(0, - (this.history.diff)))
                 this.history.arrOfHistory = this.history.arrOfHistory.slice(0, - (this.history.diff))
@@ -631,6 +695,10 @@ console.log("Forwar")
             this.history.isFirst = false;
             this.history.diff = 0;
             if(this.history.arrOfHistory.length==1){this.history.isFirst = true;}else{this.history.isFirst = false;} 
+        },
+        tabelFiltred: function(n){
+            console.log(n)
+            this.planFactCalculate();
         }
     },
     computed: {
@@ -651,6 +719,7 @@ console.log("Forwar")
             } catch {
                 return []
             }
+          
 
         },
         someArrInput: function(){
@@ -664,6 +733,7 @@ console.log("Forwar")
             })
             return arr;
         }
+       
     },
     filters: {
         dayOfWeek: function (val) {
@@ -696,7 +766,11 @@ console.log("Forwar")
             }
 
 
+        },
+        filterDotZeroZero(val){
+       return  val.toFixed(2)
         }
+        
     },
     components: {
         preloader: preloader
