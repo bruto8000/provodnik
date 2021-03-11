@@ -170,12 +170,16 @@ let app = new Vue({
             date,
             events
         }) {
+
+            
+  
             if (this.selected && this.canReWriteSelected) {
                 this.selected = false;
-                this.header =    `Активности на выбранный день - ${this.currentProjects.length }  :`
+              
             };
             if (this.selected) return;
             this.currentProjects = events;
+            this.header =    `Активности на выбранный день - ${this.currentProjects.length }  :`
 
         },
         setRange({
@@ -186,8 +190,8 @@ let app = new Vue({
                     if (v.startDate >= startDate && v.endDate <= endDate) return true;
                     return false;
                 })).length) {
-                    this.stopSelect();
                     this.header =    `Активности на выбранный период - ${this.currentProjects.length }  :`
+                    this.stopSelect();
 
 
             }
@@ -199,7 +203,7 @@ let app = new Vue({
             this.projectForModal = project;
         },
         stopSelect(ms){
-if(!ms)ms=4000;
+if(!ms)ms=3000;
 console.log(ms)
 this.canReWriteSelected = false;
 this.selected = true;
