@@ -25,16 +25,16 @@ let app = new Vue({
         employees: [],
         kalendar: [],
         donut: '',
-        audits: [
-            {   
-                auditName: "Название аудита",
-                auditArr: [
-                    { auditPropName: "Причина какая-то", auditNum: "Влияние в цифрах"}
-                ],
-                auditType: 'public | private | secret'
+        audits: [{
+            name: "Название аудита",
+            rows: [{
+                propName: "Причина ...",
+                propInt: 25,
+                propColor: ""
+            }],
+            type: 'public | private | secret'
 
-            }
-        ]
+        }]
 
 
     },
@@ -91,25 +91,27 @@ let app = new Vue({
 
         console.log(location)
 
-        if(location.pathname=='/editProj.html' ){
+        if (location.pathname == '/editProj.html') {
 
 
 
-   
-if(location.pathname=='/editProj.html'  && (!isNaN(Number(location.search.slice(1))) && (location.search.length))){
-this.projectID = location.search.slice(1);
-this.loadProject();
-} else{
-    M.toast({html: "Неверная ссылка"})
-    setTimeout(() => {
-        
-        location.replace('./menu.html')
-    }, 2000);
-}
+
+            if (location.pathname == '/editProj.html' && (!isNaN(Number(location.search.slice(1))) && (location.search.length))) {
+                this.projectID = location.search.slice(1);
+                this.loadProject();
+            } else {
+                M.toast({
+                    html: "Неверная ссылка"
+                })
+                setTimeout(() => {
+
+                    location.replace('./menu.html')
+                }, 2000);
+            }
 
 
-}
-       
+        }
+
 
 
 
@@ -121,49 +123,60 @@ this.loadProject();
     methods: {
 
 
-loadProject(){
-axios.get('./vendor/getProjById.php', {
-    params: {
-        id: this.projectID
-      }
-} ).then(
-    (res)=>{console.log(res.data);
+        loadProject() {
+            axios.get('./vendor/getProjById.php', {
+                params: {
+                    id: this.projectID
+                }
+            }).then(
+                (res) => {
+                    console.log(res.data);
 
 
-for(prop in this.project){
-this.project[prop] = res.data[prop]
-}
-    Object.assign(this.project, {flags : res.data.flags || []})
-  if(!this.employees.find((e)=>{return e.full_name==this.project.soprovod})){
-      this.employees.push({full_name: this.project.soprovod})
-
-    
-
-
-
-  }
-  Vue.nextTick(()=>{
-
-    M.FormSelect.init(document.querySelectorAll('select'))
-})
-
-    },
-    (err)=>{M.toast({html: "Ошибка: " + err}); },
-);
+                    for (prop in this.project) {
+                        this.project[prop] = res.data[prop]
+                    }
+                    Object.assign(this.project, {
+                        flags: res.data.flags || []
+                    })
+                    if (!this.employees.find((e) => {
+                            return e.full_name == this.project.soprovod
+                        })) {
+                        this.employees.push({
+                            full_name: this.project.soprovod
+                        })
 
 
-this.createDonut();
 
 
-},
-        editProj: function(){
-            if(!this.validateMainRows())return;
+
+                    }
+                    Vue.nextTick(() => {
+
+                        M.FormSelect.init(document.querySelectorAll('select'))
+                    })
+
+                },
+                (err) => {
+                    M.toast({
+                        html: "Ошибка: " + err
+                    });
+                },
+            );
+
+
+            this.createDonut();
+
+
+        },
+        editProj: function () {
+            if (!this.validateMainRows()) return;
 
 
         },
         addProj: function () {
-       
-            if(!this.validateMainRows())return;
+
+            if (!this.validateMainRows()) return;
             this.project.opisanieBody = this.editor.html.get().replace(/'/ig, '"');
 
             axios.post('../vendor/addProj.php', JSON.stringify(this.project))
@@ -174,8 +187,11 @@ this.createDonut();
                             html: "Проект добавлен"
                         });
                         for (prop in this.project) {
-                            if(prop == 'flags'){this.project[prop] = []; return;}
-              
+                            if (prop == 'flags') {
+                                this.project[prop] = [];
+                                return;
+                            }
+
                             this.project[prop] = '';
 
                         };
@@ -199,7 +215,7 @@ this.createDonut();
             this.undate = !this.undate;
             this.project.sdate = this.undate ? "Не определена" : "";
         },
-        validateMainRows(){
+        validateMainRows() {
             try {
 
 
@@ -210,7 +226,7 @@ this.createDonut();
                     }
                 }
 
-                
+
                 if (this.editor.html.get().length < 50) {
 
                     throw new Error("Описание слишком короткое.");
@@ -227,26 +243,94 @@ this.createDonut();
 
             }
         },
-        createDonut(){
+        createDonut(audit) {
+if(!audit){return}
+            let ctx = document.getElementById( 'DONUT'+this.audits.indexOf(audit)).getContext('2d');
+            let data = [];
+            let labels = [];
+            let colors = [];
+            audit.rows.forEach(row => {
+              data.push(row.propInt);
+              labels.push(row.propName);
+              colors.push(row.propColor);
+            });
+            audit.donut = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
 
-            var ctx = document.getElementById('DONUT').getContext('2d');
-           this.donut = new Chart( ctx, {
-            type: 'doughnut',
-            data: {
+                    datasets: [{
+                        data: data,
+                        backgroundColor: 'green'
+                    }],
+                    labels: labels
+                }
+                // These labels appear in the legend and in the tooltips when hovering different arcs
 
-           datasets: [{
-                data: [10, 20, 30]
-            }],
-            labels : ['red','green']
-            }
-            // These labels appear in the legend and in the tooltips when hovering different arcs
-     
-         
-        });
+
+            });
+        },
+        updateDonut(audit){
+            let data = [];
+            let labels = [];
+            let colors = [];
+            audit.rows.forEach(row => {
+                data.push(row.propInt);
+                labels.push(row.propName);
+                colors.push(row.propColor)
+              });
+           console.log(audit)
+           console.log()
+           audit.donut.config.data.datasets[0].data = data;
+           audit.donut.config.data.datasets[0].backgroundColor = colors;
+           audit.donut.config.data.labels = labels;
+           audit.donut.update();
+
+        },
+        deleteRowInAudit(audit) {
+            audit.rows.pop();
+        },
+        addRowToAudit(audit) {
+            audit.rows.push({
+                propName: "",
+                propInt: 0
+            });
+            this.initSelectColor();
+        },
+        deleteAudit() {
+            this.audits.pop();
+        },
+        addAudit() {
+            this.audits.push({
+
+                name: "Название аудита",
+                rows: [{
+                    propName: "Причина ...",
+                    propInt: 25
+                }],
+                type: ''
+
+
+            });
+            this.initSelectColor();
+            Vue.nextTick(()=>{
+
+                this.createDonut(this.audits[this.audits.length-1]);
+       
+            });
+        
+        },
+        initSelectColor(){
+            Vue.nextTick(()=>{
+
+                M.FormSelect.init(document.querySelectorAll('.selectColor'))
+            })
         }
     },
     components: {
         preloader: preloader
+    },
+    watch: {
+       
     }
 })
 

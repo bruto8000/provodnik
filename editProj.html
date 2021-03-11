@@ -178,27 +178,75 @@
 
 
 <br><br>
-<div class="row">
-
- <h3 class="center fluid-text">
-    Статусы по запуску/Доп.информация (Аудит)
- </h3>  
-
-    <div class="col m6">
 
 
 
+<div class="audits">
+    <h3 class="center fluid-text">
+        Статусы по запуску/Доп.информация (Аудит)
+        <button class="btn red" :disabled="!audits.length" @click="deleteAudit()">-</button>
+        <button class="btn green" @click="addAudit()">+</button>
+     </h3>  
 
+
+ 
+
+
+     <div class="row" v-for="audit,idx in audits" :key="idx">
+
+
+
+
+<br>
+
+        <h4 class="center fluid-text"> Загаловок аудита</h4>
+        <div class="row">
+            <input type="text" v-model="audit.name" class="col m6 offset-m3">
+        </div>
+<div class="col m6">
+
+    <table class=" centered">
+        <thead>
+          <tr>
+              <th>Причины обращения</th>
+              <th>Кол-во</th>
+              <td>        <button class="btn red" :disabled="!audit.rows.length" @click="deleteRowInAudit(audit)">-</button>
+           <button class="btn green" @click="addRowToAudit(audit)">+</button></td>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="row in audit.rows">
+            <td><input type="text" v-model='row.propName' @change="updateDonut(audit)"></td>
+            <td><input type="number" v-model='row.propInt' @change="updateDonut(audit)"></td>
+            <td><select class="selectColor" v-model='row.propColor' @change="updateDonut(audit)">
+                <option value="black"></option>
+                <option value="#ff4081">Розовый</option>
+                <option value="#ff1744">Красный</option>
+                <option value="#4a148c">Фиолетовый</option>
+                <option value="#3d5afe">Индиго</option>
+            </select></td>
+ 
+          </tr>
+      <tr>
+     
+
+      </tr>  
+        </tbody>
+      </table>
+
+
+      </div>
+    
+        <div class="col m6">
+     <canvas class="" :id="'DONUT'+idx" width="400" height="400">
+      </canvas>
+        </div>
     </div>
 
-    <div class="col m6">
-        <canvas class="" id="DONUT" width="400" height="400">
-
-
-
-        </canvas>
-    </div>
 </div>
+
+
 
   
 
