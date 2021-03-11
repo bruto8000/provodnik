@@ -25,3 +25,7 @@ thead {
 .fs-sm, .fs-sm>i{
     font-size: 16px;
 }
+
+.audits{
+    margin-top: 40px;
+}

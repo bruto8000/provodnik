@@ -17,6 +17,89 @@
 
 
 
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+          <h4>{{project.nazvanie}}</h4>
+         <p>{{project.opisanie}} </p>
+          <div v-html="project.opisanieBody">
+        
+          </div>
+
+
+
+
+
+          <div class="audits">
+            <h3 class="center fluid-text">
+                Статусы по запуску/Доп.информация (Аудит)
+             
+             </h3>  
+        
+        
+         
+        
+        
+             <div class="row" v-for="audit,idx in project.audits" :key="idx">
+        
+        
+        
+        
+        <br>
+        
+                <h4 class="center fluid-text">audit.name</h4>
+                <div class="row">
+                    <div class="col m6 offset-m3">
+        {{audit.type}}
+              
+                    </div>
+                
+                   
+                </div>
+        <div class="col m6">
+        
+            <table class=" centered">
+                <thead>
+                  <tr>
+                      <th>Причины обращения</th>
+                      <th>Кол-во</th>
+                 
+ 
+                  </tr>
+                </thead>
+        
+                <tbody>
+                  <tr v-for="row in audit.rows">
+                    <td>{{row.propName}}</td>
+                    <td>{{row.propInt}}</td>
+                 
+         
+                  </tr>
+              <tr>
+             
+        
+              </tr>  
+                </tbody>
+              </table>
+        
+        
+              </div>
+            
+                <div class="col m6">
+             <canvas class="" :id="'DONUT'+idx" width="400" height="400">
+              </canvas>
+                </div>
+            </div>
+        
+        </div>
+
+
+
+        
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close  btn-flat">Закрыть</a>
+        </div>
+        </div>
 
 
 </div>

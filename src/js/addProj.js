@@ -25,16 +25,18 @@ let app = new Vue({
         employees: [],
         kalendar: [],
         donut: '',
-        audits: [{
-            name: "Название аудита",
-            rows: [{
-                propName: "Причина ...",
-                propInt: 25,
-                propColor: ""
-            }],
-            type: 'public | private | secret'
+        audits: [
+        //     {
+        //     name: "Название аудита",
+        //     rows: [{
+        //         propName: "Причина ...",
+        //         propInt: 25,
+        //         propColor: ""
+        //     }],
+        //     type: 'public | private | secret'
 
-        }]
+        // }
+    ]
 
 
     },
@@ -80,7 +82,7 @@ let app = new Vue({
             });
 
 
-        console.log("I AM mounted");
+    
         this.kalendar[0] = Kalendar.set({
             showMonthBtn: true
         }, '#sdate');
@@ -132,27 +134,49 @@ let app = new Vue({
                 (res) => {
                     console.log(res.data);
 
-
+     
                     for (prop in this.project) {
                         this.project[prop] = res.data[prop]
                     }
+           
                     Object.assign(this.project, {
                         flags: res.data.flags || []
+
                     })
+                    this.audits = res.data.audits || [];
+                    console.log("HERE IS AUDITS",    this.audits )
+  
+                    
+     
+                    this.editor.html.set(res.data.opisanieBody);
+                    delete this.project.opisanieBody;
+    
+                    console.log((!this.employees.find((e) => {
+              
+                            return e.full_name == this.project.soprovod
+                        })));
                     if (!this.employees.find((e) => {
+                        console.log(e.full_name)
+                        console.log(this.project.soprovod)
+                        console.log(this.project.soprovod)
                             return e.full_name == this.project.soprovod
                         })) {
+                            console.log('ERROR PLACE?')
                         this.employees.push({
                             full_name: this.project.soprovod
                         })
+             
 
-
-
+                 
 
 
                     }
+    
                     Vue.nextTick(() => {
 
+                        this.audits.forEach(audit=>{
+                        this.createDonut(audit);
+                    })
                         M.FormSelect.init(document.querySelectorAll('select'))
                     })
 
@@ -165,12 +189,43 @@ let app = new Vue({
             );
 
 
-            this.createDonut();
+            
 
 
         },
         editProj: function () {
-            if (!this.validateMainRows()) return;
+            if (!this.validateMainRows() || !this.validateAudits()) return;
+
+            this.project.opisanieBody = this.editor.html.get().replace(/'/ig, '"');
+            this.project.audits = []
+            this.audits.forEach((audit,idx)=>{
+                this.project.audits[idx] = Object.assign({},audit, {donut: null})
+            })
+            this.project.id = this.projectID;
+
+       console.log(this.project.audits)
+            axios.post('../vendor/editProj.php', JSON.stringify(this.project))
+                .then((r) => {
+                    console.log(r.data);
+                    if (r.data == "OK") {
+                        M.toast({
+                            html: "Проект изменен"
+                        });
+                     
+                    
+                        delete this.project["opisanieBody"];
+
+                    } else {
+                        throw new Error(r.data)
+                    }
+
+                })
+                .catch(e => {
+                    M.toast({
+                        html: "Проект НЕ изменен! " + e
+                    });
+                })
+
 
 
         },
@@ -226,7 +281,7 @@ let app = new Vue({
                     }
                 }
 
-
+console.log('validateMainRows')
                 if (this.editor.html.get().length < 50) {
 
                     throw new Error("Описание слишком короткое.");
@@ -243,7 +298,47 @@ let app = new Vue({
 
             }
         },
+        validateAudits() {
+            try {
+
+
+                this.audits.forEach(audit=>{
+                    console.log('audit.name.lengt')
+                    if(audit.name.length<3){
+                        throw new Error("Загаловок аудита не должен быть меньше 3х символов");  
+                    }
+                    if(audit.type==""){
+                        throw new Error("Не выбран тип аудита (Public/Private)");  
+                    }
+                    audit.rows.forEach(row=>{
+                        if(row.propColor==""){
+                            throw new Error("Не выбран цвет для строки:" + row.propName);  
+                        }
+                        if(row.propName==""){
+                            throw new Error("Не выбрано имя для строки в аудите:" + audit.name);  
+                        }
+                        
+                    })
+                    
+                })
+            
+
+
+             
+                return true;
+
+            } catch (e) {
+
+                M.toast({
+                    html: e
+                });
+
+                return false;
+
+            }
+        },
         createDonut(audit) {
+            console.log('CREATING', audit)
 if(!audit){return}
             let ctx = document.getElementById( 'DONUT'+this.audits.indexOf(audit)).getContext('2d');
             let data = [];
@@ -260,7 +355,7 @@ if(!audit){return}
 
                     datasets: [{
                         data: data,
-                        backgroundColor: 'green'
+                        backgroundColor: colors
                     }],
                     labels: labels
                 }
@@ -302,10 +397,10 @@ if(!audit){return}
         addAudit() {
             this.audits.push({
 
-                name: "Название аудита",
+                name: "",
                 rows: [{
-                    propName: "Причина ...",
-                    propInt: 25
+                    propName: "",
+                    propInt: 0
                 }],
                 type: ''
 
@@ -313,7 +408,7 @@ if(!audit){return}
             });
             this.initSelectColor();
             Vue.nextTick(()=>{
-
+                console.log('audit.name.lengt')
                 this.createDonut(this.audits[this.audits.length-1]);
        
             });

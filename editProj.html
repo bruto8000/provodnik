@@ -201,7 +201,18 @@
 
         <h4 class="center fluid-text"> Загаловок аудита</h4>
         <div class="row">
-            <input type="text" v-model="audit.name" class="col m6 offset-m3">
+            <div class="col m6 offset-m2">
+
+                <input type="text" v-model="audit.name" placeholder="Заголовок" >
+            </div>
+            <div class="col m3">
+                <select class="selectColor col m2" v-model="audit.type">
+                    <option value="public">Публичный</option>
+                    <option value="private">Приватный</option>
+                    <option value="secret">Секретный</option>
+                </select>
+            </div>
+           
         </div>
 <div class="col m6">
 
@@ -217,8 +228,8 @@
 
         <tbody>
           <tr v-for="row in audit.rows">
-            <td><input type="text" v-model='row.propName' @change="updateDonut(audit)"></td>
-            <td><input type="number" v-model='row.propInt' @change="updateDonut(audit)"></td>
+            <td><input type="text" v-model='row.propName' @change="updateDonut(audit)" placeholder="Причина"></td>
+            <td><input type="number" v-model='row.propInt' placeholder="Колличество" @change="updateDonut(audit)"></td>
             <td><select class="selectColor" v-model='row.propColor' @change="updateDonut(audit)">
                 <option value="black"></option>
                 <option value="#ff4081">Розовый</option>

@@ -19,6 +19,9 @@ if($response->num_rows == 0){
 }else{
     $result->flags = json_decode(  $result->flags, JSON_UNESCAPED_UNICODE);
 
+$result->audits = json_decode( $result->audits, JSON_UNESCAPED_UNICODE);
+
+
     echo json_encode($result);
 }
 
