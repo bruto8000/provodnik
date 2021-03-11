@@ -48,7 +48,7 @@
                     class="datepicker center" value="" placeholder="Выберите дату">
             </div>
             <div class="col m3">
-                <div class="center" @click="undateZapusk">Дата запуска</div> <input :disabled="undate"
+                <div class="center" @click="undateZapusk" ref='sdate'>Дата запуска</div> <input :disabled="undate"
                     v-model.lazy="project.sdate" id="sdate" type="text" class="datepicker center" value=""
                     placeholder="Выберите дату">
             </div>
@@ -169,11 +169,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div @click="editProj" class="  btn-large col m12 black-text ">
-                <div class="flow-text">Изменить проект</div>
-            </div>
-        </div>
+    
 
 
 
@@ -230,13 +226,7 @@
           <tr v-for="row in audit.rows">
             <td><input type="text" v-model='row.propName' @change="updateDonut(audit)" placeholder="Причина"></td>
             <td><input type="number" v-model='row.propInt' placeholder="Колличество" @change="updateDonut(audit)"></td>
-            <td><select class="selectColor" v-model='row.propColor' @change="updateDonut(audit)">
-                <option value="black"></option>
-                <option value="#ff4081">Розовый</option>
-                <option value="#ff1744">Красный</option>
-                <option value="#4a148c">Фиолетовый</option>
-                <option value="#3d5afe">Индиго</option>
-            </select></td>
+         
  
           </tr>
       <tr>
@@ -257,7 +247,11 @@
 
 </div>
 
-
+<div class="row">
+    <div @click="editProj" class="  btn-large col m12 black-text ">
+        <div class="flow-text">Изменить проект</div>
+    </div>
+</div>
 
   
 

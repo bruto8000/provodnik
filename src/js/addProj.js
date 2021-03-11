@@ -36,7 +36,20 @@ let app = new Vue({
         //     type: 'public | private | secret'
 
         // }
-    ]
+    ],
+    projectNameErrors: {
+        fdate: "Дата спуска",
+        sdate: "Дата запуска",
+        nazvanie: "Название",
+        bizness: "Вид бизнеса",
+        opisanie: "Описание",  
+        zapusk: "Тип запуска",
+        soprovod: "Сопровождающий",
+        status: "Статус",
+        zakazchik: "Заказчик",
+     
+
+    }
 
 
     },
@@ -115,7 +128,9 @@ let app = new Vue({
         }
 
 
-
+this.$refs.sdate.dataset.tooltip = "Нажмите чтобы сделать неопределенной";
+this.$refs.sdate.dataset.position = "top";
+ M.Tooltip.init(this.$refs.sdate)
 
 
 
@@ -147,8 +162,10 @@ let app = new Vue({
                     console.log("HERE IS AUDITS",    this.audits )
   
                     
-     
-                    this.editor.html.set(res.data.opisanieBody);
+     setTimeout(() => {
+        this.editor.html.set(res.data.opisanieBody);
+     }, 200);
+       
                     delete this.project.opisanieBody;
     
                     console.log((!this.employees.find((e) => {
@@ -244,13 +261,14 @@ let app = new Vue({
                         for (prop in this.project) {
                             if (prop == 'flags') {
                                 this.project[prop] = [];
-                                return;
+                                continue;
                             }
 
                             this.project[prop] = '';
 
                         };
-                        this.editor.html.set('');
+                
+                        this.editor.html.set(' ');
                         delete this.project["opisanieBody"];
 
                     } else {
@@ -277,7 +295,7 @@ let app = new Vue({
                 for (prop in this.project) {
                     if (!this.project[prop]) {
 
-                        throw new Error("Пусто, чего-то не хватает: " + prop);
+                        throw new Error("Пусто, чего-то не хватает: " + this.projectNameErrors[prop]);
                     }
                 }
 
@@ -291,7 +309,7 @@ console.log('validateMainRows')
             } catch (e) {
 
                 M.toast({
-                    html: e
+                    html: e.message
                 });
 
                 return false;
@@ -312,10 +330,10 @@ console.log('validateMainRows')
                     }
                     audit.rows.forEach(row=>{
                         if(row.propColor==""){
-                            throw new Error("Не выбран цвет для строки:" + row.propName);  
+                            throw new Error("Не выбран цвет для строки: " + row.propName);  
                         }
                         if(row.propName==""){
-                            throw new Error("Не выбрано имя для строки в аудите:" + audit.name);  
+                            throw new Error("Не выбрано имя для строки в аудите: " + audit.name);  
                         }
                         
                     })
@@ -330,7 +348,7 @@ console.log('validateMainRows')
             } catch (e) {
 
                 M.toast({
-                    html: e
+                    html: e.message
                 });
 
                 return false;
@@ -347,18 +365,22 @@ if(!audit){return}
             audit.rows.forEach(row => {
               data.push(row.propInt);
               labels.push(row.propName);
-              colors.push(row.propColor);
+
             });
             audit.donut = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
 
                     datasets: [{
+                     
                         data: data,
-                        backgroundColor: colors
-                    }],
-                    labels: labels
-                }
+                        backgroundColor:  ['#c2185b', '#3949ab', '#2196f3', '#00bcd','#009688', '#66bb6a', '#f4ff81', '#f4511e', '#00e676' ].sort((v)=>{return (Math.floor(Math.random()*10) > 5) ? 1 : -1})
+                    },
+                ],
+                 
+                },
+             
+              
                 // These labels appear in the legend and in the tooltips when hovering different arcs
 
 
@@ -371,25 +393,31 @@ if(!audit){return}
             audit.rows.forEach(row => {
                 data.push(row.propInt);
                 labels.push(row.propName);
-                colors.push(row.propColor)
+        
               });
            console.log(audit)
            console.log()
            audit.donut.config.data.datasets[0].data = data;
-           audit.donut.config.data.datasets[0].backgroundColor = colors;
            audit.donut.config.data.labels = labels;
            audit.donut.update();
 
         },
         deleteRowInAudit(audit) {
             audit.rows.pop();
+          this.updateDonut(audit);
         },
         addRowToAudit(audit) {
+            if(audit.rows.length>=10){
+                M.toast({html: "Достигнуто максимальное колличество строк"})
+                return;
+            }
             audit.rows.push({
                 propName: "",
                 propInt: 0
             });
+            this.updateDonut(audit);
             this.initSelectColor();
+            
         },
         deleteAudit() {
             this.audits.pop();

@@ -48,7 +48,7 @@
                     class="datepicker center" value="" placeholder="Выберите дату">
             </div>
             <div class="col m3">
-                <div class="center" @click="undateZapusk">Дата запуска</div> <input :disabled="undate"
+                <div class="center" @click="undateZapusk" ref='sdate'>Дата запуска</div> <input :disabled="undate"
                     v-model.lazy="project.sdate" id="sdate" type="text" class="datepicker center" value=""
                     placeholder="Выберите дату">
             </div>

@@ -1,4 +1,4 @@
-let projectModal = {props: ['project'],
+let projectModal = {props: ['project', 'showDonut'],
 
 data(){
     return {
@@ -19,10 +19,12 @@ project:function(n,o){
     this.modal.open();
    console.log(this.project.audits)
    Vue.nextTick(()=>{
+       
     if(this.project.audits){
         this.project.audits.forEach(audit=>{
             this.createDonut(audit);
         })
+        this.toolTipsInit();
     }
    })
   
@@ -69,8 +71,8 @@ if(!audit){return}
         let colors = [];
         audit.rows.forEach(row => {
           data.push(row.propInt);
-          labels.push(row.propName);
-          colors.push(row.propColor);
+          labels.push(row.propName.length > 20  ? row.propName.slice(0,20) + '...' : row.propName);
+   
         });
         audit.donut = new Chart(ctx, {
             type: 'doughnut',
@@ -78,10 +80,12 @@ if(!audit){return}
 
                 datasets: [{
                     data: data,
-                    backgroundColor: colors
+                    backgroundColor: ['#c2185b', '#3949ab', '#2196f3', '#00bcd','#009688', '#66bb6a', '#f4ff81', '#f4511e', '#00e676',  '#cddc39' ].sort((v)=>{return (Math.floor(Math.random()*10) > 5) ? 1 : -1})
                 }],
                 labels: labels
-            }
+            },
+
+            
             // These labels appear in the legend and in the tooltips when hovering different arcs
 
 
@@ -89,6 +93,22 @@ if(!audit){return}
     },
     editProject(){
         location.replace('./editProj.html?'+this.project.id);
+    },
+    toolTipsInit(){
+        document.querySelectorAll('.tooltiped').forEach((th)=>{
+       if(th.innerText.length >21){
+           th.dataset.tooltip = th.innerText;
+           th.dataset.position="bottom";
+       }else{
+           console.log(th.classList.toggle('tooltiped')) 
+       }
+           
+        })
+
+    
+ M.Tooltip.init( document.querySelectorAll('.tooltiped'));
+ 
+
     }
 
 
@@ -108,7 +128,7 @@ template : `
 
 
 
-  <div class="audits container" v-show="project.audits">
+  <div class="audits container" v-show="showDonut && project.audits && project.audits.length">
     <h3 class="center fluid-text">
         Статусы по запуску/Доп.информация (Аудит)
      
@@ -136,7 +156,7 @@ template : `
         </div>
 <div class="col m6">
 
-    <table class=" centered">
+    <table class="striped centered" style="max-width: 100%">
         <thead>
           <tr>
               <th>Причины обращения</th>
@@ -147,8 +167,8 @@ template : `
         </thead>
 
         <tbody>
-          <tr v-for="row in audit.rows">
-            <td>{{row.propName}}</td>
+          <tr v-for="row,rowIdx in audit.rows">
+            <td class="truncate tooltiped" style="max-width: 20ch" :id="idx+rowIdx">{{row.propName}}</td>
             <td>{{row.propInt}}</td>
          
  
