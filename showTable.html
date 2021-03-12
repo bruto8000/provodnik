@@ -5,98 +5,113 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./src/css/bulma.css">
     <link rel="stylesheet" href="./src/css/materialize.css">
-    <link rel="stylesheet" href="./src/css/style.css">
     <meta http-equiv="Cache-Control" content="no-cache" />
+    <link rel="stylesheet" href="./src/css/style.css">
     <title>Title</title>
 </head>
 
 <body>
     <div id="app" >
         <preloader ms="0"></preloader>
-        <div class="row container">
-            <div class="col m2 center offset-m2">Дата начала:
-                <input type="text" class="datepicker" v-model.lazy="date1">
+        <div class="columns">
+            <div class="column is-3 is-offset-3 center ">
+                <span>Дата начала:</span> 
+                <input type="text" class="datepicker input" v-model.lazy="date1">
             </div>
          
-            <div class="col m2 center">Дата конца:
-                <input type="text" class="datepicker" v-model.lazy="date2">
+            <div class="column is-3 center">
+                <span>Дата конца:</span> 
+                <input type="text" class="datepicker input" v-model.lazy="date2">
             </div>
-       
-            <div class="col m2 offset-m1" style="margin-top:20px;">
-                <div class="btn" @click="dateRange">Сформировать</div>
-            </div>
+      
         
         </div>
     
        
 
         <h3 class="center">Табель 
-            <div class="btn z-depth-3" style="width: 40px; padding: 0;border-radius: 50%;" @click="exportToExcel('allTable')"> <img src="./EX.png" width="100%" style="border-radius: 50%;" alt=""></div>
+            <div class="button z-depth-3" style="width: 40px; padding: 0;border-radius: 50%;" @click="exportToExcel('allTable')"> <img src="./EX.png" width="100%" style="border-radius: 50%;" alt=""></div>
            
         </h3>
-<div class="col m12" style="overflow: auto;">
+<div class="column is-12" style="overflow: auto;">
 
 
-        <table cellspacing="2" border="1" cellpadding="5" class="responsive-table striped center" id="allTable">
+        <table class="table is-hoverable" id="allTable">
+            <tbody>
+
+     
             <tr>
-                <th></th>
-                <th v-for="day in tabelFiltred" class="center" >{{day.date}}</th>
+                <th ></th>
+                <th  v-for="day in tabelFiltred" class="center" >{{day.date}}</th>
             </tr>
             <tr>
-                <th></th>
-                <th v-for="day in tabelFiltred" class="center" >{{ day.date | dayOfWeek}}</th>
-
-            </tr>
-            <tr v-for="employee in employees">
-                <td>{{employee['full_name']}}</td>
-                <td v-for="day in tabelFiltred" class="center"  :class="{
-                    green : day.body[employee.nid].trim() == 'В',
-                    blue : day.body[employee.nid].trim() == 'О',
-                    yellow : day.body[employee.nid].trim() == 'Б',
-                    indigo : day.body[employee.nid].trim() == 'З',
+                <th  style="text-align: center;">ФИО</th>
+                <th  v-for="day in tabelFiltred" class="center" >{{ day.date | dayOfWeek}}</th></tr>
+            <tr class="center" v-for="employee in employees">
+                <td style="width: 1%;
+                white-space: nowrap; text-align: left;" >{{employee['full_name']}}</td>
+                <td v-for="day in tabelFiltred" class="center ma vam"  :class="{
+    
+                    'has-background-info' : day.body[employee.nid].trim() == 'З',
+                    'has-background-danger': day.body[employee.nid].trim() == 'В',
+                    'has-background-primary' : day.body[employee.nid].trim() == 'О',
+                    'has-background-warning' : day.body[employee.nid].trim() == 'Б',
+                    'has-background-success':       Number(day.body[employee.nid].trim().replace(',','.')) > 0     
                 }
                 
                 
-                "> {{ day.body[employee.nid]}}
-                </td>
+                ">{{ day.body[employee.nid]}}</td>
 
             </tr>
+        </tbody>
         </table>
     </div>
 
     <hr>
-<br>
-<br>
-<br>
 
 
-<div class="row">
+<div class="block">
 
 <h4 class="center fluid-text">
     План/Факт 
-    <div class="btn z-depth-3" style="width: 40px; padding: 0;border-radius: 50%;" @click="exportToExcel('planFact')"> <img src="./EX.png" width="100%" style="border-radius: 50%;" alt=""></div>
+    <div class="button z-depth-3" style="width: 40px; padding: 0;border-radius: 50%;" @click="exportToExcel('planFact')"> <img src="./EX.png" width="100%" style="border-radius: 50%;" alt=""></div>
      
 </h4>
       
-    <table cellspacing="2" border="1" cellpadding="5" class="col m6 offset-m3 center striped" id="planFact">
+
+<div class="columns">
+
+
+
+    <div class="column is-offset-4 is-4 center">
+
+    
+
+      
+        <table class="table is-striped is-hoverable center w100 "  id="planFact">
       
 
 
-        <tr>
-            <th>ФИО</th>
-            <th>План</th>
-            <th>Факт без замещения</th>
-            <th>Общий Факт</th>
-        </tr>
-      
-        <tr v-for="employee in employees">
-            <td>{{employee['full_name']}}</td>
-            <td>{{plan | filterDotZeroZero}}</td>
-            <td>{{employee.factWithoutZ | filterDotZeroZero}}</td>
-            <td>{{employee.fact | filterDotZeroZero}}</td>
-        </tr>
-    </table>
+            <tr>
+                <th>ФИО</th>
+                <th>План</th>
+                <th>Факт без замещения</th>
+                <th>Общий Факт</th>
+            </tr>
+          
+            <tr v-for="employee in employees">
+                <td  style="text-align: left;">{{employee['full_name']}}</td>
+                <td>{{plan | filterDotZeroZero}}</td>
+                <td>{{employee.factWithoutZ | filterDotZeroZero}}</td>
+                <td>{{employee.fact | filterDotZeroZero}}</td>
+            </tr>
+        </table>
+ 
+    </div>
+   
+</div>
 </div>
 
 

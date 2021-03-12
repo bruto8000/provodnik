@@ -5,62 +5,76 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./src/css/materialize.css">
-    <link rel="stylesheet" href="./src/css/style.css">
+<link rel="stylesheet" href="src/css/materialize.css">
     <meta http-equiv="Cache-Control" content="no-cache" />
-    <link rel="stylesheet" href="./src/css/icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@5.9.55/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="./src/css/bulma.css">
+    <link rel="stylesheet" href="./src/css/style.css">
     <title>Title</title>
 </head>
 
 <body>
     <div id="app">
         <preloader ms="0"></preloader>
-        <div class="row">
-            <div class="col m1">Дата начала:</div>
-            <div class="col m3">
-                <input type="text" class="datepicker" v-model.lazy="date1">
+        <div class="columns center">
+   
+            <div class="column is-3 is-offset-3 ">
+                <p>Дата начала:</p>
+                <input type="text" class="datepicker input" v-model.lazy="date1">
             </div>
-            <div class="col m1">Дата конца:</div>
-            <div class="col m3">
-                <input type="text" class="datepicker" v-model.lazy="date2">
+     
+            <div class="column is-3">
+                <p>Дата конца:</p>
+                <input type="text" class="datepicker input" v-model.lazy="date2">
             </div>
-            <div class="col m4">
-                <div class="btn" @click="dateRange">Сформировать</div>
-            </div>
+         
         </div>
-        <div class="btn" @click="changeOnServer">Сохранить</div>
-        <div class="btn" @click="clearSome(false)">Сбросить выборку</div>
-        <div class="btn" @click="some.step = 0;enterSome()">Выбрать несколько</div>
-        <div class="btn" @click="moveSome">Переместить выборку</div>
-        <div class="btn" @click="history.copy = true;moveSome()">Переместить выборку с копираванием</div>
-        <button class="btn" @click="moveHistory(false)" :disabled="history.isFirst"> <i class="material-icons">arrow_back</i></button>
-        <button class="btn" @click="moveHistory(true)" :disabled="history.isLast"><i class="material-icons">arrow_forward</i></button>
-        <input type="text" placeholder="Для нескольких"   v-model='some.input'>
-        <div class="row">
 
-        </div>
-        <div class="col m12" style="overflow: auto;">
+      <div class="toolbar center block">
+
+   <div class="block ">
+
+ 
+        <div class="button is-success block" @click="changeOnServer">Сохранить</div>
+        <div class="button is-primary block" @click="clearSome(false)">Сбросить выборку</div>
+        <div class="button is-primary block" @click="some.step = 0;enterSome()">Выбрать несколько</div>
+        <div class="button is-primary block" @click="moveSome">Переместить выборку</div>
+        <div class="button is-primary block" @click="history.copy = true;moveSome()">Переместить выборку с копираванием</div>
+        <button class="button is-info block" @click="moveHistory(false)" :disabled="history.isFirst"> <span class="mdi mdi-undo"></span></button>
+        <button class="button is-info block" @click="moveHistory(true)" :disabled="history.isLast"><span class="mdi mdi-redo"></span></button>
+    </div>
+
+
+        <div  class="columns block"><input type="text" placeholder="Для нескольких"  class="input column is-4 is-offset-4"  v-model='some.input'></div> 
+
+    </div>
+    
+       
+        <div class="table-container" >
 
   
-            <table  class="responsive-table striped">
+            <table  class="table is-striped is-hoverable ">
+                <thead>
                 <tr>
                     <th></th>
                     <th v-for="day in tabelFiltred" class="center" >{{day.date}}</th>
                 </tr>
                 <tr>
-                    <th></th>
+                    <td></td>
                     <th v-for="day in tabelFiltred" class="center" >{{ day.date | dayOfWeek}}</th>
     
                 </tr>
+            </thead>
+            <tbody>
                 <tr v-for="employee in employees">
-                    <td>{{employee['full_name']}}</td>
-                    <td v-for="day in tabelFiltred" class="center"  :class="{red : day.somes.includes(employee.nid),
-                         ' pink accent-1' :  day.presomes.includes(employee.nid) }" @mouseover="preEnterSome(day,employee.nid)"><input class="center"  :class="{
-                            indigo : day.body[employee.nid].trim() == 'З',
-                        green : day.body[employee.nid].trim() == 'В',
-                        blue : day.body[employee.nid].trim() == 'О',
-                        yellow : day.body[employee.nid].trim() == 'Б',
-                    }
+                    <td>> {{employee['full_name']}}></td>
+                    <td v-for="day in tabelFiltred" class="center"  :class="{'has-background-danger' : day.somes.includes(employee.nid),
+                            'has-background-warning' :  day.presomes.includes(employee.nid) }" @mouseover="preEnterSome(day,employee.nid)"><input class=" input p0 center "  :class="{
+                            'has-background-info' : day.body[employee.nid].trim() == 'З',
+                            'has-background-danger': day.body[employee.nid].trim() == 'В',
+                            'has-background-primary' : day.body[employee.nid].trim() == 'О',
+                            'has-background-warning' : day.body[employee.nid].trim() == 'Б',
+                            'has-background-success':       Number(day.body[employee.nid].trim().replace(',','.')) == 7  || Number(day.body[employee.nid].trim().replace(',','.')) == 8.25 ||    Number(day.body[employee.nid].trim().replace(',','.')) == 8       }
                     
                     
                     " @click="enterSome(day, employee.nid)"  type="text"
@@ -68,6 +82,7 @@
                     </td>
     
                 </tr>
+            </tbody>
             </table>
         </div>
    

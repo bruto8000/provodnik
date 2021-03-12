@@ -494,16 +494,18 @@ if(!keepHistory){
             this.some.somes = [];
             this.$forceUpdate()
         },
-        changeOnServer: function () {
-            M.toast({
-                html: "Синхронизирую..."
-            })
+        changeOnServer: function (event) {
+       event.target.classList.toggle('is-loading')
+        
             axios.post('../vendor/saveTabel.php', JSON.stringify(this.tabel))
                 .then(res => {
                     console.log(res.data)
                     if (res.data == "OK") {
+                        setTimeout(() => {
+                            event.target.classList.toggle('is-loading')
+                        }, 200);
                         M.toast({
-                            html: "Синхронизация успешна!"
+                            html: "Данные сохранены."
                         })
                     } else {
                         M.toast({
@@ -519,7 +521,7 @@ if(!keepHistory){
             var tableToExcel = (function () {
                 var uri = 'data:application/vnd.ms-excel;base64,',
                     template =
-                    '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+                    '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
                     base64 = function (s) {
                         return window.btoa(unescape(encodeURIComponent(s)))
                     },
@@ -535,7 +537,9 @@ if(!keepHistory){
                         table: table.innerHTML
                     }
                     console.log(table)
-                    console.log(ctx)
+                    console.log(ctx.table)
+             ctx.table = ctx.table.replace(/class="[\w\s-]+"/gu, '')
+             console.log(ctx.table)
                     window.location.href = uri + base64(format(template, ctx))
                 }
             })()

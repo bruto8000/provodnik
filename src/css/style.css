@@ -29,3 +29,15 @@ thead {
 .audits{
     margin-top: 40px;
 }
+.center{
+    text-align: center;
+}
+.ma{
+    margin: auto;
+}
+.vam{
+    vertical-align: middle !important;
+}
+.w100{
+    width: 100%;
+}
