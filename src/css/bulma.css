@@ -23,8 +23,9 @@
 .button,
 .delete,
 .file,
-.is-unselectable,
-.modal-close,
+.is-unselectable
+/* ,
+.modal-close, */
 .pagination-ellipsis,
 .pagination-link,
 .pagination-next,
@@ -73,8 +74,10 @@
     margin-bottom: 1.5rem
 }
 
-.delete,
-.modal-close {
+.delete
+/* ,
+.modal-close  */
+{
     -moz-appearance: none;
     -webkit-appearance: none;
     background-color: rgba(10, 10, 10, .2);
@@ -98,9 +101,11 @@
 }
 
 .delete::after,
-.delete::before,
+.delete::before
+/* ,
 .modal-close::after,
-.modal-close::before {
+.modal-close::before  */
+{
     background-color: #fff;
     content: "";
     display: block;
@@ -111,32 +116,39 @@
     transform-origin: center center
 }
 
-.delete::before,
-.modal-close::before {
+.delete::before
+/* ,
+.modal-close::before  */
+{
     height: 2px;
     width: 50%
 }
 
-.delete::after,
-.modal-close::after {
+.delete::after
+/* ,
+.modal-close::after */
+ {
     height: 50%;
     width: 2px
 }
 
 .delete:focus,
-.delete:hover,
-.modal-close:focus,
-.modal-close:hover {
+.delete:hover
+/* .modal-close:focus,
+.modal-close:hover */
+ {
     background-color: rgba(10, 10, 10, .3)
 }
 
 .delete:active,
-.modal-close:active {
+/* .modal-close:active */
+ {
     background-color: rgba(10, 10, 10, .4)
 }
 
-.is-small.delete,
-.is-small.modal-close {
+.is-small.delete
+/* .is-small.modal-close */
+ {
     height: 16px;
     max-height: 16px;
     max-width: 16px;
@@ -155,8 +167,10 @@
     width: 24px
 }
 
-.is-large.delete,
-.is-large.modal-close {
+.is-large.delete
+/* ,
+.is-large.modal-close */
+ {
     height: 32px;
     max-height: 32px;
     max-width: 32px;
@@ -5732,7 +5746,7 @@ print {
 .message-body pre code {
     background-color: transparent
 }
-
+/* 
 .modal {
     align-items: center;
     display: none;
@@ -5749,7 +5763,7 @@ print {
 
 .modal-background {
     background-color: rgba(10, 10, 10, .86)
-}
+} */
 
 /* .modal-card,
 .modal-content {
@@ -5762,7 +5776,7 @@ print {
 
 @media screen and (min-width:769px) {
 
-    .modal-card,
+    /* .modal-card,
     .modal-content {
         margin: 0 auto;
         max-height: calc(100vh - 40px);
@@ -5829,7 +5843,7 @@ print {
     flex-shrink: 1;
     overflow: auto;
     padding: 20px
-}
+} */
 
 .navbar {
     background-color: #fff;

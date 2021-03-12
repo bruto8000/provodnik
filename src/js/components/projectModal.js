@@ -118,7 +118,7 @@ template : `
 
 <div id="projectModal" class="modal">
 <div class="modal-content">
-  <h4>{{project.nazvanie}}</h4>
+  <h1 class="title is-2">{{project.nazvanie}}</h1>
  <p>{{project.opisanie}} </p>
   <div v-html="project.opisanieBody">
 

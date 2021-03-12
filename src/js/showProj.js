@@ -55,7 +55,11 @@ let app = new Vue({
                 
                 Vue.nextTick( ()=> {
                     this.kalendar = Kalendar.set();
-                    M.FormSelect.init(document.querySelectorAll('select'))
+                    M.FormSelect.init(document.querySelectorAll('select'),  {
+                        dropdownOptions : {
+                            constrainWidth: false
+                        }
+                    })
                   
                 })
                 
@@ -84,7 +88,11 @@ let app = new Vue({
             this.sort.r = 1;
             this.sort.column = '';
             Vue.nextTick(function () {
-                M.FormSelect.init(document.querySelectorAll('select'))
+                M.FormSelect.init(document.querySelectorAll('select', {
+                    dropdownOptions : {
+                        constrainWidth: false
+                    }
+                }))
             })
 
         },

@@ -47,6 +47,16 @@ let app = new Vue({
     mounted: function () {
         console.log("I AM mounted");
 
+let year = new Date().getFullYear()
+let month = new Date().getMonth()
+let kvartal = '';
+switch (true){
+    case month >= 0 && month <=2 : kvartal = "I"; break;
+    case month >= 3 && month <=5 : kvartal = "II"; break;
+    case month >= 7 && month <=9 : kvartal = "III"; break;
+    case month >= 9 : kvartal = "IV"; break;
+}
+this.date1 = kvartal + ' ' + year;
         this.kalendar = Kalendar.set({
             showMonthBtn: true,
             showKvartalBtn: true,
@@ -605,7 +615,7 @@ console.log("Forwar")
             }
         },
         filterInput: function(day,emp){
-         day.body[emp] = day.body[emp].toUpperCase()
+         day.body[emp] = day.body[emp].toUpperCase().trim()
         },
         planFactCalculate(){
             this.plan = 0;

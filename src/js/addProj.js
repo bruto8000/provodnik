@@ -95,9 +95,10 @@ let app = new Vue({
             });
 
 
-    
+            let someDate = new Date();
         this.kalendar[0] = Kalendar.set({
-            showMonthBtn: true
+            showMonthBtn: true,
+            events: [someDate.toDateString()]
         }, '#sdate');
         this.kalendar[1] = Kalendar.set({
 
@@ -210,8 +211,21 @@ this.$refs.sdate.dataset.position = "top";
 
 
         },
-        editProj: function () {
-            if (!this.validateMainRows() || !this.validateAudits()) return;
+        editProj: function (event) {
+            event.target.classList.toggle('is-loading')
+            if (!this.validateMainRows() || !this.validateAudits()) {
+                
+                
+                setTimeout(() => {
+                    event.target.classList.toggle('is-loading')
+                }, 400);
+                
+                
+                
+                return;
+
+
+            }
 
             this.project.opisanieBody = this.editor.html.get().replace(/'/ig, '"');
             this.project.audits = []
@@ -223,6 +237,9 @@ this.$refs.sdate.dataset.position = "top";
        console.log(this.project.audits)
             axios.post('../vendor/editProj.php', JSON.stringify(this.project))
                 .then((r) => {
+                    setTimeout(() => {
+                        event.target.classList.toggle('is-loading')
+                    }, 400);
                     console.log(r.data);
                     if (r.data == "OK") {
                         M.toast({
@@ -246,13 +263,27 @@ this.$refs.sdate.dataset.position = "top";
 
 
         },
-        addProj: function () {
+        addProj: function (event) {
+            event.target.classList.toggle('is-loading')
+            if (!this.validateMainRows()) {
 
-            if (!this.validateMainRows()) return;
+
+setTimeout(() => {
+    event.target.classList.toggle('is-loading')
+}, 400);
+
+
+
+
+                return;
+            } 
             this.project.opisanieBody = this.editor.html.get().replace(/'/ig, '"');
-
+     
             axios.post('../vendor/addProj.php', JSON.stringify(this.project))
                 .then((r) => {
+     setTimeout(() => {
+        event.target.classList.toggle('is-loading')
+     }, 400);
                     console.log(r.data);
                     if (r.data == "OK") {
                         M.toast({

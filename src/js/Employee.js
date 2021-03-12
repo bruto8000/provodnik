@@ -28,9 +28,15 @@ mounted(){
 
 }
     ,methods:  {
-    addToServ:    function () {
+    addToServ:    function (event) {
+
+        event.target.classList.toggle('is-loading')
+
   if(!this.full_name || !this.nid || !this.login){
       M.toast({html:"Упс, что-то пусто"});
+      setTimeout(() => {
+        event.target.classList.toggle('is-loading')
+    },400);
       return;
   }
   axios.post('../vendor/addEmployee.php',JSON.stringify( {
@@ -39,6 +45,9 @@ mounted(){
       login: this.login
   }))
   .then(res=>{
+    setTimeout(() => {
+      event.target.classList.toggle('is-loading')
+  }, 400);
       console.log(res.data)
       if(res.data=="OK"){
           M.toast({html: "Сотрудник добавлен"});
@@ -51,6 +60,7 @@ mounted(){
           this.nid = ''
           this.login = ''
       }else  if(res.data == 'NID'){
+        
          
         M.toast({html: "Уникальный ID уже существует"});
       }else{

@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="./src/css/style.css">
     <link rel="stylesheet" href="./src/css/froala_editor.css">
     <link rel="stylesheet" href="./src/css/froala_style.css">
+    <link rel="stylesheet" href="./src/css/bulma.css">
 
 
 
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+ 
     <link rel="stylesheet" href="./src/css/froala_style.css">
     <link rel="stylesheet" href="./src/css/froala/code_view.css">
     <link rel="stylesheet" href="./src/css/froala/colors.css">
@@ -26,7 +26,8 @@
     <link rel="stylesheet" href="./src/css/froala/video.css">
     <link rel="stylesheet" href="./src/css/froala/fullscreen.css">
     <link rel="stylesheet" href="./src/css/froala/file.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css">
+
+  
 
 
 
@@ -41,25 +42,25 @@
     <div id="app" class="container">
 
         <preloader ms="0"></preloader>
-        <h1 class="center">Добавление проекта</h1>
-        <div class="row">
-            <div class="col m3 ">
+        <h1 class="center title is-1">Добавление проекта</h1>
+        <div class="columns">
+            <div class="column is-3 ">
                 <div class="center">Дата спуска</div> <input v-model.lazy="project.fdate" id="fdate" type="text"
-                    class="datepicker center" value="" placeholder="Выберите дату">
+                    class="datepicker center input" value="" placeholder="Выберите дату">
             </div>
-            <div class="col m3">
+            <div class="column is-3">
                 <div class="center" @click="undateZapusk" ref='sdate'>Дата запуска</div> <input :disabled="undate"
-                    v-model.lazy="project.sdate" id="sdate" type="text" class="datepicker center" value=""
+                    v-model.lazy="project.sdate" id="sdate" type="text" class="datepicker center input" value=""
                     placeholder="Выберите дату">
             </div>
-            <div class="col m6 center ">
+            <div class="column is-6 center ">
                 <div class="  ">Название</div>
                 <input placeholder="Введите Название" v-model="project.nazvanie" id="nazvanie" type="text"
-                    class="validate">
+                    class="validate input">
             </div>
         </div>
-        <div class="row">
-            <div class="col m3 center ">
+        <div class="columns">
+            <div class="column is-3 p-1 center ">
                 <div class="  ">Вид бизнеса</div>
                 <div class="">
                     <select v-model="project.bizness" id="bizness">
@@ -75,7 +76,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col m3 center">
+            <div class="column is-3  p-1 center">
                 <div class="  ">Тип запуска</div>
                 <div class="">
                     <select v-model="project.zapusk" id="zapusk">
@@ -96,29 +97,32 @@
                     </select>
                 </div>
             </div>
-            <div class="col m6 center ">
+            <div class="column is-6 center ">
                 <div class="  ">Описание</div>
                 <input placeholder="Введите Описание" v-model="project.opisanie" id="opisanie" type="text"
-                    class="validate">
+                    class="validate input">
             </div>
         </div>
-        <div class="row">
-            <div class="col m3">
+        <div class="columns">
+            <div class="column is-3 p-1">
                 <div class="   center">Сопровождающий</div>
-                <select v-model="project.soprovod" id="soprovod">
+                <div class="">
 
-                    <option value="" selected>Сопровождающий</option>
-                    <option v-for="employee in employees" :value="employee['full_name']">{{employee['full_name']}}
-                    </option>
-
-                </select>
+                    <select v-model="project.soprovod" id="soprovod">
+                        
+                        <option value="" selected>Сопровождающий</option>
+                        <option v-for="employee in employees" :value="employee['full_name']">{{employee['full_name']}}
+                        </option>
+                        
+                    </select>
+                </div>
 
 
             </div>
 
 
 
-            <div class="col m3 center ">
+            <div class="column is-3 p-1 center ">
                 <div class="">Статус</div>
                 <div class="">
                     <select v-model="project.status" id="status">
@@ -135,13 +139,13 @@
             </div>
 
 
-            <div class="col m3 center  ">
+            <div class="column is-3 center  ">
                 <div class="  ">Заказчик</div>
                 <input placeholder="Введите заказчика" v-model="project.zakazchik" id="zakazchik" type="text"
-                    class="validate">
+                    class="validate input">
             </div>
 
-            <div class="col m3 center  ">
+            <div class="column is-3 center  p-1 ">
                 <div class="  ">Флаги</div>
                 <select placeholder="Флаги" v-model="project.flags" id="zakazchik" type="text"
                     class="validate"
@@ -159,19 +163,19 @@
             </div>
 
         </div>
-        <div class="row">
+        <div class="columns">
 
-            <div class="col m12">
+            <div class="column is-12">
 
                 <div class="froala">
                     <label for="pbody">Описание</label>
-                    <textarea class="form-control" rows="7" wrap="hard" id="pbody" name="pbody"></textarea>
+                    <textarea class="form-control" columnss="7" wrap="hard" id="pbody" name="pbody"></textarea>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div @click="addProj" class="  btn-large col m12 black-text ">
-                <div class="flow-text">Добавить проект</div>
+        <div class="columns">
+            <div @click="addProj" class="button has-text-white is-large is-primary column is-12 black-text title is-3">
+    Добавить проект
             </div>
         </div>
 
