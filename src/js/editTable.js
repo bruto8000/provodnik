@@ -23,6 +23,7 @@ let app = new Vue({
         range: ["01 03 2021", "02 03 2021", "03 03 2021", "04 03 2021", "05 03 2021", "06 03 2021", "07 03 2021", "08 03 2021", "09 03 2021", "10 03 2021", "11 03 2021", "12 03 2021", "13 03 2021", "14 03 2021", "15 03 2021", "16 03 2021", "17 03 2021", "18 03 2021", "19 03 2021", "20 03 2021", "21 03 2021", "22 03 2021", "23 03 2021", "24 03 2021", "25 03 2021", "26 03 2021", "27 03 2021", "28 03 2021", "29 03 2021", "30 03 2021", "31 03 2021"],
         some: {
             OFF: false,
+            clicked: false,
             step: -1,
             F: {
                 X: '',
@@ -60,7 +61,7 @@ this.date1 = kvartal + ' ' + year;
         this.kalendar = Kalendar.set({
             showMonthBtn: true,
             showKvartalBtn: true,
-            showYearBtn: true
+            // showYearBtn: true
         });
 
 
@@ -267,110 +268,18 @@ if(endDate < startDate){
 
         },
 
-        enterSome: function (day, who) {
+        preEnterSome: function (day, nid, clear) {
 
- 
-            switch (this.some.step) {
-                case -1:
+
+
             
-
-                    return;
-                case 0: {
-                    M.toast({
-                        html: "Выберите начальный"
-                    });
-
-
-              this.clearSome(false);
-              this.some.step = 1;
-          
-
-                    break;
-                }
-                case 1: {
-                    this.some.F.X = this.tabelFiltred.indexOf(day);
-                    this.some.F.Y = this.trueNID.indexOf(who);
-                    M.toast({
-                        html: "Выберите конечный"
-                    });
-                    this.some.step = 2;
-                    break;
-                }
-                case 2: {
-                    this.some.L.X = this.tabelFiltred.indexOf(day);
-                    this.some.L.Y = this.trueNID.indexOf(who);
-                    this.modifSome();
-                    M.toast({
-                        html: "Подсчет"
-                    });
-                    this.some.step = 3;
-                    break;
-                }
-                case 4: {
-
-                    let x = this.some.L.X - this.some.F.X;
-                    let y = this.some.L.Y - this.some.F.Y;
-
-
-                    this.some.F.X = this.tabelFiltred.indexOf(day);
-                    this.some.F.Y = this.trueNID.indexOf(who);
-                    this.some.L.X = this.some.F.X + x;
-                    this.some.L.Y = this.some.F.Y + y;
-                    // let oldinput = this.some.input;
-
-                    if(!this.history.copy){
-
-               
-                    this.some.somes.forEach(element => {
-                        element.somes.forEach((v, idx, arr) => {
-                            element.body[v] = " ";
-                            element.presomes = [];
-                        })
-                    });
-                }
-                    this.history.write = false;
-                    this.history.copy= false;
-                    this.clearSome(true);
-                    this.some.step = 3;
-                    this.modifSome();
-                    Vue.nextTick(e => {
-
-                        let i = 0;
-        
-                        this.some.somes.forEach(element => {
-                            element.somes.forEach((v, idx, arr) => {
-                                element.body[v] = this.history.arrOfHistory[this.history.arrOfHistory.length-1][i];
-                                // console.log(this.history[this.history.arrOfHistory.length-1][i])
-                    
-                    
-                                element.presomes = [];
-                                i++;
-                            })
-                        });
-
-                        // this.some.input = oldinput;
-                        Vue.nextTick(()=>{
-
-                            this.history.write = true;
-                        })
-                    })
-
-                    break;
-                }
-
-
-
-            }
-        },
-        preEnterSome: function (day, nid) {
-
             if(this.some.OFF) return;
-this.some.OFF = true;
+this.some.OFF = true; //OPTIMIZATION
 setTimeout(() => {
     this.some.OFF = false; 
 }, 0);
 
-            if (!(this.some.step == 2 || this.some.step == 4)) {
+            if (!(this.some.clicked || this.some.step == 4)) {
                 return;
             }
 
@@ -379,8 +288,9 @@ setTimeout(() => {
 
 
 
-            if (this.some.step == 2) {
-
+            if (this.some.clicked || this.some.step == 2) {
+console.log(this.some.F.X)
+console.log(this.some.F.Y)
                 this.some.PRE.X = this.tabelFiltred.indexOf(day);
                 this.some.PRE.Y = this.trueNID.indexOf(nid);
                 this.some.presomes = [];
@@ -430,6 +340,118 @@ this.some.presomes = [];
 
 
 
+
+        },
+        setSomeClicked(day, who){
+            console.log('Click')
+            console.log(this.some.clicked)
+            console.log(this.some)
+            if(this.some.clicked) return;
+
+            console.log(this.trueNID)
+            console.log(who)
+            console.log(this.trueNID.indexOf(who))
+            if(this.some.step == 4){
+                console.log('SETSOMECLICKED FUCKING BITCH 4')
+                let x = this.some.L.X - this.some.F.X;
+                let y = this.some.L.Y - this.some.F.Y;
+
+
+                this.some.F.X = this.tabelFiltred.indexOf(day);
+                this.some.F.Y = this.trueNID.indexOf(who);
+                this.some.L.X = this.some.F.X + x;
+                this.some.L.Y = this.some.F.Y + y;
+                // let oldinput = this.some.input;
+
+                if(!this.history.copy){
+
+           
+                this.some.somes.forEach(element => {
+                    element.somes.forEach((v, idx, arr) => {
+                        element.body[v] = " ";
+                        element.presomes = [];
+                    })
+                });
+            }
+                this.history.write = false;
+                this.history.copy= false;
+                this.clearSome(true);
+                this.some.step = 3;
+                this.modifSome();
+                Vue.nextTick(e => {
+
+                    let i = 0;
+    
+                    this.some.somes.forEach(element => {
+                        element.somes.forEach((v, idx, arr) => {
+                            element.body[v] = this.history.arrOfHistory[this.history.arrOfHistory.length-1][i];
+                            // console.log(this.history[this.history.arrOfHistory.length-1][i])
+                
+                
+                            element.presomes = [];
+                            i++;
+                        })
+                    });
+
+                    // this.some.input = oldinput;
+                    Vue.nextTick(()=>{
+
+                        this.history.write = true;
+                    })
+                })
+             
+            }else{
+
+
+                if(this.some.step == 3)return;
+                this.some.clicked = true;
+                this.some.F.X = this.tabelFiltred.indexOf(day);
+                this.some.F.Y = this.trueNID.indexOf(who);
+
+this.some.step = 2;
+             
+
+
+
+
+            }
+        },
+        unsetSomeClicked(){
+            this.some.clicked = false;
+            if( this.some.PRE.X == -1){
+                this.some.PRE.X ==   this.some.L.X;
+                this.some.PRE.X ==   this.some.L.X;
+                console.log("unsetSomeClicked step1")
+            return;
+        }
+       
+                
+  
+                if(this.some.PRE.X <= this.some.F.X && this.some.PRE.Y <=   this.some.F.Y){
+                    console.log("unsetSomeClicked step2")
+                    this.some.presomes.forEach(element => {
+                        element.presomes = [];
+                    });
+
+                    return;
+                }
+                    console.log("unsetSomeClicked after return")
+if(! (this.some.step == 2)) return;
+console.log("unsetSomeClicked after return2")
+console.log(this.some.PRE.X )
+console.log(this.some.F.X )
+console.log(this.some.PRE.Y )
+console.log(this.some.F.Y)
+                    this.some.L.X =this.some.PRE.X
+                    this.some.L.Y =this.some.PRE.Y
+                    this.some.PRE.X = -1;
+                    this.some.PRE.Y = -1;
+                    this.clearSome(false);
+                    this.some.step = 3;
+                    this.modifSome();
+                  
+                
+   
 
         },
         moveSome: function (day, who) {
@@ -483,8 +505,18 @@ this.some.presomes = [];
 
 
         },
-        clearSome: function (keepHistory) {
+        clearSome: function (keepHistory,clearXY) {
+            
 
+ if(clearXY){
+    this.some.F.Y = -1;
+    this.some.F.X = -1;
+    this.some.L.X = -1;
+    this.some.L.Y = -1;
+ }           
+if(this.step == -1){
+    return
+}
 if(!keepHistory){
     this.history.arrOfHistory = [];
     this.history.isLast = true;
@@ -499,7 +531,9 @@ if(!keepHistory){
             });
             
             this.some.step = -1;
-
+            this.some.PRE.X = -1;
+            this.some.PRE.Y = -1;
+         
             this.some.input = '';
             this.some.somes = [];
             this.$forceUpdate()
@@ -633,13 +667,13 @@ this.employees.forEach(em=>{
                             if(em.nid == nid){
                               
                                 if(v.body[nid].trim().toUpperCase() == 'З' ){
-                                    if(v.isNextDayVixod){
-                                        em.fact +=7;
+                                    // if(v.isNextDayVixod){
+                                    //     em.fact +=7;
                                      
-                                    }else{
+                                    // }else{
                                         em.fact +=  8.25;
                                     
-                                    }
+                                    // }
                                 }else if( ! isNaN(Number(v.body[nid].trim().replace(',', '.')))){
                                     em.fact +=  Number(v.body[nid].trim().replace(',', '.'))  ;
                                     em.factWithoutZ  +=  Number(v.body[nid].trim().replace(',', '.'))  ;
@@ -658,7 +692,26 @@ this.employees.forEach(em=>{
                 }
                 
             })
+
+
+            this.employees.forEach(employee=>{
+                employee.koeff =  ((1 - (employee.factWithoutZ/this.plan))*100).toFixed(0) + '%';
+
+            })
  
+        },
+        classObjForTd(day,employee){
+
+let dataOfDay = day.body[employee.nid].trim().toUpperCase();
+return {
+    'has-background-info' : dataOfDay == 'З',
+    'has-background-danger': dataOfDay== 'В',
+    'has-background-primary' : dataOfDay == 'О',
+    'has-background-warning' : dataOfDay == 'Б',
+    'has-background-success':  [7,8,8.25].includes(Number(dataOfDay.replace(',','.')))
+
+}
+
         }
 
     },
@@ -727,8 +780,8 @@ this.employees.forEach(em=>{
             try {
                 return this.tabel.filter(v => {
                     if (!v.somes) v.somes = [];
-                    if (this.range.indexOf(v.date) > (-1)) return true;
-                    return false;
+                    return this.range.includes(v.date);
+            
                 })
             } catch {
                 return []

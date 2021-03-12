@@ -52,17 +52,7 @@
             <tr class="center" v-for="employee in employees">
                 <td style="width: 1%;
                 white-space: nowrap; text-align: left;" >{{employee['full_name']}}</td>
-                <td v-for="day in tabelFiltred" class="center ma vam"  :class="{
-    
-                    'has-background-info' : day.body[employee.nid].trim() == 'З',
-                    'has-background-danger': day.body[employee.nid].trim() == 'В',
-                    'has-background-primary' : day.body[employee.nid].trim() == 'О',
-                    'has-background-warning' : day.body[employee.nid].trim() == 'Б',
-                    'has-background-success':       Number(day.body[employee.nid].trim().replace(',','.')) > 0     
-                }
-                
-                
-                ">{{ day.body[employee.nid]}}</td>
+                <td v-for="day in tabelFiltred" class="center ma vam"  :class="classObjForTd(day,employee)">{{ day.body[employee.nid]}}</td>
 
             </tr>
         </tbody>
@@ -99,6 +89,7 @@
                 <th>План</th>
                 <th>Факт без замещения</th>
                 <th>Общий Факт</th>
+                <th>Коэфф</th>
             </tr>
           
             <tr v-for="employee in employees">
@@ -106,6 +97,7 @@
                 <td>{{plan | filterDotZeroZero}}</td>
                 <td>{{employee.factWithoutZ | filterDotZeroZero}}</td>
                 <td>{{employee.fact | filterDotZeroZero}}</td>
+                <td>{{employee.koeff}}</td>
             </tr>
         </table>
  

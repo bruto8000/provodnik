@@ -14,19 +14,19 @@
     <title>Title</title>
 </head>
 
-<body>
-    <div id="app">
+<body  >
+    <div id="app" @mouseup="unsetSomeClicked">
         <preloader ms="0"></preloader>
         <div class="columns center">
        
             <div class="column is-3 is-offset-3 ">
                 <p>Дата начала:</p>
-                <input type="text" class="datepicker input" v-model.lazy="date1">
+                <input type="text" class="datepicker input" :disabled="some.step == 3 || some.step == 4" v-model.lazy="date1">
             </div>
      
             <div class="column is-3">
                 <p>Дата конца:</p>
-                <input type="text" class="datepicker input" v-model.lazy="date2">
+                <input type="text" class="datepicker input" :disabled="some.step == 3 || some.step == 4" v-model.lazy="date2">
             </div>
          
         </div>
@@ -36,13 +36,13 @@
    <div class="block ">
 
  
-        <div class="button is-success block" @click="changeOnServer">Сохранить</div>
-        <div class="button is-primary block" @click="clearSome(false)">Сбросить выборку</div>
-        <div class="button is-primary block" @click="some.step = 0;enterSome()">Выбрать несколько</div>
-        <div class="button is-primary block" @click="moveSome">Переместить выборку</div>
-        <div class="button is-primary block" @click="history.copy = true;moveSome()">Переместить выборку с копираванием</div>
-        <button class="button is-info block" @click="moveHistory(false)" :disabled="history.isFirst"> <span class="mdi mdi-undo"></span></button>
-        <button class="button is-info block" @click="moveHistory(true)" :disabled="history.isLast"><span class="mdi mdi-redo"></span></button>
+        <button class="button is-success block" @click="changeOnServer" :disabled="some.step == 3 || some.step == 4"> <i class="mdi mdi-database-arrow-down mdi-24px"></i> Сохранить</button>
+        <button class="button is-danger block" @click="clearSome(false,true)" :disabled="!(some.step == 3)"> <i class="mdi mdi-content-save-off-outline mdi-24px"></i> </button>
+      
+        <button class="button is-primary block" @click="moveSome" :disabled="!(some.step == 3)"> <i class="mdi mdi-content-save-move-outline mdi-24px"></i> </button>
+        <button class="button is-primary block" @click="history.copy = true;moveSome()" :disabled="!(some.step == 3)"> <i class="mdi mdi-content-save-all-outline mdi-24px"></i></button>
+        <button class="button is-info block" @click="moveHistory(false)" :disabled="history.isFirst"> <i class="mdi mdi-undo mdi-24px"></i></button>
+        <button class="button is-info block" @click="moveHistory(true)" :disabled="history.isLast"><i class="mdi mdi-redo mdi-24px"></i></button>
     </div>
 
 
@@ -71,15 +71,7 @@
                     <td style="width: 1%;
                     white-space: nowrap; text-align: left;"> {{employee['full_name']}}</td>
                     <td v-for="day in tabelFiltred" class="center"  :class="{'has-background-danger' : day.somes.includes(employee.nid),
-                            'has-background-warning' :  day.presomes.includes(employee.nid) }" @mouseover="preEnterSome(day,employee.nid)"><input class=" input p0 center "  :class="{
-                            'has-background-info' : day.body[employee.nid].trim() == 'З',
-                            'has-background-danger': day.body[employee.nid].trim() == 'В',
-                            'has-background-primary' : day.body[employee.nid].trim() == 'О',
-                            'has-background-warning' : day.body[employee.nid].trim() == 'Б',
-                            'has-background-success':       Number(day.body[employee.nid].trim()) == 7  || Number(day.body[employee.nid].trim().replace(',','.')) == 8.25 ||    Number(day.body[employee.nid].trim().replace(',','.')) == '8'       }
-                    
-                    
-                    " @click="enterSome(day, employee.nid)"  type="text"
+                            'has-background-warning' :  day.presomes.includes(employee.nid) }"  @mouseover="preEnterSome(day,employee.nid)"><input class=" input p0 center "  :class="classObjForTd(day,employee)" @mousedown="setSomeClicked(day,employee.nid)"   type="text"
                             v-model="day.body[employee.nid]" name="" @input="filterInput(day, employee.nid)">
                     </td>
     
