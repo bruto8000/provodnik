@@ -97,13 +97,13 @@
                 </div>
             </div>
             <div class="column is-6 center ">
-                <div class="  ">Описание</div>
-                <input placeholder="Введите Описание" v-model="project.opisanie" id="opisanie" type="text"
+                <div class="  ">Заказчик</div>
+                <input placeholder="Введите заказчика"  v-model="project.zakazchik" id="zakazchik" type="text"
                     class="validate input">
             </div>
         </div>
         <div class="columns">
-            <div class="column is-3 p-1">
+            <div class="column is-6 p-1">
                 <div class="   center">Сопровождающий</div>
                 <div class="">
 
@@ -121,7 +121,7 @@
 
 
 
-            <div class="column is-3 p-1 center ">
+            <div class="column is-3  p-1 center ">
                 <div class="">Статус</div>
                 <div class="">
                     <select v-model="project.status" id="status">
@@ -138,11 +138,7 @@
             </div>
 
 
-            <div class="column is-3 center  ">
-                <div class="  ">Заказчик</div>
-                <input placeholder="Введите заказчика" v-model="project.zakazchik" id="zakazchik" type="text"
-                    class="validate input">
-            </div>
+       
 
             <div class="column is-3 center  p-1 ">
                 <div class="  ">Флаги</div>
@@ -222,9 +218,9 @@
 
     <table class=" centered">
         <thead>
-          <tr>
-              <th>Причины обращения</th>
-              <th>Кол-во</th>
+          <tr class="my-1">
+              <th>     <input type="text" class="is-large input" v-model="audit.subname" placeholder="Подзаголовок" ></th>
+              <th class="has-text-centered"> Кол-во</th>
               <td>        <button class="button is-danger" :disabled="!audit.rows.length" @click="deleteRowInAudit(audit)">-</button>
            <button class="button is-success" @click="addRowToAudit(audit)">+</button></td>
           </tr>

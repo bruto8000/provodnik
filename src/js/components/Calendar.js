@@ -331,7 +331,7 @@
                                     l.style.cursor = 'pointer';
             //BRUTOR                        // l.textContent = D.locales[this.options.language].months[n];
                                     l.id = 'monthWrapper' + n;
-                                    l.innerHTML = D.locales[this.options.language].months[n] + '<span class="monthSpan red-text" id="monthSpan' +n+ '"></span>';
+                                    l.innerHTML = D.locales[this.options.language].months[n] + '<span class="monthSpan" id="monthSpan' +n+ '"></span>';
                                  
                              
                                     o.appendChild(l);
@@ -408,14 +408,14 @@
                         }, {
                             key: "_renderLoading",
                             value: function e() {
-                                console.log("-renderloagin")
+                                // console.log("-renderloagin")
                                 var t = document.createElement("div");
                                 t.classList.add("calendar-loading-container");
                                 t.style.minHeight = this._nbCols * 200 + "px";
                                 var n = document.createElement("div");
                                 n.classList.add("calendar-loading");
                                 if (this.options.loadingTemplate) {
-                                    console.log("loading templaye")
+                                    // console.log("loading templaye")
 
                                     if (typeof this.options.loadingTemplate === "string") {
 
@@ -478,7 +478,8 @@
                             key: "_renderDataSourceDay",
                             value: function e(t, n, a) {
 
-                                 console.log(t,a)
+    // console.log('WNIMANUUM')                             ;console.log(t, n, a)
+    //a PROJECTS    === n - DateObject ==== t - HTMLELEMENTOFDAY
                                 var i = t.parentElement;
                                 switch (this.options.style) {
                                     case "border":
@@ -515,8 +516,8 @@
                                                 }
 
                                         
-                                            console.log(...usedColors)
-                                            console.log(usedColors.length)
+                                            // console.log(...usedColors)
+                                            // console.log(usedColors.length)
                                             i.style.boxShadow = s
                                         }
                                         break;
@@ -524,36 +525,59 @@
                                         i.style.backgroundColor = a[a.length - 1].color;
                                         var l = n.getTime();
                                         if (a[a.length - 1].startDate.getTime() == l) {
+                                            // console.log('CASE 1')
                                             i.classList.add("day-start");
                                             if (a[a.length - 1].startHalfDay || this.options.alwaysHalfDay) {
+
+                                        
                                                 i.classList.add("day-half");
                                                 var d = "transparent";
-                                                for (var o = a.length - 2; o >= 0; o--) {
-                                                    if (a[o].startDate.getTime() != l || !a[o].startHalfDay && !this.options.alwaysHalfDay) {
-                                                        d = a[o].color;
-                                                        break
+
+
+                                                let usedColors = [];
+                                                for (let o = 0; o <a.length; o++) {
+                                                    if(usedColors.includes(a[o].color) || usedColors.length >=2){
+                                                        continue;
                                                     }
-                                                }
-                                                i.style.background = "linear-gradient(-45deg, ".concat(a[a.length - 1].color, ", ").concat(a[a.length - 1].color, " 49%, ").concat(d, " 51%, ").concat(d, ")")
-                                            } else if (this.options.roundRangeLimits) {
-                                                i.classList.add("round-left")
-                                            }
-                                        } else if (a[a.length - 1].endDate.getTime() == l) {
-                                            i.classList.add("day-end");
-                                            if (a[a.length - 1].endHalfDay || this.options.alwaysHalfDay) {
-                                                i.classList.add("day-half");
-                                                var d = "transparent";
-                                                for (var o = a.length - 2; o >= 0; o--) {
-                                                    if (a[o].endDate.getTime() != l || !a[o].endHalfDay && !this.options.alwaysHalfDay) {
-                                                        d = a[o].color;
-                                                        break
+                                                    usedColors.push(a[o].color)
+                                       
+                                                     
+        
+        
                                                     }
-                                                }
-                                                i.style.background = "linear-gradient(135deg, ".concat(a[a.length - 1].color, ", ").concat(a[a.length - 1].color, " 49%, ").concat(d, " 51%, ").concat(d, ")")
-                                            } else if (this.options.roundRangeLimits) {
-                                                i.classList.add("round-right")
+
+
+                                            
+
+                                    if(usedColors.length == 1){
+                                        i.style.background = usedColors[0];
+                                    }else{
+
+                                        i.style.background = "linear-gradient(135deg, ".concat(usedColors[0], ", ").concat(usedColors[0], " 49%, ").concat(usedColors[1], " 51%, ").concat(usedColors[1], ")")
+                                    }
                                             }
-                                        }
+                                            //  else if (this.options.roundRangeLimits) {
+                                            //     console.log('CASE 1-2')
+                                            //     i.classList.add("round-left")
+                                            // }
+                                        } 
+                                        // else if (a[a.length - 1].endDate.getTime() == l) {
+                                        //     console.log('CASE 2')
+                                        //     i.classList.add("day-end");
+                                        //     if (a[a.length - 1].endHalfDay || this.options.alwaysHalfDay) {
+                                        //         i.classList.add("day-half");
+                                        //         var d = "transparent";
+                                        //         for (var o = a.length - 2; o >= 0; o--) {
+                                        //             if (a[o].endDate.getTime() != l || !a[o].endHalfDay && !this.options.alwaysHalfDay) {
+                                        //                 d = a[o].color;
+                                        //                 break
+                                        //             }
+                                        //         }
+                                        //         i.style.background = "linear-gradient(135deg, ".concat(a[a.length - 1].color, ", ").concat(a[a.length - 1].color, " 49%, ").concat(d, " 51%, ").concat(d, ")")
+                                        //     } else if (this.options.roundRangeLimits) {
+                                        //         i.classList.add("round-right")
+                                        //     }
+                                        // }
                                         break;
                                     case "custom":
                                         if (this.options.customDataSourceRenderer) {

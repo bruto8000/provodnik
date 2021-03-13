@@ -21,9 +21,12 @@ let app = new Vue({
         filterInput: {
             zakazchik: "",
             nazvanie: "",
+         
+
+
+        },
+        filterHTML :{
             opisanie: "",
-
-
         },
         sort: {
             column: "",
@@ -41,6 +44,13 @@ let app = new Vue({
         axios.get('../vendor/showProj.php')
         .then(res => {
             this.projects = res.data.reverse();
+            this.projects.forEach(proj=>{
+                let htmlEl = document.createElement('div')
+                htmlEl.innerHTML = proj.opisanieBody;
+
+                proj.opisanieBodyCuted = htmlEl.innerText.length < 50 ? htmlEl.innerText :  htmlEl.innerText.slice(0,50)+'...';
+                proj.opisanieBodyHTML= htmlEl;
+            })
         }, err => {
                 M.toast({
                     html: "Ошибка " + err
@@ -85,6 +95,7 @@ let app = new Vue({
             for (prop in this.filterInput) {
                 this.filterInput[prop] = ''
             }
+            this.filterHTML.opisanie = ''
             this.sort.r = 1;
             this.sort.column = '';
             Vue.nextTick(function () {
@@ -164,7 +175,14 @@ console.log(this.projectForModal)
                 }
                 for (prop in this.filterInput) {
                     if (this.filterInput[prop]) {
+                        
                         if (!v[prop].toUpperCase().includes(this.filterInput[prop].toUpperCase())) return false;
+                    }
+                }
+                if(this.filterHTML.opisanie.length){
+                    if(!v.opisanieBodyHTML.innerText.includes(this.filterHTML.opisanie)){
+                        return false;
+
                     }
                 }
                 return true;

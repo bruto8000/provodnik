@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="./src/css/style.css">
     <link rel="stylesheet" href="./src/css/calendar.css">
     <link rel="stylesheet" href="./src/css/bulma.css">
+    <link rel="stylesheet" href="./src/css/chart.css">
+    <link rel="stylesheet" href="./src/css/materialdesignicons.css">
 
 
 
@@ -25,11 +27,12 @@
 <div class="columns">
     <div class="column is-5">
         <calendar  language="ru" :data-source="dataSource"
-     
+        always-half-day="true"
          enable-range-selection='true'
-        render-style='border' 
+        render-style='background' 
         @select-range="setRange" 
         @mouse-on-day="setDay" 
+ 
       
         display-week-number="true"
         class="table-no-100">
@@ -51,6 +54,7 @@
             <th class="" >Вид бизнеса</th>
             <th class="" >Тип запуска </th>
             <th class="" >Название</th>
+            <th class="" >Описание</th>
          
             <th class="" >Сопровождающий</th>
             <th class="" >Заказчик</th>
@@ -66,7 +70,8 @@
                 <td class="">{{project.bizness}}</td>
                 <td class="">{{project.zapusk}}</td>
                 <td class="">{{project.nazvanie}}</td>
-              
+                <td class="">{{project.opisanieBodyCuted}}</td>
+                
                 <td class="">{{project.soprovod}}</td>
                 <td class="">{{project.zakazchik}}</td>
                 <td class="">{{project.status}}</td>
@@ -104,6 +109,7 @@
 
 
 
+<script src="./src/js/chart.js"></script>
 <script src="./src/js/components/preloader.js"></script>
 <script src="./src/js/components/projectModal.js"></script>
 <script src="./src/js/components/Calendar.js"></script>

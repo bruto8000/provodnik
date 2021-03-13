@@ -172,7 +172,7 @@
 
             </div>
             <div class="column is-1"><input type="text" class="input" v-model="filterInput.nazvanie"></div>
-            <div class="column is-2"><input type="text" class="input" v-model="filterInput.opisanie"></div>
+            <div class="column is-2"><input type="text" class="input" v-model="filterHTML.opisanie"></div>
             <div class="column is-2 p-1">
 
                 <select v-model="filterSelect.soprovod" id="soprovod">
@@ -210,7 +210,7 @@
                 <div class="column is-1">{{project.bizness}}</div>
                 <div class="column is-1">{{project.zapusk}}</div>
                 <div class="column is-1">{{project.nazvanie}}</div>
-                <div class="column is-2">{{project.opisanie}}</div>
+                <div class="column is-2">{{project.opisanieBodyCuted}}</div>
                 <div class="column is-2">{{project.soprovod}}</div>
                 <div class="column is-2">{{project.zakazchik}}</div>
                 <div class="column is-1">{{project.status}}</div>

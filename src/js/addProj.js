@@ -9,14 +9,14 @@ let app = new Vue({
             sdate: "",
             nazvanie: "",
             bizness: "",
-            opisanie: "",
+         
             zapusk: "",
             soprovod: "",
             status: "",
             zakazchik: "",
             flags: [],
             //  opisanieBody: "", Will added Automaticly
-
+//   opisanie: "", OLD
         },
         projectID: 0,
 
@@ -28,6 +28,7 @@ let app = new Vue({
         audits: [
         //     {
         //     name: "Название аудита",
+        //     subname: ""
         //     rows: [{
         //         propName: "Причина ...",
         //         propInt: 25,
@@ -157,7 +158,7 @@ this.$refs.sdate.dataset.position = "top";
            
                     Object.assign(this.project, {
                         flags: res.data.flags || []
-
+                        
                     })
                     this.audits = res.data.audits || [];
                     console.log("HERE IS AUDITS",    this.audits )
@@ -168,11 +169,9 @@ this.$refs.sdate.dataset.position = "top";
      }, 200);
        
                     delete this.project.opisanieBody;
+                    delete this.project.opisanie;
     
-                    console.log((!this.employees.find((e) => {
-              
-                            return e.full_name == this.project.soprovod
-                        })));
+                  
                     if (!this.employees.find((e) => {
                         console.log(e.full_name)
                         console.log(this.project.soprovod)
@@ -351,20 +350,27 @@ console.log('validateMainRows')
             try {
 
 
-                this.audits.forEach(audit=>{
+                this.audits.forEach((audit,idx)=>{
+                    console.log(audit)
                     console.log('audit.name.lengt')
+                    console.log(audit.name)
                     if(audit.name.length<3){
-                        throw new Error("Загаловок аудита не должен быть меньше 3х символов");  
+                        throw new Error("Загаловок аудита не должен быть меньше 3х символов" + ' (аудит #' + (idx+1) +')' );  
+                    }
+                    console.log(audit.subname)
+                    if(audit.subname.length<3){
+                        throw new Error("Подзагаловок аудита не должен быть меньше 3х символов" + ' (аудит #' + (idx+1) +')');  
                     }
                     if(audit.type==""){
                         throw new Error("Не выбран тип аудита (Public/Private)");  
                     }
                     audit.rows.forEach(row=>{
-                        if(row.propColor==""){
-                            throw new Error("Не выбран цвет для строки: " + row.propName);  
-                        }
+                       
                         if(row.propName==""){
                             throw new Error("Не выбрано имя для строки в аудите: " + audit.name);  
+                        }
+                        if(row.propInt==""){
+                            throw new Error("Не выбрано колличество для строки в аудите: " + audit.name);  
                         }
                         
                     })
@@ -457,6 +463,7 @@ if(!audit){return}
             this.audits.push({
 
                 name: "",
+                subname: "",
                 rows: [{
                     propName: "",
                     propInt: 0

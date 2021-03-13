@@ -38,26 +38,14 @@ let app = new Vue({
     },
     mounted: function () {
       
-        setTimeout(() => {
-            for (let i = 0; i < 12; i++) {
-                this.monthSpans.push(document.getElementById('monthSpan' + i))
-                this.monthWrappers.push(document.getElementById('monthWrapper' + i))
-            }
-        }, 200);
+ 
+           
 
 
-        setTimeout(() => {
-            console.log(this.monthWrappers)
-            this.monthWrappers.forEach((e, idx) => {
-              
 
-                e.onclick = () => {
-                    this.monthCheck(idx)
-                }
-            })
 
-            M.Tooltip.init(document.querySelectorAll('.tooltipped'));
-        }, 1000);
+
+    
 
 
         axios.get('./vendor/showProj.php')
@@ -65,14 +53,25 @@ let app = new Vue({
                 data
             }) => {
 
-                ///PARSING 
+                ///PARSING ====> DATE IS PROJECT
+
 
                 data.forEach(DATE => {
-                    if(DATE.flags){
 
-                        DATE.color = DATE.flags.includes("Влияние") ||  DATE.flags.includes("ДПП")  ? 'red' : 'green';
+
+                    let htmlEl = document.createElement('div')
+                    htmlEl.innerHTML = DATE.opisanieBody;
+    
+                    DATE.opisanieBodyCuted = htmlEl.innerText.length < 50 ? htmlEl.innerText :  htmlEl.innerText.slice(0,50)+'...';
+                    DATE.opisanieBodyHTML= htmlEl;
+
+
+
+                    if(DATE.flags && (DATE.flags.includes("Влияние") ||  DATE.flags.includes("ДПП"))){
+
+                        DATE.color =  '#ef5350';
                     }else{
-                        DATE.color  = 'green'
+                        DATE.color  = '#81c784'
                     }
                     let splited = DATE.sdate.split(' ');
 
@@ -120,10 +119,8 @@ let app = new Vue({
                 });
                 this.dataSource = data;
 
-                setTimeout(() => {
-
-                    this.monthSet();
-                }, 300);
+           this.monthSet();
+               
 
 
             })
@@ -135,20 +132,55 @@ let app = new Vue({
     methods: {
         monthSet() {
 
-            this.monthSpans.forEach((e, idx) => {
-                if (this.monthsWithUnsetDate.includes(idx)) 
-                {
-                    e.innerText = '•';
-             
-               this.monthWrappers[idx].dataset.position = "bottom";
-               this.monthWrappers[idx].classList.add('tooltipped');
-               this.monthWrappers[idx].dataset.tooltip = "В этом месяце есть проекты с  неназначенной датой запуска.<br> Кликнине чтобы посмотреть";
-             
 
+
+
+            Vue.nextTick(()=>{
+                for (let i = 0; i < 12; i++) {
+                    this.monthSpans.push(document.getElementById('monthSpan' + i))
+                    this.monthWrappers.push(document.getElementById('monthWrapper' + i))
                 }
+                this.monthWrappers.forEach((e, idx) => {
+                  
+    
+                    e.onclick = () => {
+                        this.monthCheck(idx)
+                    }
+                })
 
-            })
-            M.Tooltip.init(document.querySelectorAll('.tooltipped'));
+
+
+                this.monthSpans.forEach((e, idx) => {
+                    if (this.monthsWithUnsetDate.includes(idx)) 
+                    {
+              
+                        e.classList.add("mdi");
+                        e.classList.add("mdi-message-alert");
+         
+                   this.monthWrappers[idx].dataset.position = "bottom";
+                   this.monthWrappers[idx].classList.add('tooltipped');
+                   this.monthWrappers[idx].dataset.tooltip = "В этом месяце есть проекты с  неназначенной датой запуска.<br> Кликнине чтобы посмотреть";
+                 
+    
+                    }
+    
+                })
+
+
+
+
+                M.Tooltip.init(document.querySelectorAll('.tooltipped'));
+
+
+
+
+            } )
+
+
+
+
+           
+
         },
         monthCheck(idx) {
             console.log(idx)
