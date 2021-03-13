@@ -8,14 +8,29 @@ projectTypes: {
     public : "Публичный",
     private: "Приватный",
     secret: "Секретный"
-}
+},
+
+currentProject : {}
+
+
     }
+
+
+
 },
 watch :{
 
 project:function(n,o){
+    console.log('PROJECT')
+    if(!n.id)return; 
+    if(this.currentProject.id == n.id){
+        this.modal.open();
+       console.log('uje est')
+        return;
+    }
+    console.log('oy new')
+    this.currentProject = n;
 
-    if(!n.id)return;
     this.modal.open();
    console.log(this.project.audits)
    Vue.nextTick(()=>{
@@ -44,7 +59,8 @@ mounted(){
         outDuration: 0,
         onCloseEnd: function(){
             console.log(this)
-            this.$emit('change-project-to-null')
+            this.$emit('update:project', {id:null})
+        
         }.bind(this)
     });
 
@@ -63,9 +79,9 @@ mounted(){
 },
 methods: {
     createDonut(audit) {
-        console.log('CREATING', audit)
+
 if(!audit){return}
-        let ctx = document.getElementById( 'DONUT'+this.project.audits.indexOf(audit)).getContext('2d');
+        let ctx = document.getElementById( 'DONUT'+this.currentProject.audits.indexOf(audit)).getContext('2d');
         let data = [];
         let labels = [];
         let colors = [];
@@ -92,7 +108,7 @@ if(!audit){return}
         });
     },
     editProject(){
-        location.replace('./editProj.html?'+this.project.id);
+        location.replace('./editProj.html?'+this.currentProject.id);
     },
     toolTipsInit(){
         document.querySelectorAll('.tooltiped').forEach((th)=>{
@@ -118,9 +134,9 @@ template : `
 
 <div id="projectModal" class="modal">
 <div class="modal-content">
-  <h1 class="title is-2">{{project.nazvanie}}</h1>
- <p>{{project.opisanie}} </p>
-  <div v-html="project.opisanieBody">
+  <h1 class="title is-2">{{currentProject.nazvanie}}</h1>
+ <p>{{currentProject.opisanie}} </p>
+  <div v-html="currentProject.opisanieBody">
 
   </div>
 
@@ -128,7 +144,7 @@ template : `
 
 
 
-  <div class="audits container" v-show="showDonut && project.audits && project.audits.length">
+  <div class="audits container" v-show="showDonut && currentProject.audits && currentProject.audits.length">
     <h3 class="center fluid-text">
         Статусы по запуску/Доп.информация (Аудит)
      
@@ -138,7 +154,7 @@ template : `
  
 
 
-     <div class="row" v-for="audit,idx in project.audits" :key="idx">
+     <div class="row" v-for="audit,idx in currentProject.audits" :key="idx">
 
 
 

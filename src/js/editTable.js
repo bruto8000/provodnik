@@ -836,6 +836,9 @@ return {
         },
         filterDotZeroZero(val){
        return  val.toFixed(2)
+        },
+        cutYear(val){
+return val.split(' ').slice(0,-1).join(' ')
         }
         
     },

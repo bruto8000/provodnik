@@ -116,6 +116,7 @@ let app = new Vue({
         openProject(project){
             console.log(project)
 this.projectForModal = project;
+console.log(this.projectForModal)
 
         },
         exportToExcel: function () {
