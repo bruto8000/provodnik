@@ -1,8 +1,8 @@
 // setTimeout(()=>location.reload(), 3000) 
 
 
- Vue.component('addProj',{
-
+ Vue.component('editProj',{
+props : ['projectFromParent'],
     data(){return {
         project: {
             fdate: "",
@@ -18,7 +18,7 @@
             //  opisanieBody: "", Will added Automaticly
 //   opisanie: "", OLD
         },
-        projectID: 0,
+    
 
         editor: '',
         undate: false,
@@ -55,7 +55,7 @@
     }
     },
     mounted: function () {
-console.log('mounted')
+
 
         console.log(this.kalendar);
         axios.get('../vendor/showEmployees.php')
@@ -106,28 +106,9 @@ console.log('mounted')
         }, '#fdate');
 
 
-        console.log(location)
+       this.project = Object.assign({},this.projectFromParent)
 
-        if (location.pathname == '/editProj.html') {
-
-
-
-
-            if (location.pathname == '/editProj.html' && (!isNaN(Number(location.search.slice(1))) && (location.search.length))) {
-                this.projectID = location.search.slice(1);
-                this.loadProject();
-            } else {
-                M.toast({
-                    html: "Неверная ссылка"
-                })
-                setTimeout(() => {
-
-                    location.replace('./menu.html')
-                }, 2000);
-            }
-
-
-        }
+       
 
 
 this.$refs.sdate.dataset.tooltip = "Нажмите чтобы сделать неопределенной";
@@ -143,67 +124,69 @@ this.$refs.sdate.dataset.position = "top";
 
 
         loadProject() {
-            axios.get('./vendor/getProjById.php', {
-                params: {
-                    id: this.projectID
-                }
-            }).then(
-                (res) => {
-                    console.log(res.data);
+
+            this.project = Object.assign({},this.projectFromParent ) 
+    //         axios.get('./vendor/getProjById.php', {
+    //             params: {
+    //                 id: this.projectID
+    //             }
+    //         }).then(
+    //             (res) => {
+    //                 console.log(res.data);
 
      
-                    for (prop in this.project) {
-                        this.project[prop] = res.data[prop]
-                    }
+    //                 for (prop in this.project) {
+    //                     this.project[prop] = res.data[prop]
+    //                 }
            
-                    Object.assign(this.project, {
-                        flags: res.data.flags || []
+    //                 Object.assign(this.project, {
+    //                     flags: res.data.flags || []
                         
-                    })
-                    this.audits = res.data.audits || [];
-                    console.log("HERE IS AUDITS",    this.audits )
+    //                 })
+    //                 this.audits = res.data.audits || [];
+    //                 console.log("HERE IS AUDITS",    this.audits )
   
                     
-     setTimeout(() => {
-        this.editor.html.set(res.data.opisanieBody);
-     }, 200);
+    //  setTimeout(() => {
+    //     this.editor.html.set(res.data.opisanieBody);
+    //  }, 200);
        
-                    delete this.project.opisanieBody;
-                    delete this.project.opisanie;
+    //                 delete this.project.opisanieBody;
+    //                 delete this.project.opisanie;
     
                   
-                    if (!this.employees.find((e) => {
-                        console.log(e.full_name)
-                        console.log(this.project.soprovod)
-                        console.log(this.project.soprovod)
-                            return e.full_name == this.project.soprovod
-                        })) {
-                            console.log('ERROR PLACE?')
-                        this.employees.push({
-                            full_name: this.project.soprovod
-                        })
+    //                 if (!this.employees.find((e) => {
+    //                     console.log(e.full_name)
+    //                     console.log(this.project.soprovod)
+    //                     console.log(this.project.soprovod)
+    //                         return e.full_name == this.project.soprovod
+    //                     })) {
+    //                         console.log('ERROR PLACE?')
+    //                     this.employees.push({
+    //                         full_name: this.project.soprovod
+    //                     })
              
 
                  
 
 
-                    }
+    //                 }
     
-                    Vue.nextTick(() => {
+    //                 Vue.nextTick(() => {
 
-                        this.audits.forEach(audit=>{
-                        this.createDonut(audit);
-                    })
-                        M.FormSelect.init(document.querySelectorAll('select'))
-                    })
+    //                     this.audits.forEach(audit=>{
+    //                     this.createDonut(audit);
+    //                 })
+    //                     M.FormSelect.init(document.querySelectorAll('select'))
+    //                 })
 
-                },
-                (err) => {
-                    M.toast({
-                        html: "Ошибка: " + err
-                    });
-                },
-            );
+    //             },
+    //             (err) => {
+    //                 M.toast({
+    //                     html: "Ошибка: " + err
+    //                 });
+    //             },
+    //         );
 
 
             
@@ -490,14 +473,41 @@ if(!audit){return}
  
     watch: {
        
-    },
+projectFromParent : function(n,o){
+
+console.log(n, ' IS NEW PROJ');
+this.project = Object.assign({},this.projectFromParent)
+
+    // if (location.pathname == '/editProj.html') {
+
+
+
+
+    //     if (location.pathname == '/editProj.html' && (!isNaN(Number(location.search.slice(1))) && (location.search.length))) {
+    //         this.projectID = location.search.slice(1);
+    //         this.loadProject();
+    //     } else {
+    //         M.toast({
+    //             html: "Неверная ссылка"
+    //         })
+    //         setTimeout(() => {
+
+    //             location.replace('./menu.html')
+    //         }, 2000);
+    //     }
+
+
+    }
+
+},
+
+
+
     template: `
-    
-    
-    <div  class="container">
+    <div class="container">
 
-
-    <h1 class="center title is-1">Добавление проекта</h1>
+  
+    <h1 class="center title is-1">Изменение проекта</h1>
     <div class="columns">
         <div class="column is-3 ">
             <div class="center">Дата спуска</div> <input v-model.lazy="project.fdate" id="fdate" type="text"
@@ -624,17 +634,100 @@ if(!audit){return}
             </div>
         </div>
     </div>
+
+
+
+
+<br><br>
+
+
+
+<div class="audits">
+<h3 class="center fluid-text title is-3">
+    Статусы по запуску/Доп.информация (Аудит)
+    <button class="button is-danger" :disabled="!audits.length" @click="deleteAudit()">-</button>
+    <button class="button is-primary" @click="addAudit()">+</button>
+ </h3>  
+
+
+
+
+
+ <div class="row" v-for="audit,idx in audits" :key="idx">
+
+
+
+
+<br>
+
+    <h4 class="center title is-4 my-1"> Загаловок аудита : {{audit.name}}</h4>
     <div class="columns">
-        <div @click="addProj" class="button has-text-white is-large is-primary column is-12 black-text title is-3">
-Добавить проект
+        <div class="column is-6 is-offset-3">
+
+            <input type="text" class="input" v-model="audit.name" placeholder="Заголовок" >
         </div>
+        <div class="column is-2 p-1">
+            <select class="selectColor" v-model="audit.type">
+                <option value="public">Публичный</option>
+                <option value="private">Приватный</option>
+                <option value="secret">Секретный</option>
+            </select>
+        </div>
+       
     </div>
 
 
+    <div class="columns">
+
+ 
+<div class="column is-6">
+
+<table class=" centered">
+    <thead>
+      <tr class="my-1">
+          <th>     <input type="text" class="is-large input" v-model="audit.subname" placeholder="Подзаголовок" ></th>
+          <th class="has-text-centered"> Кол-во</th>
+          <td>        <button class="button is-danger" :disabled="!audit.rows.length" @click="deleteRowInAudit(audit)">-</button>
+       <button class="button is-success" @click="addRowToAudit(audit)">+</button></td>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr v-for="row in audit.rows">
+        <td><input type="text" class="input" v-model='row.propName' @change="updateDonut(audit)" placeholder="Причина"></td>
+        <td><input type="number" class="input" v-model='row.propInt' placeholder="Колличество" @change="updateDonut(audit)"></td>
+     
+
+      </tr>
+  <tr>
+ 
+
+  </tr>  
+    </tbody>
+  </table>
+
+
+  </div>
+
+    <div class="column is-6">
+ <canvas class="" :id="'DONUT'+idx" width="400" height="400">
+  </canvas>
+    </div>
+</div>
+</div>
+</div>
+
+
+<div class="columns my-4">
+<div @click="editProj" class="button has-text-white is-large is-primary column is-12 black-text title is-3">
+    Изменить проект
+</div>
+</div>
 
 
 
 </div>
+
     
     `
 })

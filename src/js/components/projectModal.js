@@ -121,7 +121,9 @@ if(audit.donut)audit.donut.destroy();
 })
     },
     editProject(){
-        location.replace('./editProj.html?'+this.currentProject.id);
+        console.log('emmiting edit proj')
+        this.$emit('edit-proj', this.currentProject);
+        // location.replace('./editProj.html?'+this.currentProject.id);
     },
     toolTipsInit(){
         document.querySelectorAll('.cut-to-20-ch').forEach((th)=>{

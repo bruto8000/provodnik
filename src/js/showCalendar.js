@@ -3,9 +3,9 @@
 
 
 
-let app = new Vue({
-    el: "#app",
-    data: {
+Vue.component('showCalendar',{
+
+    data(){return {
 
         dataSource: [
 
@@ -34,7 +34,7 @@ let app = new Vue({
         ],
         currentMonth: 0
 
-
+    }
     },
     mounted: function () {
       
@@ -251,7 +251,7 @@ setTimeout(() => {
     components: {
         calendar: Calendar,
         projectModal: projectModal,
-        preloader: preloader
+      
     },
     computed: {
         unsetDateProjects() {
@@ -260,5 +260,83 @@ setTimeout(() => {
                 return !!v.unseted
             })
         }
-    }
+    },
+    template : `
+    <div>
+
+
+
+<div class="columns">
+    <div class="column is-5">
+        <calendar  language="ru" :data-source="dataSource"
+        always-half-day="true"
+         enable-range-selection='true'
+        render-style='background' 
+        @select-range="setRange" 
+        @mouse-on-day="setDay" 
+ 
+      
+        display-week-number="true"
+        class="table-no-100">
+    </calendar>
+    </div>
+    <div class="column is-7" v-show="currentProjects.length" style="overflow: auto; max-height: 95vh;">
+        <h3 v-if='currentProjects.length'  class="title is-3">
+            {{header}}
+         
+        
+        </h3>
+    
+
+<table class="table is-fullwidth">
+        <tr>
+         
+            <th class="" >Дата спуска</th>
+            <th class="" >Дата запуска</th>
+            <th class="" >Вид бизнеса</th>
+            <th class="" >Тип запуска </th>
+            <th class="" >Название</th>
+            <th class="" >Описание</th>
+         
+            <th class="" >Сопровождающий</th>
+            <th class="" >Заказчик</th>
+            <th class="" >Статус</th>
+ 
+    </tr>
+
+
+
+            <tr class=" hover__bg" v-for="project in currentProjects" :key="project.id" @click="openProject(project)" >
+                <td class="">{{project.fdate}}</td>
+                <td class="">{{project.sdate}}</td>
+                <td class="">{{project.bizness}}</td>
+                <td class="">{{project.zapusk}}</td>
+                <td class="">{{project.nazvanie}}</td>
+                <td class="">{{project.opisanieBodyCuted}}</td>
+                
+                <td class="">{{project.soprovod}}</td>
+                <td class="">{{project.zakazchik}}</td>
+                <td class="">{{project.status}}</td>
+    
+            </tr>
+    
+    
+    
+
+   
+
+</table>
+
+
+
+    </div>
+</div>
+   
+
+<project-modal :project.sync='projectForModal' show-donut="true" ></project-modal>
+
+</div>
+    
+    
+    `
 })

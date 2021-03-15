@@ -7,28 +7,163 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./src/css/materialize.css">
     <link rel="stylesheet" href="./src/css/style.css">
+    <link rel="stylesheet" href="./src/css/bulma.css">
+    <link rel="stylesheet" href="./src/css/materialdesignicons.css">
+    <link rel="stylesheet" href="./src/css/chart.css">
+    <link rel="stylesheet" href="./src/css/froala_editor.css">
+    <link rel="stylesheet" href="./src/css/froala_style.css">
     <meta http-equiv="Cache-Control" content="no-cache" />
     <title>Title</title>
+
+
+
+
+
+
+     
+    <link rel="stylesheet" href="./src/css/froala_style.css">
+    <link rel="stylesheet" href="./src/css/froala/code_view.css">
+    <link rel="stylesheet" href="./src/css/froala/colors.css">
+    <link rel="stylesheet" href="./src/css/froala/emoticons.css">
+    <link rel="stylesheet" href="./src/css/froala/image_manager.css">
+    <link rel="stylesheet" href="./src/css/froala/image.css">
+    <link rel="stylesheet" href="./src/css/froala/line_breaker.css">
+    <link rel="stylesheet" href="./src/css/froala/table.css">
+    <link rel="stylesheet" href="./src/css/froala/char_counter.css">
+    <link rel="stylesheet" href="./src/css/froala/video.css">
+    <link rel="stylesheet" href="./src/css/froala/fullscreen.css">
+    <link rel="stylesheet" href="./src/css/froala/file.css">
+
+
+
+
 </head>
 
 <body>
 
 
     <div id="app">
+        <preloader :status="status"></preloader>
+        
+        
+        
+        
+        <div class="menu" v-if="!screen">
+        
+        <div class="all">
+            <div class="lefter center" @click='setScreen("employees")'>
+                <i class="mdi mdi-account-plus-outline w100 f100 "></i>
+              <div class="text">Добавление сотрудника</div>
+            </div>
+            <div class="left center" @click='setScreen("show-calendar")'>
+                <i class="mdi mdi-calendar-outline w100 f100 "></i>
+              <div class="text"> Просмотр календаря</div>
+            </div>
+            <div class="centerm center" @click='setScreen("edit-tabel")'>
+              <div class="explainer"> <span>ProjectMS</span>   </div>
+
+              <div class="text">Редактирование табеля</div>
+              </div>
+            <div class="right center" @click='setScreen("show-proj")'>
+                <i class="mdi mdi-briefcase-outline w100 f100 "></i>
+              <div class="text">Просмотр проектов</div>
+            </div>
+            <div class="righter center" @click='setScreen("show-tabel")'>
+                <i class="mdi mdi-table-eye w100 f100 "></i>
+              <div class="text">Табель</div>
+            </div>
+            </div>
+        </div>  
+          
+      
+        
+        
+        
+        
+        
+        <div id="menu" class="sidenav">
+         
+    <ul>
+        <li><a @click='setScreen("show-tabel")'><i class="mdi mdi-table-eye mdi-36px"></i> Табель</a></li>
+        <li><a @click='setScreen("edit-tabel")'><i class="mdi mdi-table-edit mdi-36px"></i> Редактирование табеля</a></li>
+        <li><a @click='setScreen("show-proj")'><i class="mdi mdi-briefcase-outline mdi-36px"></i>  Просмотр проектов</a></li>
+        <li><a @click='setScreen("add-proj")'><i class="mdi mdi-briefcase-edit-outline mdi-36px"></i>Добавление проекта</a></li>
+        <li><a @click='setScreen("employees")'> <i class="mdi mdi-account-plus-outline mdi-36px"></i>  Добавление сотрудника</a></li>
+
+        <li><a @click='setScreen("show-calendar")'><i class="mdi mdi-calendar-outline mdi-36px"></i> Просмотр календаря</a></li>
+      </ul>  
 
 
+        </div>
+
+        <keep-alive>
+        <component :is="screen" @edit-proj='editProj' :project-from-parent="editableProject"></component>
+    </keep-alive>
 </div>
 
 
 
+<script src="./src/js/vue.js"></script>
+<script src="./src/js/materializeWithKvartal.js"></script>
+<script src="./src/js/axios.js"></script>
 
 
 
-            <script src="./src/js/materialize.js"></script>
-            <script src="./src/js/axios.js"></script>
-            <script src="./src/js/vue.js"></script>
+<!-- COMPONENTS -->
+<script src="./src/js/components/preloader.js"></script>
+<script src="./src/js/components/Calendar.js"></script>
+<script src="./src/js/components/Calendar-lang.js"></script>
+<script src="./src/js/chart.js"></script>
+<script src="./src/js/kalendar.js"></script>
+<script src="./src/js/components/projectModal.js"></script>
+<script src="./src/js/showProj.js"></script>
+<script src="./src/js/Employees.js"></script>
+<script src="./src/js/editTabel.js"></script>
+<script src="./src/js/showTabel.js"></script>
+<script src="./src/js/addProj.js"></script>
+<script src="./src/js/showCalendar.js"></script>
+<script src="./src/js/editProj.js"></script>
 
-            <script src="./src/js/SSS.js"></script>
+
+
+<script type="text/javascript" src="./src/js/froala_editor.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/align.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/code_beautifier.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/code_view.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/colors.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/draggable.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/emoticons.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/font_size.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/font_family.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/image.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/file.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/image_manager.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/line_breaker.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/link.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/lists.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/paragraph_format.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/paragraph_style.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/video.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/table.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/url.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/entities.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/char_counter.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/inline_style.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/save.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/fullscreen.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/quote.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/cleave.min.js"></script>
+<script type="text/javascript" src="./src/js/froala/ru.js"></script>
+<!-- COMPONENTS -->
+
+
+
+
+
+
+<script src="./src/js/index.js"></script>
+
+
 
 </body>
 

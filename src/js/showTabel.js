@@ -3,9 +3,9 @@
 
 
 
-let app = new Vue({
-    el: "#app",
-    data: {
+  Vue.component('showTabel',{
+
+    data(){return{
         history: {
             write: true,
             arrOfHistory:  [],
@@ -43,7 +43,7 @@ let app = new Vue({
         },
         datesFromApi : []
 
-
+    }
     },
     mounted: function () {
         console.log("I AM mounted");
@@ -842,9 +842,127 @@ return val.split(' ').slice(0,-1).join(' ')
         }
         
     },
-    components: {
-        preloader: preloader
-    }
+  
+    template: `
+    <div>
+
+        <div class="columns">
+            <div class="column is-3 is-offset-3 center ">
+                <span>Дата начала:</span>
+                <input type="text" class="datepicker input" v-model.lazy="date1">
+            </div>
+
+            <div class="column is-3 center">
+                <span>Дата конца:</span>
+                <input type="text" class="datepicker input" v-model.lazy="date2">
+            </div>
+
+
+            <div class="column is-2 is-offset-1 center">
+                <div class="box has-text-left is-inline-block" >
+
+           
+                <div class="my-1"><div class="mx-1 p-3 min-w-36 tag  is-danger ">В</div>Выходной</div> 
+                <div class="my-1"><div class="mx-1 p-3 min-w-36 tag  is-warning ">Б</div>Больничный</div> 
+                <div class="my-1"><div class="mx-1 p-3 min-w-36 tag  is-info ">З</div>Замещение</div> 
+                <div class="my-1"><div class="mx-1 p-3 min-w-36 tag  is-primary ">О</div>Отпуск</div> 
+                <div class="my-1"><div class="mx-1 p-3 min-w-36 tag  is-success ">8|7</div>Смена</div> 
+                </div>
+               </div>
+
+
+        </div>
+
+
+
+        <h1 class="center title is-1">Табель
+            <div class="button z-depth-3" style="width: 40px; padding: 0;border-radius: 50%;"
+                @click="exportToExcel('allTable')"> <img src="./EX.png" width="100%" style="border-radius: 50%;" alt="">
+            </div>
+
+        </h1>
+        <div class="column is-12" style="overflow: auto;">
+
+
+            <table class="table is-hoverable" id="allTable">
+                <tbody>
+
+
+                    <tr>
+                        <th></th>
+                        <th v-for="day in tabelFiltred" class="center">{{day.date | cutYear}}</th>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;">ФИО</th>
+                        <th v-for="day in tabelFiltred" class="center">{{ day.date | dayOfWeek}}</th>
+                    </tr>
+                    <tr class="center" v-for="employee in employees">
+                        <td style="width: 1%;
+                white-space: nowrap; text-align: left;">{{employee['full_name']}}</td>
+                        <td v-for="day in tabelFiltred" class="center ma vam" :class="classObjForTd(day,employee)">
+                            {{ day.body[employee.nid]}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+
+        <div class="block">
+
+            <h2 class="center fluid-text title is-2">
+                План/Факт
+                <div class="button z-depth-3" style="width: 40px; padding: 0;border-radius: 50%;"
+                    @click="exportToExcel('planFact')"> <img src="./EX.png" width="100%" style="border-radius: 50%;"
+                        alt=""></div>
+
+                </h2>
+
+
+                <div class="columns">
+
+
+
+                    <div class="column is-offset-4 is-4 center">
+
+
+
+
+                        <table class="table is-striped is-hoverable center w100 " id="planFact">
+
+
+
+                            <tr>
+                                <th>ФИО</th>
+                                <th>План</th>
+                                <th>Факт без замещения</th>
+                                <th>Общий Факт</th>
+                                <th>Коэфф</th>
+                            </tr>
+
+                            <tr v-for="employee in employees">
+                                <td style="text-align: left;">{{employee['full_name']}}</td>
+                                <td>{{plan | filterDotZeroZero}}</td>
+                                <td>{{employee.factWithoutZ | filterDotZeroZero}}</td>
+                                <td>{{employee.fact | filterDotZeroZero}}</td>
+                                <td>{{employee.koeff}}</td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+                </div>
+        </div>
+
+
+    </div>
+    
+    
+    
+    
+    `
 
 
 
