@@ -106,7 +106,7 @@ props : ['projectFromParent'],
         }, '#fdate');
 
 
-       this.project = Object.assign({},this.projectFromParent)
+this.loadProject();
 
        
 
@@ -124,71 +124,19 @@ this.$refs.sdate.dataset.position = "top";
 
 
         loadProject() {
+ 
 
-            this.project = Object.assign({},this.projectFromParent ) 
-    //         axios.get('./vendor/getProjById.php', {
-    //             params: {
-    //                 id: this.projectID
-    //             }
-    //         }).then(
-    //             (res) => {
-    //                 console.log(res.data);
-
+      
+            if(!this.projectFromParent.id){
      
-    //                 for (prop in this.project) {
-    //                     this.project[prop] = res.data[prop]
-    //                 }
-           
-    //                 Object.assign(this.project, {
-    //                     flags: res.data.flags || []
-                        
-    //                 })
-    //                 this.audits = res.data.audits || [];
-    //                 console.log("HERE IS AUDITS",    this.audits )
-  
-                    
-    //  setTimeout(() => {
-    //     this.editor.html.set(res.data.opisanieBody);
-    //  }, 200);
-       
-    //                 delete this.project.opisanieBody;
-    //                 delete this.project.opisanie;
-    
-                  
-    //                 if (!this.employees.find((e) => {
-    //                     console.log(e.full_name)
-    //                     console.log(this.project.soprovod)
-    //                     console.log(this.project.soprovod)
-    //                         return e.full_name == this.project.soprovod
-    //                     })) {
-    //                         console.log('ERROR PLACE?')
-    //                     this.employees.push({
-    //                         full_name: this.project.soprovod
-    //                     })
-             
-
-                 
-
-
-    //                 }
-    
-    //                 Vue.nextTick(() => {
-
-    //                     this.audits.forEach(audit=>{
-    //                     this.createDonut(audit);
-    //                 })
-    //                     M.FormSelect.init(document.querySelectorAll('select'))
-    //                 })
-
-    //             },
-    //             (err) => {
-    //                 M.toast({
-    //                     html: "Ошибка: " + err
-    //                 });
-    //             },
-    //         );
-
-
+                M.toast({html:'Неверная ссылка,  перенаправление...'})
+                setTimeout(() => {
+                    location.hash = ''
+                }, 1000);
+            }else{
+                this.project = Object.assign({},this.projectFromParent ) 
+            }
+            
             
 
 
@@ -476,26 +424,7 @@ if(!audit){return}
 projectFromParent : function(n,o){
 
 console.log(n, ' IS NEW PROJ');
-this.project = Object.assign({},this.projectFromParent)
-
-    // if (location.pathname == '/editProj.html') {
-
-
-
-
-    //     if (location.pathname == '/editProj.html' && (!isNaN(Number(location.search.slice(1))) && (location.search.length))) {
-    //         this.projectID = location.search.slice(1);
-    //         this.loadProject();
-    //     } else {
-    //         M.toast({
-    //             html: "Неверная ссылка"
-    //         })
-    //         setTimeout(() => {
-
-    //             location.replace('./menu.html')
-    //         }, 2000);
-    //     }
-
+this.loadProject();
 
     }
 

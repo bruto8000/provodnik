@@ -231,8 +231,8 @@ template : `
 
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close btn-flat" @click="editProject()">Изменить</a>
-        <a href="#!" class="modal-close  btn-flat">Закрыть</a>
+        <a class="modal-close btn-flat" @click="editProject()">Изменить</a>
+        <a class="modal-close  btn-flat">Закрыть</a>
     </div>
 </div>
 

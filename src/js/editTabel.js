@@ -844,10 +844,10 @@ return val.split(' ').slice(0,-1).join(' ')
     },
   
     template: 
-    `
+/*html*/ ` 
     <div @mouseup="unsetSomeClicked">
 
-
+ 
 
     <div class="columns">
 
