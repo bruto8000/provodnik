@@ -2,7 +2,7 @@
 
 let Kalendar = (()=>{
 
-console.log()
+
 
 
 
@@ -97,7 +97,7 @@ console.log()
     }
 
 
-console.log(kalendarSet)
+
     return  {
 set: kalendarSet
     }

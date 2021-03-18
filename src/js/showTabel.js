@@ -624,6 +624,7 @@ Vue.component("showTabel", {
       });
     },
     classObjForTd(day, employee) {
+if(!day.body[employee.nid]){ return;}
       let dataOfDay = day.body[employee.nid].trim().toUpperCase();
       return {
         "has-background-info": dataOfDay == "З",

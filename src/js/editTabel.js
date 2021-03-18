@@ -624,6 +624,7 @@ Vue.component("editTabel", {
       });
     },
     classObjForTd(day, employee) {
+      if(!day.body[employee.nid]){ return;}
       let dataOfDay = day.body[employee.nid].trim().toUpperCase();
       return {
         "has-background-info": dataOfDay == "З",
@@ -853,7 +854,7 @@ Vue.component("editTabel", {
                         'has-background-warning' :  day.presomes.includes(employee.nid) }"
                         @mouseover="preEnterSome(day,employee.nid)">
 
-                        <input class=" input p0 center min-w-36" :class="classObjForTd(day,employee)"
+                        <input class=" input  p-0 center min-w-36" :class="classObjForTd(day,employee)"
                             @mousedown="setSomeClicked(day,employee.nid)" type="text"
                             v-model="day.body[employee.nid]" @input="filterInput(day, employee.nid)">
                     </td>
