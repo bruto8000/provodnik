@@ -32,7 +32,7 @@ $id = $_POST['id'];
 
 
 if(mysqli_query($connect,"UPDATE  projects SET fdate='$fdate',
- sdate='$sdate', nazvanie='$nazvanie', opisanie='$opisanie', 
+ sdate='$sdate', nazvanie='$nazvanie', 
  zakazchik='$zakazchik', bizness='$bizness', zapusk='$zapusk',
   status='$status', soprovod='$soprovod', opisanieBody='$opisanieBody',
    flags='$flags', audits='$audits' WHERE id='$id'"))

@@ -27,10 +27,10 @@ $flags = json_encode($_POST['flags'], JSON_UNESCAPED_UNICODE);
 
 
 if(mysqli_query($connect,"INSERT INTO `projects`( `fdate`, `sdate`, `nazvanie`, 
-`opisanie`, `zakazchik`, `bizness`,
+ `zakazchik`, `bizness`,
 `zapusk`, `status`, `soprovod`, 
 `opisanieBody`, `flags`) 
-VALUES ('$fdate','$sdate','$nazvanie', '$opisanie','$zakazchik', '$bizness', '$zapusk','$status' , '$soprovod', '$opisanieBody', '$flags')")){
+VALUES ('$fdate','$sdate','$nazvanie','$zakazchik', '$bizness', '$zapusk','$status' , '$soprovod', '$opisanieBody', '$flags')")){
 echo "OK";
     }else {
         echo "ERROR" . $connect->error;
