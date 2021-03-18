@@ -21,6 +21,8 @@ Vue.component("editProj", {
         },
         AB: [],
         statusZapusk: [],
+        risks: [],
+        audits: []
         //  opisanieBody: "", Will added Automaticly
         //   opisanie: "", OLD
       },
@@ -105,11 +107,11 @@ Vue.component("editProj", {
       this.loadProject();
     });
 
-    let someDate = new Date();
+
     this.kalendar[0] = Kalendar.set(
       {
-        showMonthBtn: true,
-        events: [someDate.toDateString()],
+        showMonthBtn: true
+        
       },
       "#sdate"
     );
@@ -148,6 +150,8 @@ Vue.component("editProj", {
           ocenka,
           AB,
           statusZapusk,
+          risks,
+          audits
         }) => ({
           id,
           fdate,
@@ -162,7 +166,10 @@ Vue.component("editProj", {
           ocenka,
           AB,
           statusZapusk,
+          risks,
+          audits
         }))(this.projectFromParent);
+console.log(this.project.audits);
 
         if (this.projectFromParent.opisanieBody)
           setTimeout(() => {
@@ -170,8 +177,17 @@ Vue.component("editProj", {
           }, 200);
 
         Vue.nextTick(function () {
+          console.log(this)
           M.FormSelect.init(document.querySelectorAll("select"));
-        });
+          M.Collapsible.init(document.querySelectorAll('.collapsible'));
+          
+          this.project.audits.forEach(v=>{
+            
+             this.createDonut(v);
+          })
+        }, this);
+
+        this.initStatusZapusk();
       }
     },
     editProj: function (event) {
@@ -186,11 +202,9 @@ Vue.component("editProj", {
       }
 
       this.project.opisanieBody = this.editor.html.get().replace(/'/gi, '"');
-      this.project.audits = [];
-      this.audits.forEach((audit, idx) => {
-        this.project.audits[idx] = Object.assign({}, audit, {
-          donut: null,
-        });
+      
+      this.project.audits.forEach((audit, idx) => {
+      audit.donut = null;
       });
       console.log(JSON.stringify(this.project));
 
@@ -293,7 +307,7 @@ Vue.component("editProj", {
     },
     validateAudits() {
       try {
-        this.audits.forEach((audit, idx) => {
+        this.project.audits.forEach((audit, idx) => {
           if (audit.name.length < 3) {
             throw new Error(
               "Загаловок аудита не должен быть меньше 3х символов" +
@@ -347,7 +361,7 @@ Vue.component("editProj", {
         return;
       }
       let ctx = document
-        .getElementById("DONUT" + this.audits.indexOf(audit))
+        .getElementById("DONUT" + this.project.audits.indexOf(audit))
         .getContext("2d");
       let data = [];
       let labels = [];
@@ -414,10 +428,10 @@ Vue.component("editProj", {
       this.initSelectColor();
     },
     deleteAudit() {
-      this.audits.pop();
+      this.project.audits.pop();
     },
     addAudit() {
-      this.audits.push({
+      this.project.audits.push({
         name: "",
         subname: "",
         rows: [
@@ -430,7 +444,7 @@ Vue.component("editProj", {
       });
       this.initSelectColor();
       Vue.nextTick(() => {
-        this.createDonut(this.audits[this.audits.length - 1]);
+        this.createDonut(this.project.audits[this.project.audits.length - 1]);
       });
     },
     initSelectColor() {
@@ -471,7 +485,8 @@ Vue.component("editProj", {
         this.validateMainRows() &&
         this.validateAudits() &&
         this.validateOcenka() &&
-        this.validateStatusZapusk()
+        this.validateStatusZapusk() &&
+        this.validateRisks()
       );
     },
     openABmodal() {
@@ -482,6 +497,9 @@ Vue.component("editProj", {
         opisanie: "",
         srok: "",
       });
+      this.initStatusZapusk();
+    },
+    initStatusZapusk() {
       Vue.nextTick(() => {
         Kalendar.set({
           showClearBtn: true,
@@ -491,7 +509,6 @@ Vue.component("editProj", {
         });
       });
     },
-
     deleteStatusZapuskRow() {
       this.project.statusZapusk.pop();
     },
@@ -499,7 +516,6 @@ Vue.component("editProj", {
       if (
         this.project.statusZapusk.filter((v, idx) => {
           if (!v.opisanie) {
-     
             M.toast({
               html: `Вы не ввели имя для строки ${
                 idx + 1
@@ -513,11 +529,53 @@ Vue.component("editProj", {
       }
       return true;
     },
+    addRisksRow() {
+      if (this.project.risks.length < 10) {
+        this.project.risks.push({
+          opisanie: "",
+          prognoz: "",
+          status: "",
+        });
+      this.initSelectRisks();
+      } else {
+        M.toast({ html: "Вы достигли максимального количества срок '10'" });
+      }
+    },
+    deleteRisksRow() {
+      this.project.risks.pop();
+    },
+    validateRisks() {
+      try {
+        this.project.risks.forEach((risk, idx) => {
+          for (prop in risk) {
+            if (!risk[prop])
+              throw new Error(
+                `Не введены данные в рисках, поле ${prop} в строке ${idx + 1}`
+              );
+          }
+        });
+      } catch (e) {
+        M.toast({ html: e.message });
+
+        return false;
+      }
+      return true;
+    },
+    initSelectRisks(){
+this.$nextTick().then(()=>{  M.FormSelect.init(document.querySelectorAll('.risk-select'))})
+    },
+    destroyDonuts() {
+      if (!this.project.audits) return;
+      this.project.audits.forEach((audit) => {
+        if (audit.donut) audit.donut.destroy();
+      });
+    },
+    
   },
 
   watch: {
     projectFromParent: function (n, o) {
-      console.log(n, " IS NEW PROJ");
+      
       this.loadProject();
     },
   },
@@ -660,236 +718,343 @@ Vue.component("editProj", {
 <br><br>
 
 
+<ul class="collapsible">
+<li>
+  <div class="collapsible-header">
+  <h3 class="title is-4">
 
-<div class="ocenka">
-<h1 class="title is-1">Оценка</h1>
-  <div class="columns">
-  <div class="column is-4 p1">
-
-  <select v-model="project.ocenka.type" @change="changeOcenka">
-  <option value="">Не выбрана</option>
-  <option value="Успешный">Успешный</option>
-  <option value="С ошибкой">С ошибкой</option>
-  </select>
-
- 
-  
+  Оценка
+</h3> 
   </div>
-  
-  <div class="column is-8 p1">
-  
+  <div class="collapsible-body">
 
 
-  <select v-model="project.ocenka.reason"  :disabled="project.ocenka.type != 'С ошибкой'">
-  <option value="Нарушение регламента МИ, есть влияние на клиента/сотрудника">Нарушение регламента МИ, есть влияние на клиента/сотрудника
-  </option>
-  <option value="Наличие багов (не технических), влияющих на клиента, процессы компании/департамента. Сопровождающий мог проработать самостоятельно">Наличие багов (не технических), влияющих на клиента, процессы компании/департамента. Сопровождающий мог проработать самостоятельно
-  </option>
-<option value="Не инициировано изменение процедуры/продукта для улучшения сервиса для клиента">
-Не инициировано изменение процедуры/продукта для улучшения сервиса для клиента
-</option>
-<option value="Не инициирована подготовка инструментов/схем и процедур обслуживания клиента для сотрудников">
-
-Не инициирована подготовка инструментов/схем и процедур обслуживания клиента для сотрудников
-
-</option>
-
-  </select>
- 
+    <div class="ocenka">
+        <h1 class="title is-1">Оценка</h1>
+          <div class="columns">
+          <div class="column is-4 p1">
+        
+          <select v-model="project.ocenka.type" @change="changeOcenka">
+          <option value="">Не выбрана</option>
+          <option value="Успешный">Успешный</option>
+          <option value="С ошибкой">С ошибкой</option>
+          </select>
+        
+         
+          
+          </div>
+          
+          <div class="column is-8 p1">
+          
+        
+        
+          <select v-model="project.ocenka.reason"  :disabled="project.ocenka.type != 'С ошибкой'">
+          <option value="Нарушение регламента МИ, есть влияние на клиента/сотрудника">Нарушение регламента МИ, есть влияние на клиента/сотрудника
+          </option>
+          <option value="Наличие багов (не технических), влияющих на клиента, процессы компании/департамента. Сопровождающий мог проработать самостоятельно">Наличие багов (не технических), влияющих на клиента, процессы компании/департамента. Сопровождающий мог проработать самостоятельно
+          </option>
+        <option value="Не инициировано изменение процедуры/продукта для улучшения сервиса для клиента">
+        Не инициировано изменение процедуры/продукта для улучшения сервиса для клиента
+        </option>
+        <option value="Не инициирована подготовка инструментов/схем и процедур обслуживания клиента для сотрудников">
+        
+        Не инициирована подготовка инструментов/схем и процедур обслуживания клиента для сотрудников
+        
+        </option>
+        
+          </select>
+         
+        
+          </div>
+          </div>
+        
+        </div>
 
   </div>
+</li>
+<li>
+  <div class="collapsible-header">
+  
+  <h3 class="title is-4">
+  
+  АБ
+</h3> 
   </div>
-
-</div>
-
-
-<div class="AB">
-<h1 class="title is-1">
-АБ
-<button class="button is-danger" :disabled="!project.AB.length" @click="deleteAB()">-</button>
-<button class="button is-primary" @click="openABmodal()">+</button>
-</h1>
-
-
-
-
-
-
-
-
-<div class="modal" id="ABModal">
-<div class="modal-content">
-  <h4 class="my-5 title is-4" >Выберите тип новых данных</h4>
- 
-  <div class="columns ">
+  <div class="collapsible-body"><div class="AB">
+    <h1 class="title is-1">
+    АБ
+    <button class="button is-danger" :disabled="!project.AB.length" @click="deleteAB()">-</button>
+    <button class="button is-primary" @click="openABmodal()">+</button>
+    </h1>
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="modal" id="ABModal">
+    <div class="modal-content">
+      <h4 class="my-5 title is-4" >Выберите тип новых данных</h4>
+     
+      <div class="columns ">
+      
+    
+    
+      <div class="column  has-text-centered is-clickable box">
+      <h3> Просто ввести число</h3>
+      <input type="number" class="input is-primary">
+      </div>
+    
+    
+    
+      <div class="column  has-text-centered box is-clickable mx-5">
+      
+      <table class="table  is-narrow is-fullwidth " >
+    <tr>
+    <td>Вид бизнеса</td>
+    <td>АБ</td>
+    </tr>
+    
+    <tr>
+    <td>FMC</td>
+    <td></td>
+    </tr>
+    
+    <tr>
+    <td>FTTB</td>
+    <td></td>
+    </tr>
+    <tr>
+    <td>B2C</td>
+    <td></td>
+    </tr>
+    
+    <tr>
+    <td>FMC</td>
+    <td></td>
+    </tr>
+    
+    <tr>
+    <td>FIX</td>
+    <td></td>
+    </tr>
+    
+    
+    <tr>
+    <td>ПК</td>
+    <td></td>
+    </tr>
+    </table>
+      </div>
+    
+    
+    
+      <div class="column is-clickable box  table ">
+      <table class="table is-narrow is-fullwidth ">
+      <tr>
+      <td>Действие</td>
+      <td>дд.мм.гг</td>
+      <td>дд.мм.гг</td>
+     
+     
+      </tr>
+    
+    
+      <tr>
+      <td>Смс-рассылка</td>
+      <td></td>
+      <td></td>
+    
+    
+     
+    
+    
+      
+      </tr>
+    
+      <tr> 
+      <td>E-mail рассылка</td>
+      <td></td>
+    <td></td>
+    
+    
+      </tr>
+    
+      <tr>
+      <td>Push-рассылка
+      
+      </td>
+      <td></td>
+    <td></td>
+    
+    
+      </tr>
+      
+      <tr>
+      <td>ТВ реклама</td>
+      <td></td>
+    <td></td>
+    
+    
+      </tr>
+    
+      <tr>
+      <td>Офсет</td>
+      <td></td>
+    <td></td>
+    
+    
+      </tr>
+    
+      </table>
+      
+      </div>
+      
+      
+      </div>
+    
+    
+    
+    
+    
+    
+    </div>
+    <div class="modal-footer">
+      <a  class="modal-close button is-primary">Закрыть</a>
+    </div>
+    </div>
+    
+    
+    </div></div>
+</li>
+<li>
+  <div class="collapsible-header"><h3 class="title is-4">
   
-
-
-  <div class="column  has-text-centered is-clickable box">
-  <h3> Просто ввести число</h3>
-  <input type="number" class="input is-primary">
+  Статус по запуску
+  </h3>
   </div>
+  <div class="collapsible-body">
 
-
-
-  <div class="column  has-text-centered box is-clickable mx-5">
-  
-  <table class="table  is-narrow is-fullwidth " >
-<tr>
-<td>Вид бизнеса</td>
-<td>АБ</td>
-</tr>
-
-<tr>
-<td>FMC</td>
-<td></td>
-</tr>
-
-<tr>
-<td>FTTB</td>
-<td></td>
-</tr>
-<tr>
-<td>B2C</td>
-<td></td>
-</tr>
-
-<tr>
-<td>FMC</td>
-<td></td>
-</tr>
-
-<tr>
-<td>FIX</td>
-<td></td>
-</tr>
-
-
-<tr>
-<td>ПК</td>
-<td></td>
-</tr>
-</table>
-  </div>
-
-
-
-  <div class="column is-clickable box  table ">
-  <table class="table is-narrow is-fullwidth ">
-  <tr>
-  <td>Действие</td>
-  <td>дд.мм.гг</td>
-  <td>дд.мм.гг</td>
- 
- 
-  </tr>
-
-
-  <tr>
-  <td>Смс-рассылка</td>
-  <td></td>
-  <td></td>
-
-
- 
-
-
-  
-  </tr>
-
-  <tr> 
-  <td>E-mail рассылка</td>
-  <td></td>
-<td></td>
-
-
-  </tr>
-
-  <tr>
-  <td>Push-рассылка
-  
-  </td>
-  <td></td>
-<td></td>
-
-
-  </tr>
-  
-  <tr>
-  <td>ТВ реклама</td>
-  <td></td>
-<td></td>
-
-
-  </tr>
-
-  <tr>
-  <td>Офсет</td>
-  <td></td>
-<td></td>
-
-
-  </tr>
-
-  </table>
-  
-  </div>
-  
-  
-  </div>
+    <div class="statusZapusk">
+    
+    <h3 class="title is-4">
+    
+    
+    Статус по запуску
+    <button class="button is-danger" :disabled="!project.statusZapusk.length" @click="deleteStatusZapuskRow">-</button>
+    <button class="button is-primary" @click="addStatusZapuskRow">+</button>
+    
+    
+    </h3>
+    
+    
+    <div class="if-fullwidth w100" v-if="project.statusZapusk.length">
+    <div class="columns">
+    <div class="column is-9">Описание статуса</div>
+    <div class="column">Срок</div>
+    
+    </div>
+    
+    <div  class="columns" v-for="(row,idx) in project.statusZapusk" :key="idx">
+    <div class="column is-9"><input type="text" class="input is-primary" v-model.lazy="row.opisanie"></div>
+    <div class="column"><input type="text" class="input is-primary datepicker" v-model.lazy="row.srok"></div>
+    
+    </div>
+    
+    </div>
+    
+    
+    
+    <div id='statusZapuskDate'></div>
+    </div>
+    </div>
+</li>
 
 
 
 
+<li>
+    <div class="collapsible-header">
+    <h3 class="title is-4">
+    Риски
 
-
-</div>
-<div class="modal-footer">
-  <a href="#!" class="modal-close button is-primary">Закрыть</a>
-</div>
-</div>
-
-
-</div>
-
+</h3> 
+    </div>
+    <div class="collapsible-body">
 
 
 
 
-<div class="statusZapusk">
-
-<h3 class="title is-3">
-
-
-Статус по запуску
-<button class="button is-danger" :disabled="!project.statusZapusk.length" @click="deleteStatusZapuskRow">-</button>
-<button class="button is-primary" @click="addStatusZapuskRow">+</button>
-
-
-</h3>
-
-
-<div class="if-fullwidth w100">
-<div class="columns">
-<div class="column is-9">Описание статуса</div>
-<div>Срок</div>
-
-</div>
-
-<div  class="columns" v-for="(row,idx) in project.statusZapusk" :key="idx">
-<div class="column is-9"><input type="text" class="input is-primary" v-model.lazy="row.opisanie"></div>
-<div class="column"><input type="text" class="input is-primary datepicker" v-model.lazy="row.srok"></div>
-
-</div>
-
-</div>
+        <div class="risks">
 
 
 
-<div id='statusZapuskDate'></div>
-</div>
+
+            <h3 class="title is-4">
+            
+            
+            Риски по запуску
+            <button class="button is-danger" :disabled="!project.risks.length" @click="deleteRisksRow">-</button>
+            <button class="button is-primary" :disabled="project.risks.length >= 10" @click="addRisksRow">+</button>
+            
+            
+            </h3>
+            
+            
+            <div class="if-fullwidth w100" v-if="project.risks.length">
+            <div class="columns">
+            
+            <div class="column is-5" >Описание риска</div>
+            <div class="column is-5" >Прогноз влияния</div>
+            <div class="column is-2">Вероятность реализации риска </div>
+            
+            </div>
+            
+            
+            <div class="columns" v-for="row in project.risks">
+            
+            <div class="column is-5"><input type="text" class="input is-primary" v-model="row.opisanie"></div>
+            <div class="column is-5" ><input type="text" class="input is-primary" v-model="row.prognoz"></div>
+            <div class="column is-2 p-0" >
+            
+            
+            <select v-model="row.status" class="risk-select">
+            <option value="Низкая">Низкая</option>
+            <option value="Средняя">Средняя</option>
+            <option value="Высокая">Высокая</option>
+            
+            </select>
+            </div>
+            </div>
+            
+            
+            
+            
+            </div>
+            
+            
+            </div>
+            
+            
+
+    </div>
+  </li>
 
 
+
+
+<li>
+    <div class="collapsible-header">
+     <h3 class="title is-4">
+     Аудиты
+     
+     </h3> 
+    </div>
+    <div class="collapsible-body">
+
+        
 
 
 
@@ -897,78 +1062,86 @@ Vue.component("editProj", {
 
 <div class="audits ">
 <h3 class="center fluid-text title is-3">
-  Голос клиента (Аудит)
-    <button class="button is-danger" :disabled="!audits.length" @click="deleteAudit()">-</button>
-    <button class="button is-primary" @click="addAudit()">+</button>
- </h3>  
+Голос клиента (Аудит)
+<button class="button is-danger" :disabled="!project.audits.length" @click="deleteAudit()">-</button>
+<button class="button is-primary" @click="addAudit()">+</button>
+</h3>  
 
 
 
 
 
- <div class="column box" v-for="audit,idx in audits" :key="idx">
+<div class="column box" v-for="audit,idx in project.audits" :key="idx">
 
 
 
 
 <br>
 
-    <h4 class="center title is-4 my-1"> Загаловок аудита : {{audit.name}}</h4>
-    <div class="columns">
-        <div class="column is-6 is-offset-3">
+<h4 class="center title is-4 my-1"> Загаловок аудита : {{audit.name}}</h4>
+<div class="columns">
+<div class="column is-6 is-offset-3">
 
-            <input type="text" class="input" v-model="audit.name" placeholder="Заголовок" >
-        </div>
-        <div class="column is-2 p-1">
-            <select class="selectColor" v-model="audit.type">
-                <option value="public">Публичный</option>
-                <option value="private">Приватный</option>
-                <option value="secret">Секретный</option>
-            </select>
-        </div>
-       
-    </div>
+    <input type="text" class="input" v-model="audit.name" placeholder="Заголовок" >
+</div>
+<div class="column is-2 p-1">
+    <select class="selectColor" v-model="audit.type">
+        <option value="public">Публичный</option>
+        <option value="private">Приватный</option>
+        <option value="secret">Секретный</option>
+    </select>
+</div>
+
+</div>
 
 
-    <div class="columns">
+<div class="columns">
 
- 
+
 <div class="column is-6">
 
 <table class=" centered">
-    <thead>
-      <tr class="my-1">
-          <th>     <input type="text" class="is-large input" v-model="audit.subname" placeholder="Подзаголовок" ></th>
-          <th class="has-text-centered"> Кол-во</th>
-          <td>        <button class="button is-danger" :disabled="!audit.rows.length" @click="deleteRowInAudit(audit)">-</button>
-       <button class="button is-success" @click="addRowToAudit(audit)">+</button></td>
-      </tr>
-    </thead>
+<thead>
+<tr class="my-1">
+  <th>     <input type="text" class="is-large input" v-model="audit.subname" placeholder="Подзаголовок" ></th>
+  <th class="has-text-centered"> Кол-во</th>
+  <td>        <button class="button is-danger" :disabled="!audit.rows.length" @click="deleteRowInAudit(audit)">-</button>
+<button class="button is-success" @click="addRowToAudit(audit)">+</button></td>
+</tr>
+</thead>
 
-    <tbody>
-      <tr v-for="row in audit.rows">
-        <td><input type="text" class="input" v-model='row.propName' @change="updateDonut(audit)" placeholder="Причина"></td>
-        <td><input type="number" class="input" v-model='row.propInt' placeholder="Колличество" @change="updateDonut(audit)"></td>
-     
-
-      </tr>
-  <tr>
- 
-
-  </tr>  
-    </tbody>
-  </table>
+<tbody>
+<tr v-for="row in audit.rows">
+<td><input type="text" class="input" v-model='row.propName' @change="updateDonut(audit)" placeholder="Причина"></td>
+<td><input type="number" class="input" v-model='row.propInt' placeholder="Колличество" @change="updateDonut(audit)"></td>
 
 
-  </div>
+</tr>
+<tr>
 
-    <div class="column is-6">
- <canvas class="" :id="'DONUT'+idx" width="400" height="400">
-  </canvas>
+
+</tr>  
+</tbody>
+</table>
+
+
+</div>
+
+<div class="column is-6">
+<canvas class="" :id="'DONUT'+idx" width="400" height="400">
+</canvas>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
     </div>
-</div>
-</div>
-</div>
+  </li>
+
+</ul>
 
 
 <div class="columns my-4">
@@ -983,4 +1156,7 @@ Vue.component("editProj", {
 
     
     `,
+    activated(){
+      console.log('UPDATET')
+    }
 });

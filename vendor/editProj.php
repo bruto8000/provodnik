@@ -24,6 +24,7 @@ $audits = json_encode($_POST['audits'], JSON_UNESCAPED_UNICODE);
 $ocenka = json_encode($_POST['ocenka'], JSON_UNESCAPED_UNICODE);
 $AB = json_encode($_POST['AB'], JSON_UNESCAPED_UNICODE);
 $statusZapusk = json_encode($_POST['statusZapusk'], JSON_UNESCAPED_UNICODE);
+$risks = json_encode($_POST['risks'], JSON_UNESCAPED_UNICODE);
 
 
 $id = $_POST['id'];
@@ -35,7 +36,7 @@ $id = $_POST['id'];
 
 
 if (mysqli_query($connect, "UPDATE  projects SET fdate='$fdate',
- sdate='$sdate', nazvanie='$nazvanie', AB='$AB', statusZapusk='$statusZapusk',
+ sdate='$sdate', nazvanie='$nazvanie', AB='$AB', statusZapusk='$statusZapusk', risks='$risks',
  zakazchik='$zakazchik', ocenka='$ocenka', bizness='$bizness', zapusk='$zapusk',
   status='$status', soprovod='$soprovod', opisanieBody='$opisanieBody',
    flags='$flags', audits='$audits' WHERE id='$id'")) {

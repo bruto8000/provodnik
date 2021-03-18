@@ -653,8 +653,10 @@ Vue.component("editTabel", {
         return;
       }
       if (n.split(" ").length == 2 || n.split(" ").length == 1) {
+        if(this.date2 != n){
         this.date2 = n;
         this.dateRange();
+        }
       }
       return;
     },
@@ -664,8 +666,10 @@ Vue.component("editTabel", {
         return;
       }
       if (n.split(" ").length == 2 || n.split(" ").length == 1) {
+        if(this.date1 != n){
         this.date1 = n;
         this.dateRange();
+      }
         return;
       }
       return;

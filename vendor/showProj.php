@@ -41,6 +41,13 @@ if ($response = mysqli_query($connect, "SELECT * FROM `projects`")) {
 
 
 
+    $obj->risks = json_decode($obj->risks, JSON_UNESCAPED_UNICODE);
+
+    if (!$obj->risks) {
+      $obj->risks = [];
+    }
+
+
 
 
     array_push($result, $obj);

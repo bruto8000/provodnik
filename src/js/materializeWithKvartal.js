@@ -2738,7 +2738,11 @@ $jscomp.polyfill = function (e, r, p, m) {
       key: "_placeDropdown",
       value: function _placeDropdown() {
         // Set width before calculating positionInfo
-        var idealWidth = this.options.constrainWidth ? this.el.getBoundingClientRect().width : this.dropdownEl.getBoundingClientRect().width;
+        var preidealWidths = [];
+        preidealWidths.push(this.el.getBoundingClientRect().width)
+        preidealWidths.push(this.dropdownEl.getBoundingClientRect().width)
+    //    var idealWidth = this.options.constrainWidth ? this.el.getBoundingClientRect().width : this.dropdownEl.getBoundingClientRect().width;
+        var idealWidth = Math.max(...preidealWidths)
         this.dropdownEl.style.width = idealWidth + 'px';
 
         var positionInfo = this._getDropdownPosition();

@@ -28,7 +28,7 @@ let projectModal = {
       this.currentProject = n;
 
       this.modal.open();
-      console.log(this.project.audits);
+     
       Vue.nextTick(() => {
         this.createDonuts(this.project.audits);
 
@@ -37,7 +37,11 @@ let projectModal = {
     },
   },
   computed: {},
+  activated(){
+ 
+  },
   mounted() {
+
     this.modal = M.Modal.init(document.getElementById("projectModal"), {
       inDuration: 0,
       outDuration: 0,
@@ -56,7 +60,7 @@ let projectModal = {
     createDonuts(audits) {
       if (!audits) return;
       audits.forEach((audit) => {
-        console.log("Making Donut");
+       
         if (!audit) {
           return;
         }
@@ -110,7 +114,7 @@ let projectModal = {
       });
     },
     editProject() {
-      console.log("emmiting edit proj");
+       this.destroyDonuts();
       this.$emit("edit-proj", this.currentProject);
       // location.replace('./editProj.html?'+this.currentProject.id);
     },
