@@ -42,6 +42,7 @@ let app = new Vue({
     components: {
         showProj: showProj,
         employees: Employees
+   
 
     },
     methods: {

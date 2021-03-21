@@ -853,7 +853,13 @@ Vue.component("editTabel", {
             <tbody>
                 <tr v-for="employee in employees">
                     <td style="width: 1%;
-                white-space: nowrap; text-align: left;"> {{employee['full_name']}}</td>
+                white-space: nowrap; text-align: left;
+                
+                position: sticky;
+    left:0;
+    z-index: 2;
+    background: white;
+                "> {{employee['full_name']}}</td>
                     <td v-for="day in tabelFiltred" class="center" :class="{'has-background-danger' : day.somes.includes(employee.nid),
                         'has-background-warning' :  day.presomes.includes(employee.nid) }"
                         @mouseover="preEnterSome(day,employee.nid)">

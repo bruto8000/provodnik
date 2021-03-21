@@ -754,7 +754,8 @@ if(!day.body[employee.nid]){ return;}
     },
   },
 
-  template: `
+  template:
+  /*html*/ `
     <div>
 
         <div class="columns">
@@ -792,7 +793,7 @@ if(!day.body[employee.nid]){ return;}
             </div>
 
         </h1>
-        <div class="column is-12" style="overflow: auto;">
+        <div class="column is-12 p-0" style="overflow: auto;">
 
 
             <table class="table is-hoverable" id="allTable">
@@ -809,7 +810,12 @@ if(!day.body[employee.nid]){ return;}
                     </tr>
                     <tr class="center" v-for="employee in employees">
                         <td style="width: 1%;
-                white-space: nowrap; text-align: left;">{{employee['full_name']}}</td>
+                white-space: nowrap; text-align: left;
+                position: sticky;
+    left:0;
+    z-index: 2;
+    background: white;
+                ">{{employee['full_name']}}</td>
                         <td v-for="day in tabelFiltred" class="center ma vam" :class="classObjForTd(day,employee)">
                             {{ day.body[employee.nid]}}</td>
 

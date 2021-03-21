@@ -18,7 +18,8 @@ $bizness = $_POST['bizness'];
 $zapusk = $_POST['zapusk'];
 $status = $_POST['status'];
 $soprovod = $_POST['soprovod'];
-$opisanieBody = $_POST['opisanieBody'] ;
+$difficulty = $_POST['difficulty'];
+$opisanieBody = $_POST['opisanieBody'];
 $flags = json_encode($_POST['flags'], JSON_UNESCAPED_UNICODE);
 // $ocenka = $_POST['ocenka'];
 // $comments =  serialize($_POST['comments'] ) ;
@@ -26,18 +27,12 @@ $flags = json_encode($_POST['flags'], JSON_UNESCAPED_UNICODE);
 
 
 
-if(mysqli_query($connect,"INSERT INTO `projects`( `fdate`, `sdate`, `nazvanie`, 
+if (mysqli_query($connect, "INSERT INTO `projects`( `fdate`, `sdate`, `nazvanie`, 
  `zakazchik`, `bizness`,
-`zapusk`, `status`, `soprovod`, 
+`zapusk`, `status`, `soprovod`, `difficulty`,
 `opisanieBody`, `flags`) 
-VALUES ('$fdate','$sdate','$nazvanie','$zakazchik', '$bizness', '$zapusk','$status' , '$soprovod', '$opisanieBody', '$flags')")){
-echo "OK";
-    }else {
-        echo "ERROR" . $connect->error;
-    }
-
-
-    
-
-
-
+VALUES ('$fdate','$sdate','$nazvanie','$zakazchik', '$bizness', '$zapusk','$status' , '$soprovod','$difficulty', '$opisanieBody', '$flags')")) {
+    echo "OK";
+} else {
+    echo "ERROR" . $connect->error;
+}

@@ -48,6 +48,11 @@ if ($response = mysqli_query($connect, "SELECT * FROM `projects`")) {
     }
 
 
+    $obj->bugs = json_decode($obj->bugs, JSON_UNESCAPED_UNICODE);
+
+    if (!$obj->bugs) {
+      $obj->bugs = [];
+    }
 
 
     array_push($result, $obj);

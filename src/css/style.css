@@ -44,7 +44,9 @@ thead {
 .min-w-36{
     min-width: 36px;
 }
-
+.min-w-100{
+  min-width: 100px;
+}
 .monthSpan{
     position:absolute;
     right: 0;

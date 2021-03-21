@@ -15,6 +15,7 @@
             status: "",
             zakazchik: "",
             flags: [],
+            difficulty: []
             //  opisanieBody: "", Will added Automaticly
 //   opisanie: "", OLD
         },
@@ -48,6 +49,7 @@
         soprovod: "Сопровождающий",
         status: "Статус",
         zakazchik: "Заказчик",
+        difficulty: "Сложность",
      
 
     }
@@ -142,126 +144,7 @@ this.$refs.sdate.dataset.position = "top";
     methods: {
 
 
-        loadProject() {
-            axios.get('./vendor/getProjById.php', {
-                params: {
-                    id: this.projectID
-                }
-            }).then(
-                (res) => {
-                    console.log(res.data);
-
-     
-                    for (prop in this.project) {
-                        this.project[prop] = res.data[prop]
-                    }
-           
-                    Object.assign(this.project, {
-                        flags: res.data.flags || []
-                        
-                    })
-                    this.audits = res.data.audits || [];
-                    console.log("HERE IS AUDITS",    this.audits )
-  
-                    
-     setTimeout(() => {
-        this.editor.html.set(res.data.opisanieBody);
-     }, 200);
        
-                    delete this.project.opisanieBody;
-                    delete this.project.opisanie;
-    
-                  
-                    if (!this.employees.find((e) => {
-                        console.log(e.full_name)
-                        console.log(this.project.soprovod)
-                        console.log(this.project.soprovod)
-                            return e.full_name == this.project.soprovod
-                        })) {
-                            console.log('ERROR PLACE?')
-                        this.employees.push({
-                            full_name: this.project.soprovod
-                        })
-             
-
-                 
-
-
-                    }
-    
-                    Vue.nextTick(() => {
-
-                        this.audits.forEach(audit=>{
-                        this.createDonut(audit);
-                    })
-                        M.FormSelect.init(document.querySelectorAll('select'))
-                    })
-
-                },
-                (err) => {
-                    M.toast({
-                        html: "Ошибка: " + err
-                    });
-                },
-            );
-
-
-            
-
-
-        },
-        editProj: function (event) {
-            event.target.classList.toggle('is-loading')
-            if (!this.validateMainRows() || !this.validateAudits()) {
-                
-                
-                setTimeout(() => {
-                    event.target.classList.toggle('is-loading')
-                }, 400);
-                
-                
-                
-                return;
-
-
-            }
-
-            this.project.opisanieBody = this.editor.html.get().replace(/'/ig, '"');
-            this.project.audits = []
-            this.audits.forEach((audit,idx)=>{
-                this.project.audits[idx] = Object.assign({},audit, {donut: null})
-            })
-            this.project.id = this.projectID;
-
-       console.log(this.project.audits)
-            axios.post('../vendor/editProj.php', JSON.stringify(this.project))
-                .then((r) => {
-                    setTimeout(() => {
-                        event.target.classList.toggle('is-loading')
-                    }, 400);
-                    console.log(r.data);
-                    if (r.data == "OK") {
-                        M.toast({
-                            html: "Проект изменен"
-                        });
-                     
-                    
-                        delete this.project["opisanieBody"];
-
-                    } else {
-                        throw new Error(r.data)
-                    }
-
-                })
-                .catch(e => {
-                    M.toast({
-                        html: "Проект НЕ изменен! " + e
-                    });
-                })
-
-
-
-        },
         addProj: function (event) {
             event.target.classList.toggle('is-loading')
             if (!this.validateMainRows()) {
@@ -345,153 +228,15 @@ console.log('validateMainRows')
                 return false;
 
             }
-        },
-        validateAudits() {
-            try {
-
-
-                this.audits.forEach((audit,idx)=>{
-                    console.log(audit)
-                    console.log('audit.name.lengt')
-                    console.log(audit.name)
-                    if(audit.name.length<3){
-                        throw new Error("Загаловок аудита не должен быть меньше 3х символов" + ' (аудит #' + (idx+1) +')' );  
-                    }
-                    console.log(audit.subname)
-                    if(audit.subname.length<3){
-                        throw new Error("Подзагаловок аудита не должен быть меньше 3х символов" + ' (аудит #' + (idx+1) +')');  
-                    }
-                    if(audit.type==""){
-                        throw new Error("Не выбран тип аудита (Public/Private)");  
-                    }
-                    audit.rows.forEach(row=>{
-                       
-                        if(row.propName==""){
-                            throw new Error("Не выбрано имя для строки в аудите: " + audit.name);  
-                        }
-                        if(row.propInt==""){
-                            throw new Error("Не выбрано колличество для строки в аудите: " + audit.name);  
-                        }
-                        
-                    })
-                    
-                })
-            
-
-
-             
-                return true;
-
-            } catch (e) {
-
-                M.toast({
-                    html: e.message
-                });
-
-                return false;
-
-            }
-        },
-        createDonut(audit) {
-            console.log('CREATING', audit)
-if(!audit){return}
-            let ctx = document.getElementById( 'DONUT'+this.audits.indexOf(audit)).getContext('2d');
-            let data = [];
-            let labels = [];
-            let colors = [];
-            audit.rows.forEach(row => {
-              data.push(row.propInt);
-              labels.push(row.propName);
-
-            });
-            audit.donut = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-
-                    datasets: [{
-                     
-                        data: data,
-                        backgroundColor:  ['#c2185b', '#3949ab', '#2196f3', '#00bcd','#009688', '#66bb6a', '#f4ff81', '#f4511e', '#00e676' ].sort((v)=>{return (Math.floor(Math.random()*10) > 5) ? 1 : -1})
-                    },
-                ],
-                 
-                },
-             
-              
-                // These labels appear in the legend and in the tooltips when hovering different arcs
-
-
-            });
-        },
-        updateDonut(audit){
-            let data = [];
-            let labels = [];
-            let colors = [];
-            audit.rows.forEach(row => {
-                data.push(row.propInt);
-                labels.push(row.propName);
-        
-              });
-           console.log(audit)
-           console.log()
-           audit.donut.config.data.datasets[0].data = data;
-           audit.donut.config.data.labels = labels;
-           audit.donut.update();
-
-        },
-        deleteRowInAudit(audit) {
-            audit.rows.pop();
-          this.updateDonut(audit);
-        },
-        addRowToAudit(audit) {
-            if(audit.rows.length>=10){
-                M.toast({html: "Достигнуто максимальное колличество строк"})
-                return;
-            }
-            audit.rows.push({
-                propName: "",
-                propInt: 0
-            });
-            this.updateDonut(audit);
-            this.initSelectColor();
-            
-        },
-        deleteAudit() {
-            this.audits.pop();
-        },
-        addAudit() {
-            this.audits.push({
-
-                name: "",
-                subname: "",
-                rows: [{
-                    propName: "",
-                    propInt: 0
-                }],
-                type: ''
-
-
-            });
-            this.initSelectColor();
-            Vue.nextTick(()=>{
-                console.log('audit.name.lengt')
-                this.createDonut(this.audits[this.audits.length-1]);
-       
-            });
-        
-        },
-        initSelectColor(){
-            Vue.nextTick(()=>{
-
-                M.FormSelect.init(document.querySelectorAll('.selectColor'))
-            })
         }
+
     },
  
     watch: {
        
     },
-    template: `
+    template: 
+    /*html*/`
     
     
     <div  class="container">
@@ -552,7 +297,14 @@ if(!audit){return}
                 </select>
             </div>
         </div>
-        <div class="column is-6 center ">
+
+        <div class="column is-3 center ">
+        <div class="  ">Сложность</div>
+        <input placeholder="Введите сложность"  v-model="project.difficulty" id="difficulty" type="text"
+            class="validate input">
+    </div>
+
+        <div class="column is-3 center ">
             <div class="  ">Заказчик</div>
             <input placeholder="Введите заказчика"  v-model="project.zakazchik" id="zakazchik" type="text"
                 class="validate input">
