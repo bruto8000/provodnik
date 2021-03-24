@@ -15,7 +15,7 @@
             status: "",
             zakazchik: "",
             flags: [],
-            difficulty: []
+            difficulty: ''
             //  opisanieBody: "", Will added Automaticly
 //   opisanie: "", OLD
         },
@@ -298,11 +298,21 @@ console.log('validateMainRows')
             </div>
         </div>
 
-        <div class="column is-3 center ">
-        <div class="  ">Сложность</div>
-        <input placeholder="Введите сложность"  v-model="project.difficulty" id="difficulty" type="text"
-            class="validate input">
-    </div>
+        <div class="column is-3 center p-1">
+            <div class="  ">Сложность</div>
+            <select v-model="project.difficulty"  id="difficulty">
+<option value="1">1</option>
+<option value="1.5">1.5</option>
+<option value="2">2</option>
+<option value="2.5">2.5</option>
+<option value="3">3</option>
+<option value="3.5">3.5</option>
+
+
+
+            </select>
+      
+        </div>
 
         <div class="column is-3 center ">
             <div class="  ">Заказчик</div>

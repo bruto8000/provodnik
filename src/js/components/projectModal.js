@@ -11,7 +11,15 @@ let projectModal = {
         secret: "Секретный",
       },
 
-      currentProject: {},
+      currentProject: {
+  
+        ocenka: {
+
+        
+          type : "",
+          reason: ""
+        }
+      },
     };
   },
   watch: {
@@ -25,15 +33,19 @@ let projectModal = {
       }
       // console.log('oy new')
       this.destroyDonuts();
-      this.currentProject = n;
+      this.destroyGrafiks();
+      this.currentProject = {}
+   
+        this.currentProject = Object.assign({}, n);
+        if(!this.currentProject.ocenka.type)
+        this.currentProject.ocenka = {
+          type : "",
+          reason: ""
+        }
+        this.initProject();
 
-      this.modal.open();
-     
-      Vue.nextTick(() => {
-        this.createDonuts(this.project.audits);
-
-        this.toolTipsInit();
-      });
+   
+    
     },
   },
   computed: {},
@@ -51,9 +63,18 @@ let projectModal = {
         this.$emit("update:project", { id: null });
       }.bind(this),
     });
-
+    this.reasonModal = M.Modal.init(document.getElementById("reasonModal"), {
+      inDuration: 0,
+      outDuration: 0,
+      onCloseEnd: function () {
+     
+      }.bind(this),
+    });
     this.modal.$overlay[0].onclick = () => {
       this.modal.close();
+    };
+    this.reasonModal.$overlay[0].onclick = () => {
+      this.reasonModal.close();
     };
   },
   methods: {
@@ -107,10 +128,50 @@ let projectModal = {
         });
       });
     },
+    createGrafiks(AB) {
+      if (!AB) return;
+      AB.forEach((table) => {
+       
+        if (!table || table.type == 'small') {
+          return;
+        }
+        let ctx = document
+          .getElementById("line" + this.currentProject.AB.indexOf(table));
+       
+     
+      
+      
+        table.line = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: table.range,
+              datasets: table.TRs.map((TR,idxOfTR)=>{
+                return {
+                  data: TR.inputs.map(input=>input.value),
+                  label: TR.type,
+                  fill: false,
+                  borderColor: table.colors[idxOfTR],
+                  backgroundColor : table.colors[idxOfTR]
+                }
+              })
+            
+          },
+
+      });
+
+
+      });
+    },
     destroyDonuts() {
       if (!this.currentProject.audits) return;
       this.currentProject.audits.forEach((audit) => {
         if (audit.donut) audit.donut.destroy();
+      });
+    },
+    destroyGrafiks() {
+      if (!this.currentProject.AB) return;
+      this.currentProject.AB.forEach((table) => {
+        if (table.type == 'big') table.line.destroy();
       });
     },
     editProject() {
@@ -136,104 +197,249 @@ let projectModal = {
         M.Tooltip.init(document.querySelectorAll(".tooltiped"))
       );
     },
-  },
-  template: `
+    ocenkaInit() {
 
+  
+    M.FormSelect.init(document.querySelectorAll(".select-projectModal"));
 
-<div id="projectModal" class="modal">
+    this.ocenkaReasonTooltipInit();
 
-
-
-<div class="modal-content">
-    <h1 class="title is-2">{{currentProject.nazvanie}}</h1>
-    <p>{{currentProject.opisanie}} </p>
-    <div v-html="currentProject.opisanieBody">
-
-    </div>
-
-
-
-
-
-    <div class="audits "
-        v-show="showDonut && currentProject.audits && currentProject.audits.length">
-        <h3 class="center fluid-text title is-2">
-           Доп.информация (Аудит)
-
-        </h3>
-
-
-
-
-
-        <div class="box" v-for="audit,idx in currentProject.audits" :key="idx">
-
-
-
-
+    },
+    initProject(){
+      this.modal.open();
+      Vue.nextTick(() => {
+        this.createDonuts(this.project.audits);
+        this.createGrafiks(this.project.AB);
+        this.toolTipsInit();
+ 
       
+        
+        this.ocenkaInit();
+      });
+    },
+    changeOcenka() {
+      console.log(this.currentProject.ocenka)
+      if (
+        this.currentProject.ocenka.type == "Успешно" ||
+        this.currentProject.ocenka.type == ""
+      ){
+        this.currentProject.ocenka.reason = "";
+        this.changeOcenkaOnServ();
+      }else{
+this.openReasonModal();
+        }
+      
+    },
+    openReasonModal(){
+      this.reasonModal.open();
+      M.FormSelect.init(document.querySelectorAll(".selectReason"));
+    },
+    closeReasonModal(){
+      this.reasonModal.close();
+      this.$forceUpdate();
 
-            <h4 class="center fluid-text title is-4">{{audit.name}}</h4>
-            <div class="columns">
-                <div class="column is-6 is-offset-3 title-is-5 has-text-centered">
-                    Тип: {{ projectTypes[audit.type] }}
+this.ocenkaReasonTooltipInit();
+this.changeOcenkaOnServ();
+      // if(this.currentProject.ocenka.reason == ""){
+      //   this.currentProject.ocenka.type ='Без оценки';
+      // }
+    },
+    ocenkaReasonTooltipInit(){
+      this.$nextTick().then(()=>{
 
-                </div>
-
-
-            </div>
-
-            <div class="columns">
-                <div class="column is-6">
-
-                    <table class="table  centered is-hoverable is-fullwidth" >
-                        <thead>
-                            <tr>
-                                <th class="cut-to-20-ch">{{audit.subname}}</th>
-                                <th>Кол-во</th>
-
-
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <tr v-for="row,rowIdx in audit.rows">
-                                <td class="truncate cut-to-20-ch"  :id="idx+rowIdx">{{row.propName}}</td>
-                                <td>{{row.propInt}}</td>
+        M.Tooltip.init(document.querySelectorAll('.ocenkaReason'));
+      })
+    },
+    changeOcenkaOnServ(){
+      console.log(JSON.stringify({
+        id: this.currentProject.id,
+        ocenka: this.currentProject.ocenka
+      }))
+      axios.post('./vendor/changeOcenka.php', JSON.stringify({
+        id: this.currentProject.id,
+        ocenka: this.currentProject.ocenka
+      })).then(v=>{console.log(v)})
+    }
+    
+  },
+  template: /*html*/`
 
 
-                            </tr>
-                            
-                        </tbody>
-                    </table>
-
-
-                </div>
-
-                <div class="column is-6">
-                    <canvas class="" :id="'DONUT'+idx" width="400" height="400">
-                    </canvas>
-                </div>
-            </div>
-
+  <div id="projectModal" class="modal">
+  
+  
+  
+      <div class="modal-content">
+          <div class="right">
+  
+            
+  
+  
+  
+      
+              <select @change="changeOcenka" v-model="currentProject.ocenka.type" class="select-projectModal">
+                  <option value=""><span class="mdi  mdi-alert">Без оценки</span> </option>
+                  <option value="Успешно"><span class="mdi  mdi-check">Успешно</span></option>
+                  <option value="С ошибкой"><span class="mdi  mdi-close">С ошибкой</span></option>
+        
+              </select>
+  
+              
+  <div v-if="currentProject.ocenka.type == 'С ошибкой' && currentProject.ocenka.reason != ''" data-position="bottom" :data-tooltip="currentProject.ocenka.reason" class="ocenkaReason tooltipped has-text-centered">Причина<span class="mdi mdi-cursor-default"></span> </div>
+       
+          </div>
+          <h1 class="title is-2">{{currentProject.nazvanie}}</h1>
+          <p>{{currentProject.opisanie}} </p>
+          <div v-html="currentProject.opisanieBody">
+      
+          </div>
+      
+      
+      
+      
+      
+          <div class="audits "
+              v-show="showDonut && currentProject.audits && currentProject.audits.length">
+              <h3 class="center fluid-text title is-2">
+                 Доп.информация (Аудит)
+      
+              </h3>
+      
+      
+      
+      
+      
+              <div class="box" v-for="audit,idx in currentProject.audits" :key="idx">
+      
+      
+      
+      
+            
+      
+                  <h4 class="center fluid-text title is-4">{{audit.name}}</h4>
+                  <div class="columns">
+                      <div class="column is-6 is-offset-3 title-is-5 has-text-centered">
+                          Тип: {{ projectTypes[audit.type] }}
+      
+                      </div>
+      
+      
+                  </div>
+      
+                  <div class="columns">
+                      <div class="column is-6">
+      
+                          <table class="table  centered is-hoverable is-fullwidth" >
+                              <thead>
+                                  <tr>
+                                      <th class="cut-to-20-ch">{{audit.subname}}</th>
+                                      <th>Кол-во</th>
+      
+      
+                                  </tr>
+                              </thead>
+      
+                              <tbody>
+                                  <tr v-for="row,rowIdx in audit.rows">
+                                      <td class="truncate cut-to-20-ch"  :id="idx+rowIdx">{{row.propName}}</td>
+                                      <td>{{row.propInt}}</td>
+      
+      
+                                  </tr>
+                                  
+                              </tbody>
+                          </table>
+      
+      
+                      </div>
+      
+                      <div class="column is-6">
+                          <canvas class="" :id="'DONUT'+idx" width="400" height="400">
+                          </canvas>
+                      </div>
+                  </div>
+      
+              </div>
+      
+      
+      
+      
+          </div>
+  
+  
+          <div class="AB"    v-show=" currentProject.AB && currentProject.AB.length">
+  
+  
+  
+              <h3 class="center fluid-text title is-2">
+                  Абонентская База
+       
+               </h3>
+  
+  <div class="box" v-for="(table,idx) in currentProject.AB" :key="idx">
+  
+  
+      <div class="columns">
+          <canvas :id="'line'+idx">
+  
+          </canvas>
+      </div>
+  </div>
+  
+  
+              
+  
+  
+          </div>
+  
+  
+  
+          <div class="modal-footer">
+  
+  
+              <a class="modal-close btn-flat" @click="editProject()">Изменить</a>
+              <a class="modal-close  btn-flat">Закрыть</a>
+          </div>
+      </div>
+      
+      
+      <div id="reasonModal" class="modal">
+          <div class="modal-content">
+            Выберите причину:
+  
+  
+  
+         <select class="selectReason" @change.lazy="closeReasonModal" v-model="currentProject.ocenka.reason"  >
+                  <option  value="Нарушение регламента МИ, есть влияние на клиента/сотрудника">Нарушение
+                      регламента МИ, есть влияние на клиента/сотрудника
+                  </option>
+                  <option 
+                      value="Наличие багов (не технических), влияющих на клиента, процессы компании/департамента. Сопровождающий мог проработать самостоятельно">
+                      Наличие багов (не технических), влияющих на клиента, процессы компании/департамента.
+                      Сопровождающий мог проработать самостоятельно
+                  </option>
+                  <option 
+                      value="Не инициировано изменение процедуры/продукта для улучшения сервиса для клиента">
+                      Не инициировано изменение процедуры/продукта для улучшения сервиса для клиента
+                  </option>
+                  <option 
+                      value="Не инициирована подготовка инструментов/схем и процедур обслуживания клиента для сотрудников">
+  
+                      Не инициирована подготовка инструментов/схем и процедур обслуживания клиента для
+                      сотрудников
+  
+                  </option>
+  
+              </select>
+          </div>
+          <div class="modal-footer">
+            <a  @click="closeReasonModal" class=" button is-primary">Закрыть</a>
+          </div>
         </div>
-
-
-
-
-    </div>
-    <div class="modal-footer">
-        <a class="modal-close btn-flat" @click="editProject()">Изменить</a>
-        <a class="modal-close  btn-flat">Закрыть</a>
-    </div>
-</div>
-
-
-
-</div> 
-
-
-
-
-`,
+      </div> 
+      
+      
+      
+      
+  `,
 };

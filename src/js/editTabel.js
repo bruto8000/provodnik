@@ -257,7 +257,6 @@ Vue.component("editTabel", {
       //     }, idx * 100);
       // });
     },
-
     preEnterSome: function (day, nid, clear) {
       if (this.some.OFF) return;
       this.some.OFF = true; //OPTIMIZATION
@@ -426,7 +425,6 @@ Vue.component("editTabel", {
         html: "Выберите новое начало",
       });
     },
-
     modifSome: function () {
       // slice(this.some.F.X, this.some.L.X)
 
@@ -493,7 +491,6 @@ Vue.component("editTabel", {
           }
         });
     },
-
     exportToExcel: function (id) {
       var tableToExcel = (function () {
         var uri = "data:application/vnd.ms-excel;base64,",

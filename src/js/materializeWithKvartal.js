@@ -6779,6 +6779,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     }, {
       key: "_renderDropdown",
       value: function _renderDropdown(data, val) {
+        
         var _this39 = this;
 
         this._resetAutocomplete();
@@ -6786,6 +6787,26 @@ $jscomp.polyfill = function (e, r, p, m) {
         var matchingData = [];
 
         // Gather all matching data
+        if(val == ""){
+          for (var key in data) {
+         
+              // Break if past limit
+              if (this.count >= this.options.limit) {
+                break;
+              }
+  
+              var entry = {
+                data: data[key],
+                key: key
+              };
+              matchingData.push(entry);
+  
+              this.count++;
+            
+          }
+        }else {
+
+     
         for (var key in data) {
           if (data.hasOwnProperty(key) && key.toLowerCase().indexOf(val) !== -1) {
             // Break if past limit
@@ -6802,7 +6823,7 @@ $jscomp.polyfill = function (e, r, p, m) {
             this.count++;
           }
         }
-
+      }
         // Sort
         if (this.options.sortFunction) {
           var sortFunctionBound = function (a, b) {
@@ -6840,6 +6861,10 @@ $jscomp.polyfill = function (e, r, p, m) {
         if (val.length >= this.options.minLength) {
           this.isOpen = true;
           this._renderDropdown(this.options.data, val);
+        }else{
+          if(!val.length){
+            this._renderDropdown(this.options.data, '');
+          }
         }
 
         // Open dropdown

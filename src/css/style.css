@@ -33,7 +33,7 @@ thead {
     text-align: center;
 }
 .ma{
-    margin: auto;
+    margin: auto !important;
 }
 .vam{
     vertical-align: middle !important;
@@ -53,6 +53,13 @@ thead {
 }
 .f100 {
     font-size: 100px;
+}
+
+.is-absolute{
+  position: absolute;
+}
+.is-right-0{
+  right: 0;
 }
 
 .menu {
@@ -199,4 +206,10 @@ background-size: 100%;
 }
  .ref::first-letter {
   font-size: 12px;
+}
+.fixedTD{
+  position: sticky;
+  left:0;
+  z-index: 2;
+  background: white;
 }

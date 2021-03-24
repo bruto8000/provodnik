@@ -2,6 +2,7 @@
 
 
 
+
 Vue.component("editProj", {
   props: ["projectFromParent"],
   data() {
@@ -34,6 +35,8 @@ Vue.component("editProj", {
           //   {type : "Смс-рассылка",
           //     inputs: [{value}]
           //   },
+
+
           ]
 
 
@@ -87,12 +90,19 @@ Vue.component("editProj", {
         soprovod: "Сопровождающий",
         status: "Статус",
         zakazchik: "Заказчик",
+        difficulty: "Сложность"
       },
       buttonIsLoading: false,
       ABModal: {},
     };
   },
   mounted: function () {
+//     setTimeout(() => {
+//       M.Collapsible.init(document.querySelectorAll('.collapsible'));
+ 
+// // this.addABtabel('big')
+  
+//     }, 1000);
     axios.get("../vendor/showEmployees.php").then((res) => {
       this.employees = res.data;
 
@@ -211,7 +221,7 @@ Vue.component("editProj", {
           difficulty,
           bugs
         }))(this.projectFromParent);
-        console.log(this.project.audits);
+     
 
         if (this.projectFromParent.opisanieBody)
           setTimeout(() => {
@@ -231,10 +241,17 @@ Vue.component("editProj", {
 
             this.createDonut(v);
           })
+
+
+          this.project.AB.forEach(table=>{
+            if(table.type == "big"){
+              this.createGrafik(table)
+            }
+          })
         }, this);
 
-
-      }
+        this.initGrafikDates();
+      } 
     },
     initDates() {
 
@@ -257,15 +274,22 @@ Vue.component("editProj", {
         return;
       }
 
-      this.project.opisanieBody = this.editor.html.get().replace(/'/gi, '"');
-
-      this.project.audits.forEach((audit, idx) => {
+  
+      let projectToSend = Object.assign({}, this.project);
+   projectToSend.opisanieBody = this.editor.html.get().replace(/'/gi, '"');
+projectToSend.dopinfo = this.dopeditor.html.get().replace(/'/gi, '"');
+projectToSend.audits.forEach((audit, idx) => {
         audit.donut = null;
       });
-      console.log(JSON.stringify(this.project));
+      projectToSend.AB.forEach((table, idx) => {
+      if(table.type == 'big'){
+        table.line = null;
+      }
+      });      
+      console.log((projectToSend));
 
       axios
-        .post("../vendor/editProj.php", JSON.stringify(this.project))
+        .post("../vendor/editProj.php", JSON.stringify(projectToSend))
         .then((r) => {
           setTimeout(() => {
             this.editButtonToggle(false);
@@ -292,49 +316,7 @@ Vue.component("editProj", {
         this.buttonIsLoading = false;
       }
     },
-    addProj: function (event) {
-      event.target.classList.toggle("is-loading");
-      if (!this.validateMainRows()) {
-        setTimeout(() => {
-          event.target.classList.toggle("is-loading");
-        }, 400);
-
-        return;
-      }
-      this.project.opisanieBody = this.editor.html.get().replace(/'/gi, '"');
-
-      axios
-        .post("../vendor/addProj.php", JSON.stringify(this.project))
-        .then((r) => {
-          setTimeout(() => {
-            event.target.classList.toggle("is-loading");
-          }, 400);
-
-          if (r.data == "OK") {
-            M.toast({
-              html: "Проект добавлен",
-            });
-            for (prop in this.project) {
-              if (prop == "flags") {
-                this.project[prop] = [];
-                continue;
-              }
-
-              this.project[prop] = "";
-            }
-
-            this.editor.html.set(" ");
-            delete this.project["opisanieBody"];
-          } else {
-            throw new Error(r.data);
-          }
-        })
-        .catch((e) => {
-          M.toast({
-            html: "Проект НЕ добавлен" + e,
-          });
-        });
-    },
+   
     undateZapusk: function () {
       this.undate = !this.undate;
       this.project.sdate = this.undate ? "Не определена" : "";
@@ -539,7 +521,8 @@ Vue.component("editProj", {
         this.validateOcenka() &&
         this.validateStatusZapusk() &&
         this.validateRisks() &&
-        this.validateBugs() 
+        this.validateBugs() &&
+        this.validateAB()
       );
     },
     openABmodal() {
@@ -560,6 +543,55 @@ Vue.component("editProj", {
           showKvartalBtn: true,
           container: document.getElementById("statusZapuskDate"),
         }, '.statusZapuskDate');
+
+        setTimeout(() => {
+          console.log(document.querySelectorAll('.statusZapuskInput'))
+       
+        M.Autocomplete.init(document.querySelectorAll('.statusZapuskInput'), {
+          minLength : 1,
+          data: {
+     
+            "Готовность в СУЗ" : null,
+"Ожидаются прайсы" : null,
+"Прайсы будут размещены" : null,
+"В IVR информация передана" : null,
+"IVR будет готов" : null,
+"FAQ в проработке" : null,
+"В чат-бот информация передана" : null,
+"Чат-бот будет готов" : null,
+"Тематики на согласовании" : null,
+"Тематики будут готовы " : null,
+"Ожидается прогноз нагрузки" : null,
+"Ожидается согласование ресурсов" : null,
+"КК" : null,
+"Анализ Дизайн" : null,
+"Полная готовность к запуска" : null,
+"Инициатива запустилась." : null,
+"Запрос отклика" : null,
+"Наблюдение за откликом" : null,
+"Ожидается решение по обучению" : null,
+"Обучение будет проводиться с" : null,
+"АО на согласовании" : null,
+"АО будет готов" : null,
+"СФ на согласовании" : null,
+"СФ будут готовы" : null,
+"Процедура в проработке" : null,
+"Процедура будет готова " : null,
+"Выдвинуты требования" : null,
+"Согласование экстренной схемы" : null,
+"Согласование маршрутизации/настройки сплитов" : null,
+"Тестирование" : null,
+"Согласование коммуникаций " : null,
+"Согласование лендинга" : null,
+"Согласование текста новости" : null
+
+
+            
+          }
+        })
+
+      }, 1000);
+
       });
     },
     deleteStatusZapuskRow() {
@@ -687,34 +719,283 @@ Vue.component("editProj", {
 
       });
       if(type=="big"){
-        this.project.AB.push({
+       let table = {
 
           type: 'big',
-          range: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+          range: [],
           TRs: [
           
           ]
         
-         });
+         };
+
+
+       table.colors = [
+          "#c2185b",
+          "#3949ab",
+          "#2196f3",
+          "#00bcd",
+          "#009688",
+          "#66bb6a",
+          "#f4ff81",
+          "#f4511e",
+          "#00e676",
+        ].sort((v) => {
+          return Math.floor(Math.random() * 10) > 5 ? 1 : -1;
+        }),
+        this.project.AB.push(table);
          this.$nextTick().then(()=>{
 
          
-         M.Dropdown.init(document.querySelectorAll(".dropdownTableRow"),{
-
-          constrainWidth: false,
-          hover: true
-         });
-         Kalendar.set({},'.table-date')
+    
+     this.initGrafikDates();
+          this.createGrafik(table);
+    
          })
     }
-  },
-  addTableTR(table,type){
+  
+    },
+    async initGrafikDates(){
+      await this.$nextTick();
+      M.Dropdown.init(document.querySelectorAll(".dropdownTableRow"),{
+        constrainWidth: false,
+        hover: true
+       });
+       Kalendar.set({},'.table-date');
+    },
+    addTableTR(table,type){
    
     table.TRs.push({
       type: type,
       inputs: table.range.map(v=>{return {value:""}})
     })
+    this.updateGrafik(table);
+    },
+    deleteTableTR(table,type){
+   console.log(table, type)
+      let idxOfTR = table.TRs.indexOf(table.TRs.find(v=>v.type === type))
+
+      console.log(idxOfTR)
+      table.TRs.splice(idxOfTR,1);
+      let color = table.colors[idxOfTR];
+      console.log(color)
+      table.colors.splice(idxOfTR,1);
+      table.colors.push(color);
+      let idxOfLabel = table.line.data.datasets.indexOf(table.line.data.datasets.find(v=>v.label === type));
+      table.line.data.datasets.splice(idxOfLabel,1)
+      this.updateGrafik(table);
+      // this.usedTypes(table);
+      },
+    changeTableRange(table){
+
+if(table.fdate && table.sdate){
+  table.range = this.dateRange(table.fdate, table.sdate)
+}
+table.TRs.forEach(TR=>{
+
+    while(TR.inputs.length<table.range.length){
+      TR.inputs.push({value:""})
+    }
+    if(TR.inputs.length>table.range.length){
+      TR.inputs.splice(table.range.length)
+    }
+
+
+});
+
+// this.updateGrafik(table)
+
+    },
+    dateRange (date1,date2) {
+      
+
+      ///DATE
+      let parts = date1.split(" ");
+
+      let startDate;
+      let endDate;
+      if (parts.length === 3) {
+        startDate = new Date(parts[2], parts[1] - 1, parts[0]);
+
+        parts = date2.split(" ");
+
+        endDate = new Date(parts[2], parts[1] - 1, parts[0]);
+      } else if (parts.length == 2) {
+        if (isNaN(Number(parts[0]))) {
+          switch (parts[0]) {
+            case "I":
+              startDate = new Date(parts[1], "0", "1");
+              endDate = new Date(parts[1], "3", "0");
+              break;
+            case "II":
+              startDate = new Date(parts[1], "3", "1");
+              endDate = new Date(parts[1], "6", "0");
+              break;
+            case "III":
+              startDate = new Date(parts[1], "6", "1");
+              endDate = new Date(parts[1], "9", "0");
+              break;
+            case "IV":
+              startDate = new Date(parts[1], "9", "1");
+              endDate = new Date(parts[1], "11", "31");
+              break;
+          }
+        } else {
+          //MONTH SELECTED
+
+          startDate = new Date(parts[1], parts[0] - 1, "1");
+          endDate = new Date(parts[1], parts[0], "0");
+        }
+      } else {
+        startDate = new Date(parts[0], 0, 1);
+        endDate = new Date(parts[0], 11, 31);
+      }
+
+      if (endDate < startDate) {
+        let y;
+        y = startDate;
+        startDate = endDate;
+        endDate = y;
+      }
+
+      let dates = [];
+      //to avoid modifying the original date
+      const theDate = new Date(startDate);
+
+      while (theDate < endDate) {
+        let dateForPush = "";
+
+        if (theDate.getDate() < 10) {
+          dateForPush += "0" + theDate.getDate() + " ";
+        } else {
+          dateForPush += theDate.getDate() + " ";
+        }
+
+        if (theDate.getMonth() < 9) {
+          dateForPush += "0" + (theDate.getMonth() + 1) + " ";
+        } else {
+          dateForPush += theDate.getMonth() + 1 + " ";
+        }
+        dateForPush += theDate.getFullYear();
+        dates.push(dateForPush);
+        theDate.setDate(theDate.getDate() + 1);
+      }
+
+      let dateForPush = "";
+
+      if (theDate.getDate() < 10) {
+        dateForPush += "0" + theDate.getDate() + " ";
+      } else {
+        dateForPush += theDate.getDate() + " ";
+      }
+
+      if (theDate.getMonth() < 9) {
+        dateForPush += "0" + (theDate.getMonth() + 1) + " ";
+      } else {
+        dateForPush += theDate.getMonth() + 1 + " ";
+      }
+      dateForPush += theDate.getFullYear();
+      dates.push(dateForPush);
+
+      // dates //
+
+      // this.range = dates;
+      return dates;
+    },
+    createGrafik(table) {
+      let idx = this.project.AB.indexOf(table)
+      let ctx = document.getElementById('line'+idx);
+       table.line = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: table.range,
+              datasets: table.TRs.map((TR,idxOfTR)=>{
+                return {
+                  data: TR.inputs.map(input=>input.value),
+                  label: TR.type,
+                  fill: false,
+                  borderColor: table.colors[idxOfTR],
+                  backgroundColor : table.colors[idxOfTR]
+                }
+              })
+            
+          },
+
+      });
+  },
+    updateGrafik(table){
+      table.TRs.map((TR,idxOfTR)=>{
+ 
+    TR.inputs.map((input,idxOfInput)=>{ 
+      if(!table.line.data.datasets[idxOfTR]){
+        table.line.data.datasets[idxOfTR] = {
+          label : TR.type,
+          data: [],
+          fill: false,
+          borderColor: table.colors[idxOfTR],
+          backgroundColor : table.colors[idxOfTR]
+        }
+      }
+       table.line.data.datasets[idxOfTR].data[idxOfInput] = input.value
+       
+    })
+   
+
+    table.line.data.datasets[idxOfTR].label = TR.type;
+    console.log( table.line.data.datasets)
+
+  if( table.line.data.datasets[idxOfTR] && (table.range.length <   table.line.data.datasets[idxOfTR].data.length)){
+    table.line.data.datasets[idxOfTR].data.splice(table.range.length-1)
   }
+    
+      })
+if(table.TRs.length < table.line.data.datasets.length){
+  table.line.data.datasets.splice(table.TRs.length-1)
+}
+
+    // table.line.data.datasets.forEach((dataset,idx)=>{
+    //   dataset.data.forEach((value,idxOfInput)=>{
+    //     table.line.data.datasets[idx].data[idxOfInput] = table.TRs[idx]?.inputs[idxOfInput]?.value;
+     
+    //   })
+    // })
+    table.line.data.labels = table.range;
+    table.line.update()
+  },
+  deleteAB(table){
+    if(table.type =='big'){
+      table.line.destroy();
+    }
+ this.project.AB = this.project.AB.filter(v=>v!=table);
+
+ 
+  },
+  usedTypes(table){
+
+    return table.TRs.map(v=>v.type)
+  },
+  validateAB() {
+    try{
+    this.project.AB.forEach(table=>{
+      if(table.type =='big'){
+      if(!table.range.length){
+      
+        throw new Error('Не выбраны даты для таблицы в абонентской базе')
+      }
+      if(!table.TRs.length){
+
+        throw new Error('Не выбраны действия для таблицы в абонентской базе')
+      }
+        
+      }
+    })
+
+  }catch(e){
+    M.toast({html:e.message})
+    return false;
+  }
+  return true;
+     }, 
     },
   watch: {
     projectFromParent: function (n, o) {
@@ -722,6 +1003,7 @@ Vue.component("editProj", {
       this.loadProject();
     },
   },
+  
 
   template: /*html*/ `<div class="container">
 
@@ -782,10 +1064,20 @@ Vue.component("editProj", {
           </div>
       </div>
 
-      <div class="column is-3 center ">
+      <div class="column is-3 center p-1">
           <div class="  ">Сложность</div>
-          <input placeholder="Введите сложность" v-model="project.difficulty" id="difficulty" type="text"
-              class="validate input">
+          <select v-model="project.difficulty"  id="difficulty">
+<option value="1">1</option>
+<option value="1.5">1.5</option>
+<option value="2">2</option>
+<option value="2.5">2.5</option>
+<option value="3">3</option>
+<option value="3.5">3.5</option>
+
+
+
+          </select>
+    
       </div>
       <div class="column is-3 center ">
           <div class="  ">Заказчик</div>
@@ -864,72 +1156,13 @@ Vue.component("editProj", {
 
 
   <ul class="collapsible">
-      <li>
-          <div class="collapsible-header">
-              <h3 class="title is-4">
-
-                  Оценка
-              </h3>
-          </div>
-          <div class="collapsible-body">
-
-
-              <div class="ocenka">
-                  <h1 class="title is-1">Оценка</h1>
-                  <div class="columns">
-                      <div class="column is-4 p1">
-
-                          <select v-model="project.ocenka.type" @change="changeOcenka">
-                              <option value="">Не выбрана</option>
-                              <option value="Успешный">Успешный</option>
-                              <option value="С ошибкой">С ошибкой</option>
-                          </select>
-
-
-
-                      </div>
-
-                      <div class="column is-8 p1">
-
-
-
-                          <select v-model="project.ocenka.reason" :disabled="project.ocenka.type != 'С ошибкой'">
-                              <option value="Нарушение регламента МИ, есть влияние на клиента/сотрудника">Нарушение
-                                  регламента МИ, есть влияние на клиента/сотрудника
-                              </option>
-                              <option
-                                  value="Наличие багов (не технических), влияющих на клиента, процессы компании/департамента. Сопровождающий мог проработать самостоятельно">
-                                  Наличие багов (не технических), влияющих на клиента, процессы компании/департамента.
-                                  Сопровождающий мог проработать самостоятельно
-                              </option>
-                              <option
-                                  value="Не инициировано изменение процедуры/продукта для улучшения сервиса для клиента">
-                                  Не инициировано изменение процедуры/продукта для улучшения сервиса для клиента
-                              </option>
-                              <option
-                                  value="Не инициирована подготовка инструментов/схем и процедур обслуживания клиента для сотрудников">
-
-                                  Не инициирована подготовка инструментов/схем и процедур обслуживания клиента для
-                                  сотрудников
-
-                              </option>
-
-                          </select>
-
-
-                      </div>
-                  </div>
-
-              </div>
-
-          </div>
-      </li>
+    
       <li>
           <div class="collapsible-header">
 
-              <h3 class="title is-4">
+              <h3 class="title is-4 has-text-centered">
 
-                  АБ
+                  Абонентская база
               </h3>
           </div>
           <div class="collapsible-body">
@@ -937,13 +1170,13 @@ Vue.component("editProj", {
 
               <div class="AB">
                   <h1 class="title is-1">
-                      АБ
-                      <button class="button is-danger" :disabled="!project.AB.length" @click="deleteAB()">-</button>
+                      Абонентская база
+                     
                       <button class="button is-primary" @click="openABmodal()">+</button>
                   </h1>
 
                   <div v-for="(table,idx) in project.AB" :key="idx" class=" my-5 box center">
-
+                      <button class="button is-danger left"  @click="deleteAB(table)">-</button>
 
                       <div class="column is-6 is-offset-3" v-if="table.type == 'small'">
 
@@ -991,11 +1224,11 @@ Vue.component("editProj", {
                      
 
                                   <div class="column is-3 is-offset-3">
-                                      <input type="text"  placeholder="Выберите дату" class="datepicker input  table-date" v-model.lazy="table.fdate">
+                                      <input type="text"  placeholder="Выберите дату" @change="changeTableRange(table)" class="datepicker input  table-date" v-model.lazy="table.fdate">
                                   </div>
 
                                   <div class="column is-3 ">
-                                      <input type="text" placeholder="Выберите дату" class="datepicker input table-date" v-model.lazy="table.sdate">
+                                      <input type="text" placeholder="Выберите дату" @change="changeTableRange(table)" class="datepicker input table-date" v-model.lazy="table.sdate">
                                   </div>
 
                       
@@ -1003,22 +1236,25 @@ Vue.component("editProj", {
 
                           <div class="">
                               <div class="table-container">
-                              <table class="table">
+                              <table class="table ma">
                                   <tr>
-                                      <td>
+                                      <td >
 
-                                          <button class='dropdown-trigger button is-primary dropdownTableRow'
+                        
+
+                               
+                                          <button v-show="usedTypes(table).length<5" class='dropdown-trigger button is-primary dropdownTableRow '
                                               :data-target="'dropdown'+idx">Действие</button>
 
                                           <!-- Dropdown Structure -->
-                                          <ul :id="'dropdown'+idx" class='dropdown-content'>
-                                              <li class="px-4 py-2" @click="addTableTR(table,'Смс-рассылка')">Смс-рассылка</li>
-                                              <li class="px-4 py-2" @click="addTableTR(table,'E-mail рассылка')">E-mail рассылка</li>
-                                              <li class="px-4 py-2" @click="addTableTR(table,'Push-рассылка')">Push-рассылка</li>
-                                              <li class="px-4 py-2" @click="addTableTR(table,'ТВ реклама')">ТВ реклама</li>
-                                              <li class="px-4 py-2" @click="addTableTR(table,'Офсет')">Офсет</li>
+                                          <ul :id="'dropdown'+idx" class='dropdown-content' >
+                                              <li v-if="!usedTypes(table).includes('Смс-рассылка')" class="px-4 py-2" @click="addTableTR(table,'Смс-рассылка')">Смс-рассылка</li>
+                                              <li v-if="!usedTypes(table).includes('E-mail рассылка')" class="px-4 py-2" @click="addTableTR(table,'E-mail рассылка')">E-mail рассылка</li>
+                                              <li v-if="!usedTypes(table).includes('Push-рассылка')" class="px-4 py-2" @click="addTableTR(table,'Push-рассылка')">Push-рассылка</li>
+                                              <li v-if="!usedTypes(table).includes('ТВ реклама')" class="px-4 py-2" @click="addTableTR(table,'ТВ реклама')">ТВ реклама</li>
+                                              <li v-if="!usedTypes(table).includes('Офсет')" class="px-4 py-2" @click="addTableTR(table,'Офсет')">Офсет</li>
                                           </ul>
-
+                           
 
                                       </td>
                                       <td v-for="date in table.range" class="min-w-100 px-2">{{date}} </td>
@@ -1026,17 +1262,26 @@ Vue.component("editProj", {
 
                                   </tr>
 
-                                  <tr v-for="TR in table.TRs">
-                                      <td>{{TR.type}}</td>
-                                      <td v-for="TD in TR.inputs" class="min-w-100 px-2">
-                                          <input type="text" class="input" v-model="TD.value">
+                                  <tr v-for="(TR,idxOfTR) in table.TRs" :key="idxOfTR">
+                                      <td class="fixedTD has-text-left"><span class="mdi mdi-poll" :style="{ color: [table.colors[idxOfTR]]}"></span><span @click="deleteTableTR(table,TR.type)" class="mdi mdi-delete-outline"></span>  {{TR.type}}</td>
+                                      <td v-for="(TD,idxOfTD) in TR.inputs"  :key="idxOfTD" class="min-w-100 px-2">
+                                          <input type="number" class="input" :name="idxOfTR+idxOfTD" @change="updateGrafik(table)" v-model="TD.value">
                                       </td>
                                   </tr>
 
                               </table>
                           </div>
                           </div>
+                        
+                          <div class="columns">
 
+                              <div class="column is-8 is-offset-2">
+
+                                  <canvas :id="'line'+idx">
+
+                                  </canvas>
+                              </div>
+                          </div>
                       </div>
 
 
@@ -1170,7 +1415,7 @@ Vue.component("editProj", {
       </li>
       <li>
           <div class="collapsible-header">
-              <h3 class="title is-4">
+              <h3 class="title is-4 ">
 
                   Статус по запуску
               </h3>
@@ -1179,7 +1424,7 @@ Vue.component("editProj", {
 
               <div class="statusZapusk">
 
-                  <h3 class="title is-4">
+                  <h3 class="title is-4 has-text-centered">
 
 
                       Статус по запуску
@@ -1199,11 +1444,19 @@ Vue.component("editProj", {
                       </div>
 
                       <div class="columns" v-for="(row,idx) in project.statusZapusk" :key="idx">
-                          <div class="column is-9"><input type="text" class="input is-primary"
+                          <div class="column is-9">
+                              <div class="input-field m-0">
+                              <input type="text" class="input is-primary autocomplete statusZapuskInput"
                                   v-model.lazy="row.opisanie"></div>
-                          <div class="column"><input type="text" class="input is-primary datepicker statusZapuskDate"
-                                  v-model.lazy="row.srok"></div>
+                              </div>
+                          <div class="column">
+                              
+                       
 
+                    
+                              <input type="text" class="input is-primary  datepicker statusZapuskDate"
+                                  v-model.lazy="row.srok"></div>
+                        
                       </div>
 
                   </div>
@@ -1236,7 +1489,7 @@ Vue.component("editProj", {
 
 
 
-                  <h3 class="title is-4">
+                  <h3 class="title is-4 has-text-centered">
 
 
                       Риски по запуску
@@ -1422,7 +1675,7 @@ Vue.component("editProj", {
 
 
 
-                  <h3 class="title is-4">
+                  <h3 class="title is-4 has-text-centered">
 
 
                       Баги
@@ -1515,7 +1768,7 @@ Vue.component("editProj", {
 
               <div class="statusZapusk">
 
-                  <h3 class="title is-4">
+                  <h3 class="title is-4 has-text-centered">
                       Доп. информация
                   </h3>
 
@@ -1553,5 +1806,9 @@ Vue.component("editProj", {
 
 
 
-</div>`
+</div>
+
+
+`
   });
+
