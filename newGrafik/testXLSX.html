@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./materialize.css" />
+    <link rel="stylesheet" href="./bulma.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="box">
+
+        <div v-if="!filename">
+
+ 
+        <h1 class="title is-1 has-text-centered" >Выберите файл для построения графика...</h1>
+      
+
+      
+              <input placeholder="Выберите файл"  class="input " @change="loadFile"  type="file" name="resume">
+            </div>
+<div v-else>
+  <h1 class="title is-1 has-text-centered">Файл: {{filename}}</h1>
+</div>
+
+        <div class="progress" v-show="loading">
+          <div class="indeterminate" v-show="loading"></div>
+      </div>
+
+
+        <select v-model="selectedIdx" multiple class="my-6">
+          <option v-for="selectValue in selectValues" :value="selectValue.idx">
+            {{selectValue.label}}
+          </option>
+        </select>
+
+        <div class="box" v-if="selectValues.length">
+          <h2 class="title is-2 has-text-centered">И даты ....</h2>
+          <div class="columns">
+            <div class="column is-6 has-text-centered">
+              <input type="text" v-model.lazy="datePickers.fdate" class="datepicker input" />
+            </div>
+            <div class="column is-6 has-text-centered">
+              <input type="text" v-model.lazy="datePickers.sdate" class="datepicker input" />
+            </div>
+          </div>
+          <div class="columns">
+            <div class="column is-6 is-offset-6">
+              <button class="button is-danger" @click="initGrafik">
+                Создать график
+              </button>
+            </div>
+          </div>
+          <div class="columns">
+              <div class="column is-8 is-offset-2 box">
+                <canvas id="XSXgrafik"></canvas>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./vue.js"></script>
+    <script src="./kalendar.js"></script>
+    <script src="./materializeWithKvartal.js"></script>
+    <script src="./shim.min.js"></script>
+    <script src="./xlsx.full.min.js"></script>
+    <script src="./index.js"></script>
+    <script src="./chart.js"></script>
+  </body>
+</html>
