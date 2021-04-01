@@ -84,7 +84,7 @@ Vue.component("eGrafiksComponent", {
         });
         wb = null;
         delete wb;
-        console.log(oJS2);
+  
         let values = Object.values(oJS[0]);
         let keys = Object.keys(oJS[0]);
 
@@ -258,7 +258,7 @@ Vue.component("eGrafiksComponent", {
       return dates;
     },
     initGrafik(eGrafik) {
-      console.log(eGrafik);
+
       if (eGrafik.loadType == "fl") {
         if (!(this.checkDates(eGrafik) && this.checkSelected(eGrafik))) {
           return;
@@ -274,9 +274,10 @@ Vue.component("eGrafiksComponent", {
         return;
       }
       this.createGrafik(eGrafik);
+  
     },
     createGrafik(eGrafik) {
-      console.log(eGrafik);
+
       let ctx = document.getElementById(
         "eGrafik" + this.eGrafiks.indexOf(eGrafik)
       );
@@ -286,7 +287,11 @@ Vue.component("eGrafiksComponent", {
           labels: eGrafik.range,
           datasets: eGrafik.datasets,
         },
+        options : {
+          onClick	: this.eGrafikClickHandler
+        }
       });
+      
     },
     updateGrafik(eGrafik) {
       eGrafik.grafik.data.labels = eGrafik.range;
@@ -312,88 +317,137 @@ Vue.component("eGrafiksComponent", {
       return true;
     },
     checkSelected(eGrafik) {
+      if(eGrafik.type == 'zapusk'){
       if (!eGrafik.selectedIdx.length) {
         M.toast({ html: "Активности  не выбраны." });
         return false;
       }
+    }else {
+      if (eGrafik.selectedIdx === '') {
+        M.toast({ html: "Активность  не выбрана." });
+        return false;
+      }
+    }
+
       return true;
     },
     getValues(eGrafik) {
       let arrOfEmployees = [];
-      eGrafik.selectedIdx.forEach((idxOfSelected, idxOfArr) => {
-        let currentRow;
-        if (eGrafik.type == "zapusk") {
-          currentRow = this.oJS[idxOfSelected + 2];
-        } else {
-          currentRow = this.oJS2[idxOfSelected + 3];
-        }
-        console.log(currentRow, 'CURRENT ROW')
-        //EmployeeObject SPCIAL FOR grafik
-        let employeeObject;
-        if (eGrafik.type == "zapusk") {
-          employeeObject = {
-            label: this.selectValuesZapusk[idxOfSelected].label.replace(
-              '"',
-              '"'
-            ),
-            data: [],
-            fill: false,
-            borderColor: this.colors[idxOfArr],
-            backgroundColor: this.colors[idxOfArr],
-          };
-        } else {
-          employeeObject = {
-            label: this.selectValuesPlanFact[idxOfSelected].label.replace(
-              '"',
-              '"'
-            ),
-            data: [],
-            fill: false,
-            borderColor: this.colors[idxOfArr],
-            backgroundColor: this.colors[idxOfArr],
-          };
-        }
-
-        if (eGrafik.type == "zapusk") {
-          eGrafik.range.forEach((date) => {
-            if (this.datesFromXSXZapusk.values.includes(date)) {
-              let key = this.datesFromXSXZapusk.keys[
-                this.datesFromXSXZapusk.values.indexOf(
-                  this.datesFromXSXZapusk.values.find((v) => date == v)
-                )
-              ];
-              employeeObject.data.push(Math.round(currentRow[key]) || 0);
 
 
-              console.log(date)
-              console.log('-----------------------------')
-              console.log(key)
-            } else {
-              console.log('pushing 0', date)
-              employeeObject.data.push(0);
-            }
-          });
-        } else {
-          eGrafik.range.forEach((date) => {
-            if (this.datesFromXSXPlanFact.values.includes(date)) {
-              let key = this.datesFromXSXPlanFact.keys[
-                this.datesFromXSXPlanFact.values.indexOf(
-                  this.datesFromXSXPlanFact.values.find((v) => date == v)
-                )
-              ];
+      if(eGrafik.type =='zapusk'){
 
-              console.log(date)
-              console.log('-----------------------------')
-              console.log(key)
-              employeeObject.data.push(Math.round(currentRow[key]) || 0);
-            } else {
-              employeeObject.data.push(0);
-            }
-          });
-        }
+        eGrafik.selectedIdx.forEach((idxOfSelected, idxOfArr) => {
+        let currentRow = this.oJS[idxOfSelected + 2];
+       let  employeeObject = {
+          label: this.selectValuesZapusk[idxOfSelected].label.replace(
+            '"',
+            '\"'
+          ).replace("'", "\'"),
+          data: [],
+          fill: false,
+          borderColor: this.colors[idxOfArr],
+          backgroundColor: this.colors[idxOfArr],
+        };
+
+        eGrafik.range.forEach((date) => {
+          if (this.datesFromXSXZapusk.values.includes(date)) {
+            let key = this.datesFromXSXZapusk.keys[
+              this.datesFromXSXZapusk.values.indexOf(
+                this.datesFromXSXZapusk.values.find((v) => date == v)
+              )
+            ];
+            employeeObject.data.push(Math.round(currentRow[key]) || 0);
+
+
+   
+          } else {
+            
+            employeeObject.data.push(0);
+          }
+        });
 
         arrOfEmployees.push(employeeObject);
       });
+
+      }else{
+
+  /// Прогноз ГРАФИК
+       let currentRow = this.oJS2[eGrafik.selectedIdx + 3];
+
+
+     let  employeeObject = {
+        label: "Прогноз " + this.selectValuesPlanFact[eGrafik.selectedIdx].label.replace(
+          '"',
+          "'"
+        ),
+        data: [],
+        fill: false,
+        borderColor: 'red',
+        backgroundColor: 'red'
+      };
+
+      eGrafik.range.forEach((date) => {
+        if (this.datesFromXSXPlanFact.values.includes(date)) {
+          let key = this.datesFromXSXPlanFact.keys[
+            this.datesFromXSXPlanFact.values.indexOf(
+              this.datesFromXSXPlanFact.values.find((v) => date == v)
+            )
+          ];
+
+  
+          employeeObject.data.push(Math.round(currentRow[key]) || 0);
+        } else {
+          employeeObject.data.push(0);
+        }
+      });
+
+
+      arrOfEmployees.push(employeeObject);
+
+  /// ФАКТ ГРАФИК
+      employeeObject = {
+        label: "Факт " + this.selectValuesPlanFact[eGrafik.selectedIdx].label.replace(
+          '"',
+          "'"
+        ),
+        data: [],
+        fill: false,
+        borderColor: 'blue',
+        backgroundColor: 'blue',
+      };
+
+
+    
+      eGrafik.range.forEach((date) => {
+        if (this.datesFromXSXPlanFact.values.includes(date)) {
+          let key = this.datesFromXSXPlanFact.keys[
+            this.datesFromXSXPlanFact.values.indexOf(
+              this.datesFromXSXPlanFact.values.find((v) => date == v)
+            )
+          ];
+
+  
+          employeeObject.data.push(Math.round(currentRow[Object.keys(currentRow)[Object.keys(currentRow).indexOf(key) + 1]]) || 0);
+        } else {
+          employeeObject.data.push(0);
+        }
+      });
+
+
+      arrOfEmployees.push(employeeObject);
+
+
+
+
+      }
+
+    
+ 
+    
+
+        
+ 
       return arrOfEmployees;
     },
     addGrafPlanFact() {
@@ -403,7 +457,7 @@ Vue.component("eGrafiksComponent", {
         range: [],
         fdate: "",
         sdate: "",
-        selectedIdx: [],
+        selectedIdx: '',
         grafik: null,
         loadType: "fl",
       });
@@ -441,12 +495,28 @@ Vue.component("eGrafiksComponent", {
     unlockGrafik(eGrafik){
       eGrafik.loadType = 'fl'
     },
+    eGrafikClickHandler(e){
+    console.log(  this.eGrafiks[0].grafik
+      .getElementsAtEvent(e))
+    console.log(  this.eGrafiks[0].grafik
+      .getElementAtEvent(e))
+    console.log(  this.eGrafiks[0].grafik
+      .getDatasetAtEvent(e))
+console.log(e)
+    }
   },
   watch: {
-    eGrafiks() {
+    eGrafiks(n,o) {
+   
+ 
  if(!this.watcherNeed){this.watcherNeed = true; return};
+ if(o && o.length){
+   o.forEach((eGrafik)=>{
+     eGrafik.grafik.destroy();
+   })
+ }
         this.$nextTick().then(() => {
-          console.log(this.eGrafiks, 'WROM WATCHER')
+          
           this.eGrafiks.forEach((eGrafik) => {
             eGrafik.loadType = "db"; ///LOADED FROM DataBase
             this.initGrafik(eGrafik);
@@ -557,7 +627,8 @@ Vue.component("eGrafiksComponent", {
       <h2 class="title is-2">График по План/Факту</h2>
       <h3 class="title is-3">Выберите активности: </h3>
       <select v-model="eGrafik.selectedIdx" class="my-6"  :disabled="eGrafik.loadType == 'db'">
-        <option
+      <option value="" selected></option>
+      <option
           v-for="selectValue in selectValuesPlanFact"
           :value="selectValue.idx"
         >

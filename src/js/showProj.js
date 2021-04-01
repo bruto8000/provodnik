@@ -110,9 +110,9 @@ let showProj = {
       }
     },
     openProject(project) {
-      console.log(project);
+   
       this.projectForModal = project;
-      console.log(this.projectForModal);
+
     },
     exportToExcel: function () {
       var tableToExcel = (function () {
@@ -143,9 +143,9 @@ let showProj = {
       });
     },
     editProj(project) {
-      console.log("catching, emmit pro");
+ 
       this.$emit("edit-proj", project);
-      console.log("EMMITING editProj2");
+
     },
   },
   watch: {},
@@ -176,7 +176,8 @@ let showProj = {
             }
           }
           if(this.filterOcenka != 'all'){
-          return  ((v.ocenka.type == this.filterOcenka) ||  !v.ocenka.type);
+            if(this.filterOcenka == '' && !v.ocenka.type ){return true;}
+          return  ((v.ocenka.type === this.filterOcenka));
           }
           return true;
         })

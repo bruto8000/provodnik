@@ -24,24 +24,30 @@ let projectModal = {
   },
   watch: {
     project: function (n, o) {
-      // console.log('PROJECT')
+
       if (!n.id) return;
       if (this.currentProject.id == n.id) {
         this.modal.open();
-        //    console.log('uje est')
+     
         return;
       }
-      // console.log('oy new')
+
       this.destroyDonuts();
       this.destroyGrafiks();
-      this.currentProject = {}
-   
-        this.currentProject = Object.assign({}, n);
+      if(this.currentProject && this.currentProject.ocenka){
+      if(this.currentProject.ocenka.type == 'С ошибкой' && this.currentProject.ocenka.reason == '' ){
+        console.log('С ошибкой? но без?')
+        this.currentProject.ocenka.type = '';
+        this.closeReasonModal();
+      }
+    }
+        this.currentProject = n;
         if(!this.currentProject.ocenka.type)
         this.currentProject.ocenka = {
           type : "",
           reason: ""
         }
+      
         this.initProject();
 
    
@@ -58,7 +64,7 @@ let projectModal = {
       inDuration: 0,
       outDuration: 0,
       onCloseEnd: function () {
-        console.log(this);
+      
 
         this.$emit("update:project", { id: null });
       }.bind(this),
@@ -218,7 +224,7 @@ let projectModal = {
       });
     },
     changeOcenka() {
-      console.log(this.currentProject.ocenka)
+    
       if (
         this.currentProject.ocenka.type == "Успешно" ||
         this.currentProject.ocenka.type == ""
@@ -251,14 +257,11 @@ this.changeOcenkaOnServ();
       })
     },
     changeOcenkaOnServ(){
-      console.log(JSON.stringify({
-        id: this.currentProject.id,
-        ocenka: this.currentProject.ocenka
-      }))
+   
       axios.post('./vendor/changeOcenka.php', JSON.stringify({
         id: this.currentProject.id,
         ocenka: this.currentProject.ocenka
-      })).then(v=>{console.log(v)})
+      }))
     }
     
   },

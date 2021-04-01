@@ -324,24 +324,33 @@ projectToSend.dopinfo = this.dopeditor.html.get().replace(/'/gi, '"');
 
 
 projectToSend.audits.forEach((audit, idx) => {
+  if(audit.donut){
   audit.donut.destroy();
         audit.donut = null;
+  }
       });
       projectToSend.AB.forEach((table, idx) => {
       if(table.type == 'big'){
+        if(table.line){
+
+    
         table.line.destroy();
         table.line = null;
       }
+      }
       });    
       projectToSend.eGrafiks.forEach((eGrafik, idx) => {
+        if(eGrafik.grafik){
         eGrafik.grafik.destroy();
         eGrafik.grafik = null;
-      delete  eGrafik.grafik;
+  
+        
         
     eGrafik.datasets.forEach(e=>{
       e._meta = null;
     delete  e._meta;
     })
+  }
       });       
       console.log((projectToSend));
 
@@ -1061,6 +1070,12 @@ if(table.TRs.length < table.line.data.datasets.length){
   }
   return true;
      }, 
+     destroyAB() {
+      if (!this.project.AB) return;
+      this.project.AB.forEach((table) => {
+        if (table.line) table.line.destroy();
+      });
+    },
     },
   watch: {
     projectFromParent: function (n, o) {
@@ -1069,7 +1084,10 @@ if(table.TRs.length < table.line.data.datasets.length){
     },
   },
   deactivated(){
-this.eGrafiks = [];
+    console.log('deactivated')
+
+this.destroyDonuts();
+this.destroyAB();
   },
   
 
