@@ -173,8 +173,7 @@ Vue.component("editProj", {
   },
   methods: {
     loadProject() {
-      /*DELETE*/
-      M.FormSelect.init(document.querySelectorAll("select"));
+    
 
       if (!this.projectFromParent.id) {
         M.toast({
@@ -201,7 +200,8 @@ Vue.component("editProj", {
           risks,
           audits,
           difficulty,
-          bugs
+          bugs,
+          eGrafiks
         }) => ({
           id,
           fdate,
@@ -219,7 +219,8 @@ Vue.component("editProj", {
           risks,
           audits,
           difficulty,
-          bugs
+          bugs,
+          eGrafiks
         }))(this.projectFromParent);
      
 
@@ -273,19 +274,75 @@ Vue.component("editProj", {
 
         return;
       }
+      let   projectToSend = (({
+        id,
+        fdate,
+        sdate,
+        nazvanie,
+        bizness,
+        zapusk,
+        soprovod,
+        status,
+        zakazchik,
+        flags,
+        ocenka,
+        AB,
+        statusZapusk,
+        risks,
+        audits,
+        difficulty,
+        bugs,
+        eGrafiks
+      }) => ({
+        id,
+        fdate,
+        sdate,
+        nazvanie,
+        bizness,
+        zapusk,
+        soprovod,
+        status,
+        zakazchik,
+        flags,
+        ocenka,
+        AB,
+        statusZapusk,
+        risks,
+        audits,
+        difficulty,
+        bugs,
+        eGrafiks
+      }))(this.project);
+      console.log(projectToSend.eGrafiks === this.project.eGrafiks, 'FCOPY OBJ')
+    
 
-  
-      let projectToSend = Object.assign({}, this.project);
+
+
+
    projectToSend.opisanieBody = this.editor.html.get().replace(/'/gi, '"');
 projectToSend.dopinfo = this.dopeditor.html.get().replace(/'/gi, '"');
+
+
 projectToSend.audits.forEach((audit, idx) => {
+  audit.donut.destroy();
         audit.donut = null;
       });
       projectToSend.AB.forEach((table, idx) => {
       if(table.type == 'big'){
+        table.line.destroy();
         table.line = null;
       }
-      });      
+      });    
+      projectToSend.eGrafiks.forEach((eGrafik, idx) => {
+        eGrafik.grafik.destroy();
+        eGrafik.grafik = null;
+      delete  eGrafik.grafik;
+        
+    eGrafik.datasets.forEach(e=>{
+      e._meta = null;
+    delete  e._meta;
+    })
+      });       
       console.log((projectToSend));
 
       axios
@@ -433,6 +490,10 @@ projectToSend.audits.forEach((audit, idx) => {
       });
     },
     updateDonut(audit) {
+      if(!audit.donut){
+        this.createDonut(audit);
+        return;
+      }
       let data = [];
       let labels = [];
       let colors = [];
@@ -924,6 +985,10 @@ table.TRs.forEach(TR=>{
       });
   },
     updateGrafik(table){
+      if(!table.line){
+        this.createGrafik(table);
+        return
+      }
       table.TRs.map((TR,idxOfTR)=>{
  
     TR.inputs.map((input,idxOfInput)=>{ 
@@ -1002,6 +1067,9 @@ if(table.TRs.length < table.line.data.datasets.length){
 
       this.loadProject();
     },
+  },
+  deactivated(){
+this.eGrafiks = [];
   },
   
 
@@ -1788,7 +1856,18 @@ if(table.TRs.length < table.line.data.datasets.length){
 
 
 
+      <li>
+      <div class="collapsible-header">
+          <h3 class="title is-4">
 
+              Прогноз по запускам/План Факт
+          </h3>
+      </div>
+      <div class="collapsible-body">
+
+         <e-grafiks-component :eGrafiks.sync='project.eGrafiks'></e-grafiks-component>
+      </div>
+  </li>
 
 
 

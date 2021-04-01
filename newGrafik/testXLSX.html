@@ -9,55 +9,153 @@
     <title>Document</title>
   </head>
   <body>
-    <div id="app">
+    <div class="eGrafiks">
       <div class="box">
+        <div v-if="fileloadstatus != 'parsed'">
+          <h1 class="title is-1 has-text-centered">
+            Выберите файл для построения графика...
+          </h1>
 
-        <div v-if="!filename">
+          <input
+            placeholder="Выберите файл"
+            class="input"
+            @change="loadFile"
+            type="file"
+            name="resume"
+          />
+        </div>
 
- 
-        <h1 class="title is-1 has-text-centered" >Выберите файл для построения графика...</h1>
-      
+        <div class="" v-show="loading">
+          <h1 class="title is-1">Загрузка...</h1>
+        </div>
 
-      
-              <input placeholder="Выберите файл"  class="input " @change="loadFile"  type="file" name="resume">
-            </div>
-<div v-else>
-  <h1 class="title is-1 has-text-centered">Файл: {{filename}}</h1>
-</div>
+        <div v-if="fileloadstatus=='loaded' || fileloadstatus=='loaded'">
+          <h1 class="title is-1 has-text-centered">Файл: {{filename}}</h1>
+        </div>
 
-        <div class="progress" v-show="loading">
-          <div class="indeterminate" v-show="loading"></div>
-      </div>
-
-
-        <select v-model="selectedIdx" multiple class="my-6">
-          <option v-for="selectValue in selectValues" :value="selectValue.idx">
-            {{selectValue.label}}
-          </option>
-        </select>
-
-        <div class="box" v-if="selectValues.length">
-          <h2 class="title is-2 has-text-centered">И даты ....</h2>
+        <div v-if="fileloadstatus=='parsed'">
           <div class="columns">
-            <div class="column is-6 has-text-centered">
-              <input type="text" v-model.lazy="datePickers.fdate" class="datepicker input" />
-            </div>
-            <div class="column is-6 has-text-centered">
-              <input type="text" v-model.lazy="datePickers.sdate" class="datepicker input" />
-            </div>
-          </div>
-          <div class="columns">
-            <div class="column is-6 is-offset-6">
-              <button class="button is-danger" @click="initGrafik">
-                Создать график
+            <div class="column is-2">
+              <button class="is-primary button" @click="openGrafSelectModal">
+                Добавить график
               </button>
             </div>
+            <div class="column is-3 is-offset-3">
+              <h2 class="title is-2">Графики по Excell</h2>
+            </div>
           </div>
-          <div class="columns">
-              <div class="column is-8 is-offset-2 box">
-                <canvas id="XSXgrafik"></canvas>
+        </div>
+      </div>
+
+      <div class="box" v-for="(eGrafik,idx) in eGrafiks" :key="idx">
+       
+       
+        <div v-if="eGrafik.type =='zapusk'">
+          <h2 class="title is-2">График по запускам</h2>
+          <h3 class="title is-3">Выберите активности: </h3>
+          <select v-model="eGrafik.selectedIdx" multiple class="my-6">
+            <option
+              v-for="selectValue in selectValuesZapusk"
+              :value="selectValue.idx"
+            >
+              {{selectValue.label}}
+            </option>
+          </select>
+
+          <div class="box" v-if="selectValuesZapusk.length">
+            <h2 class="title is-2 has-text-centered">Даты</h2>
+            <div class="columns">
+              <div class="column is-6 has-text-centered">
+                <input
+                  type="text"
+                  v-model.lazy="eGrafik.fdate"
+                  class="datepicker input"
+                />
               </div>
+              <div class="column is-6 has-text-centered">
+                <input
+                  type="text"
+                  v-model.lazy="eGrafik.sdate"
+                  class="datepicker input"
+                />
+              </div>
+            </div>
+            <div class="columns">
+     
+                <button class="button is-danger column is-2 is-offset-5 is-size-4" @click="initGrafik(eGrafik)">
+                 Создать график
+                </button>
+    
+            </div>
+            <div class="columns">
+              <div class="column is-8 is-offset-2 ">
+                <canvas :id="'eGrafik'+idx"></canvas>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div v-if="eGrafik.type =='planFact'">
+          <h2 class="title is-2">График по План/Факту</h2>
+          <h3 class="title is-3">Выберите активности: </h3>
+          <select v-model="eGrafik.selectedIdx" multiple class="my-6">
+            <option
+              v-for="selectValue in selectValuesPlanFact"
+              :value="selectValue.idx"
+            >
+              {{selectValue.label}}
+            </option>
+          </select>
+
+          <div class="box" v-if="selectValuesPlanFact.length">
+            <h2 class="title is-2 has-text-centered">Даты</h2>
+            <div class="columns">
+              <div class="column is-6 has-text-centered">
+                <input
+                  type="text"
+                  v-model.lazy="eGrafik.fdate"
+                  class="datepicker input"
+                />
+              </div>
+              <div class="column is-6 has-text-centered">
+                <input
+                  type="text"
+                  v-model.lazy="eGrafik.sdate"
+                  class="datepicker input"
+                />
+              </div>
+            </div>
+            <div class="columns">
+      
+                <button class="button is-danger column is-2 is-offset-5 is-size-4" @click="initGrafik(eGrafik)">
+            Создать график
+                </button>
+            
+            </div>
+            <div class="columns">
+              <div class="column is-8 is-offset-2 ">
+                <canvas :id="'eGrafik'+idx"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+   
+   
+      <div class="modal" id="selectGrafikModal">
+        <div class="modal-content">
+          <div class="box is-clickable" @click="addGrafZapusk">
+            График для прогноза по запускам
+          </div>
+          <div class="box is-clickable" @click="addGrafPlanFact">
+            График для План Факт 1 Линия
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat"
+            >Закрыть</a
+          >
         </div>
       </div>
     </div>

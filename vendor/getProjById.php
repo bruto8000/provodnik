@@ -21,8 +21,13 @@ if ($response = mysqli_query($connect, "SELECT * FROM `projects` WHERE id=$id li
 
         $result->audits = json_decode($result->audits, JSON_UNESCAPED_UNICODE);
         $result->ocenka = json_decode($result->ocenka, JSON_UNESCAPED_UNICODE);
+        // $result->eGrafiks = json_decode($result->eGrafiks, JSON_UNESCAPED_UNICODE);
 
-        echo json_encode($result);
+
+
+        echo json_decode($result->eGrafiks);
+
+        // echo json_encode($result);
     }
 } else {
     http_response_code(500);

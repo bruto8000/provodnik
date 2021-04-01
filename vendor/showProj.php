@@ -4,7 +4,9 @@
 
 require('./connect.php');
 
-
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 
 if ($response = mysqli_query($connect, "SELECT * FROM `projects`")) {
   $result = [];
@@ -54,6 +56,12 @@ if ($response = mysqli_query($connect, "SELECT * FROM `projects`")) {
       $obj->bugs = [];
     }
 
+
+    $obj->eGrafiks = json_decode($obj->eGrafiks, JSON_UNESCAPED_UNICODE);
+
+    if (!$obj->eGrafiks) {
+      $obj->eGrafiks = [];
+    }
 
     array_push($result, $obj);
   };

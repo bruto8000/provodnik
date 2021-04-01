@@ -97,7 +97,7 @@
         </div>
 
         <keep-alive>
-        <component :is="screen" @edit-proj='editProj' :project-from-parent="editableProject"></component>
+        <component :is="screen" @edit-proj='editProj' :project-from-parent="editableProject" ></component>
     </keep-alive>
 </div>
 
@@ -106,10 +106,11 @@
 <script src="./src/js/vue.js"></script>
 <script src="./src/js/materializeWithKvartal.js"></script>
 <script src="./src/js/axios.js"></script>
-
+<script src="./src/js/xlsx.full.min.js"></script>
 
 
 <!-- COMPONENTS -->
+
 <script src="./src/js/components/preloader.js"></script>
 <script src="./src/js/components/Calendar.js"></script>
 <script src="./src/js/components/Calendar-lang.js"></script>
@@ -123,6 +124,7 @@
 <script src="./src/js/addProj.js"></script>
 <script src="./src/js/showCalendar.js"></script>
 <script src="./src/js/editProj.js"></script>
+<script src="./src/js/components/eGrafiks.js"></script>
 
 
 
