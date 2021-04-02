@@ -164,7 +164,7 @@ Vue.component("editProj", {
 
 
 
-    console.log(this.editor);
+ 
 
     this.$refs.sdate.dataset.tooltip = "Нажмите чтобы сделать неопределенной";
     this.$refs.sdate.dataset.position = "top";
@@ -990,6 +990,20 @@ table.TRs.forEach(TR=>{
               })
             
           },
+          options : {
+            scales: {
+              xAxes: [{
+                  gridLines: {
+                      display:false
+                  }
+              }],
+              yAxes: [{
+                  gridLines: {
+                      display:false
+                  }   
+              }]
+          }
+          }
 
       });
   },
