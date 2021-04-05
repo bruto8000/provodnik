@@ -696,15 +696,27 @@ this.imageCopyModal.open();
   </div>
 
   <div class="box" v-for="(eGrafik,idx) in eGrafiks" :key="idx">
-     
-    <div v-if="eGrafik.loadType=='db'">
+    <div class="panel columns my-2 py-3">
+    <div class="mx-2">
+
+   
       <button
+        @click="copyImg(eGrafik)"
         class="button is-primary"
-        @click="unlockGrafik(eGrafik)"
-        :disabled="fileloadstatus!='parsed'"
+        :disabled="!eGrafik.grafik"
       >
-        Разблокировать график
+        <span class="mdi mdi-content-copy"> </span>
       </button>
+    </div>
+      <div v-if="eGrafik.loadType=='db'" class="mx-2">
+        <button
+          class="button is-primary"
+          @click="unlockGrafik(eGrafik)"
+          :disabled="fileloadstatus!='parsed'"
+        >
+          Разблокировать график
+        </button>
+      </div>
     </div>
 
     <div v-if="eGrafik.type =='zapusk'">
@@ -725,9 +737,9 @@ this.imageCopyModal.open();
       </select>
 
       <div class="nagruzkas">
-        <h4 class="title is-4">Комментарии на графике:</h4>
-        <div class="columns">
-          <div class="column is-2">
+        <div class="is-flex">
+          <h4 class="title is-4 mx-2">Комментарии на графике:</h4>
+          <div class="mx-2">
             <button
               :disabled="eGrafik.loadType == 'db'"
               @click="addNagruzka(eGrafik)"
@@ -737,7 +749,7 @@ this.imageCopyModal.open();
             </button>
           </div>
 
-          <div class="column is-2">
+          <div class="mx-2">
             <button
               @click="deleteNagruzka(eGrafik)"
               class="button is-danger"
@@ -758,7 +770,7 @@ this.imageCopyModal.open();
                     class="input is-primary"
                     placeholder="Информация"
                     v-model="nagruzka.label"
-                    :disabled = "eGrafik.loadType == 'db'"
+                    :disabled="eGrafik.loadType == 'db'"
                   />
                 </div>
                 <div class="column is-4">
@@ -767,7 +779,7 @@ this.imageCopyModal.open();
                     class="input is-primary datepicker-nagruzka"
                     placeholder="Дата"
                     v-model.lazy="nagruzka.date"
-                    :disabled = "eGrafik.loadType == 'db'"
+                    :disabled="eGrafik.loadType == 'db'"
                   />
                 </div>
                 <div class="column is-4">
@@ -776,7 +788,7 @@ this.imageCopyModal.open();
                     class="input is-primary"
                     placeholder="Колличество (высота)"
                     v-model="nagruzka.value"
-                    :disabled = "eGrafik.loadType == 'db'"
+                    :disabled="eGrafik.loadType == 'db'"
                   />
                 </div>
               </div>
@@ -815,7 +827,7 @@ this.imageCopyModal.open();
         </div>
         <div class="columns">
           <div class="column is-8 is-offset-2">
-            <canvas :id="'eGrafik'+idx" style="background-color: #fff;"></canvas>
+            <canvas :id="'eGrafik'+idx" style="background-color: #fff"></canvas>
           </div>
         </div>
       </div>
@@ -851,9 +863,9 @@ this.imageCopyModal.open();
       </div>
 
       <div class="nagruzkas">
-        <h4 class="title is-4">Комментарии на графике:</h4>
-        <div class="columns">
-          <div class="column is-2">
+        <div class="is-flex">
+          <h4 class="title is-4 mx-2">Комментарии на графике:</h4>
+          <div class="mx-2">
             <button
               :disabled="eGrafik.loadType == 'db'"
               @click="addNagruzka(eGrafik)"
@@ -863,7 +875,7 @@ this.imageCopyModal.open();
             </button>
           </div>
 
-          <div class="column is-2">
+          <div class="mx-2">
             <button
               @click="deleteNagruzka(eGrafik)"
               class="button is-danger"
@@ -884,7 +896,7 @@ this.imageCopyModal.open();
                     class="input is-primary"
                     placeholder="Информация"
                     v-model="nagruzka.label"
-                    :disabled = "eGrafik.loadType == 'db'"
+                    :disabled="eGrafik.loadType == 'db'"
                   />
                 </div>
                 <div class="column is-4">
@@ -893,7 +905,7 @@ this.imageCopyModal.open();
                     class="input is-primary datepicker-nagruzka"
                     placeholder="Дата"
                     v-model.lazy="nagruzka.date"
-                    :disabled = "eGrafik.loadType == 'db'"
+                    :disabled="eGrafik.loadType == 'db'"
                   />
                 </div>
                 <div class="column is-4">
@@ -902,7 +914,7 @@ this.imageCopyModal.open();
                     class="input is-primary"
                     placeholder="Колличество (высота)"
                     v-model="nagruzka.value"
-                    :disabled = "eGrafik.loadType == 'db'"
+                    :disabled="eGrafik.loadType == 'db'"
                   />
                 </div>
               </div>
@@ -942,17 +954,10 @@ this.imageCopyModal.open();
         </div>
         <div class="columns">
           <div class="column is-8 is-offset-2">
-            <canvas :id="'eGrafik'+idx"  style="background-color: #fff;"></canvas>
+            <canvas :id="'eGrafik'+idx" style="background-color: #fff"></canvas>
           </div>
         </div>
       </div>
-    </div>
-
-
-    <div class="panel">
-        <button class="button is-primary" :disabled="!eGrafik.grafik"><span class="mdi mdi-content-copy" @click="copyImg(eGrafik)">
-        
-        </span></button>
     </div>
   </div>
 
@@ -970,25 +975,19 @@ this.imageCopyModal.open();
     </div>
   </div>
 
-
-
-
   <div class="modal" id="imageCopyModal">
     <div class="modal-content">
-     
-        <h2 class="title is-2 has-text-centered">Скопируйте картинку</h2>
-        <div class="columns">
-<div class="column is-12 has-text-centered">
-<img :src="eGrafikImg" alt="">
-</div>
+      <h2 class="title is-2 has-text-centered">Скопируйте картинку</h2>
+      <div class="columns">
+        <div class="column is-12 has-text-centered">
+          <img :src="eGrafikImg" alt="" />
         </div>
+      </div>
     </div>
     <div class="modal-footer">
       <a class="modal-close waves-effect waves-green btn-flat">Закрыть</a>
     </div>
   </div>
-
-
 </div>
 `,
 });
