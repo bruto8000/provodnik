@@ -27,7 +27,8 @@ let projectModal = {
 
       if (!n.id) return;
       if (this.currentProject.id == n.id) {
-        this.modal.open();
+       this.initProject(); 
+        
      
         return;
       }
@@ -88,7 +89,7 @@ let projectModal = {
       if (!audits) return;
       audits.forEach((audit) => {
        
-        if (!audit) {
+        if (!audit || audit.donutProjectModal) {
           return;
         }
         let ctx = document
@@ -105,7 +106,7 @@ let projectModal = {
               : row.propName
           );
         });
-        audit.donut = new Chart(ctx, {
+        audit.donutProjectModal = new Chart(ctx, {
           type: "doughnut",
           data: {
             datasets: [
@@ -171,7 +172,7 @@ let projectModal = {
     destroyDonuts() {
       if (!this.currentProject.audits) return;
       this.currentProject.audits.forEach((audit) => {
-        if (audit.donut) audit.donut.destroy();
+        if (audit.donutProjectModal) audit.donutProjectModal.destroy();  audit.donutProjectModal = null;
       });
     },
     destroyGrafiks() {
@@ -181,7 +182,8 @@ let projectModal = {
       });
     },
     editProject() {
-       this.destroyDonuts();
+      this.destroyDonuts();
+      this.destroyGrafiks();
       this.$emit("edit-proj", this.currentProject);
       // location.replace('./editProj.html?'+this.currentProject.id);
     },

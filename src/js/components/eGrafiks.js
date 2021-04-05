@@ -367,8 +367,8 @@ console.log('creating Egrafik', eGrafik)
       eGrafik.grafik = new Chart(ctx, {
         type: "line",
         data: {
-          labels: eGrafik.range,
-          datasets: eGrafik.datasets,
+          labels: eGrafik.range.slice(),
+          datasets: eGrafik.datasets.slice(),
         },
         options : {
           onClick	: this.eGrafikClickHandler,
@@ -415,8 +415,8 @@ console.log('creating Egrafik', eGrafik)
       
     },
     updateGrafik(eGrafik) {
-      eGrafik.grafik.data.labels = eGrafik.range;
-      eGrafik.grafik.data.datasets = eGrafik.datasets;
+      eGrafik.grafik.data.labels = eGrafik.range.slice();
+      eGrafik.grafik.data.datasets = eGrafik.datasets.slice();
       eGrafik.grafik.update();
     },
     async initDates(offMonth, offKvartal,datepickerClass ='.datepicker') {

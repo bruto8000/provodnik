@@ -191,21 +191,21 @@ Vue.component("editProj", {
           fdate,
           sdate,
           nazvanie,
+          difficulty,
           bizness,
           zapusk,
           soprovod,
           status,
           zakazchik,
-          flags,
-          ocenka,
-          AB,
-          statusZapusk,
-          risks,
-          audits,
-          difficulty,
-          bugs,
-          eGrafiks,
-          tags,
+          flags :JSON.parse(JSON.stringify(flags)),
+          ocenka : JSON.parse(JSON.stringify(ocenka)),
+          AB : JSON.parse(JSON.stringify(AB)),
+          statusZapusk :  JSON.parse(JSON.stringify(statusZapusk)),
+          risks : JSON.parse(JSON.stringify(risks)),
+          audits: JSON.parse(JSON.stringify(audits)) ,
+          bugs : JSON.parse(JSON.stringify(bugs)) ,
+          eGrafiks : JSON.parse(JSON.stringify(eGrafiks)) ,
+          tags :  JSON.parse(JSON.stringify(tags)) ,
         }))(this.projectFromParent);
 
         if (this.projectFromParent.opisanieBody)
@@ -307,12 +307,18 @@ Vue.component("editProj", {
       projectToSend.opisanieBody = this.editor.html.get().replace(/'/gi, '"');
       projectToSend.dopinfo = this.dopeditor.html.get().replace(/'/gi, '"');
 
+
+
+      // projectToSend.audits = [];
+
       projectToSend.audits.forEach((audit, idx) => {
         if (audit.donut) {
           audit.donut.destroy();
           audit.donut = null;
         }
       });
+
+      console.log(projectToSend.audits)
       projectToSend.AB.forEach((table, idx) => {
         if (table.type == "big") {
           if (table.line) {
@@ -327,13 +333,8 @@ Vue.component("editProj", {
         if (eGrafik.grafik) {
           projectToSend.eGrafiks[idx] = 
           { 
-            range :   this.project.eGrafiks[idx].range,
-            datasets :   this.project.eGrafiks[idx].datasets,
-            fact :   this.project.eGrafiks[idx].fact,
-            sdate :   this.project.eGrafiks[idx].sdate,
-            fdate :   this.project.eGrafiks[idx].fdate,
-            selectedIdx :   this.project.eGrafiks[idx].selectedIdx,
-            type :   this.project.eGrafiks[idx].type,
+     ...eGrafiks,
+     grafik: null
 
           }
         
@@ -341,14 +342,14 @@ Vue.component("editProj", {
           // eGrafik.grafik.destroy();
           // eGrafik.grafik = null;
 
-          projectToSend.eGrafiks[idx].datasets = eGrafik.datasets.map((e) => {
-       let returnable = {
-              ...e,
-              _meta : null
-            };
-            delete returnable._meta;
-            return returnable;
-          });
+      //     projectToSend.eGrafiks[idx].datasets = eGrafik.datasets.map((e) => {
+      //  let returnable = {
+      //         ...e,
+      //         _meta : null
+      //       };
+      //       delete returnable._meta;
+      //       return returnable;
+      //     });
         }
       });
       console.log(projectToSend);
@@ -461,7 +462,14 @@ Vue.component("editProj", {
       }
     },
     createDonut(audit) {
+      console.log('CREATING DONUT...')
       if (!audit) {
+        return;
+      }
+      if(audit.donut){
+        console.log(audit)
+        console.log('has donut')
+        this.updateDonut(audit);
         return;
       }
       let ctx = document
@@ -501,6 +509,7 @@ Vue.component("editProj", {
       });
     },
     updateDonut(audit) {
+      console.log('UPDATING DONUT...')
       if (!audit.donut) {
         this.createDonut(audit);
         return;
@@ -731,7 +740,7 @@ Vue.component("editProj", {
     destroyDonuts() {
       if (!this.project.audits) return;
       this.project.audits.forEach((audit) => {
-        if (audit.donut) audit.donut.destroy();
+        if (audit.donut) {audit.donut.destroy(); audit.donut = null}
       });
     },
     addBugsRow() {
@@ -1135,6 +1144,17 @@ Vue.component("editProj", {
 
     this.destroyDonuts();
     this.destroyAB();
+  },
+  activated(){
+    this.project.audits.forEach((v) => {
+      this.createDonut(v);
+    });
+
+    this.project.AB.forEach((table) => {
+      if (table.type == "big") {
+        this.createGrafik(table);
+      }
+    });
   },
 
   template: /*html*/ `<div class="container">
