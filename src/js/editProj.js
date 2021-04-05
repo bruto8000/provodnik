@@ -166,6 +166,7 @@ Vue.component("editProj", {
         //   location.hash = "show-proj";
         // }, 1000);
       } else {
+        console.log(this.projectFromParent.AB)
         this.project = (({
           id,
           fdate,
@@ -309,23 +310,34 @@ Vue.component("editProj", {
 
 
 
-      // projectToSend.audits = [];
+    projectToSend.audits = [];
 
-      projectToSend.audits.forEach((audit, idx) => {
-        if (audit.donut) {
-          audit.donut.destroy();
-          audit.donut = null;
+      this.project.audits.forEach((audit, idx) => {
+        projectToSend.audits[idx] = {
+          ...audit,
+          donut: null
         }
+        // if (audit.donut) {
+        //   audit.donut.destroy();
+        //   audit.donut = null;
+        // }
       });
 
       console.log(projectToSend.audits)
-      projectToSend.AB.forEach((table, idx) => {
-        if (table.type == "big") {
-          if (table.line) {
-            table.line.destroy();
-            table.line = null;
-          }
+
+      projectToSend.AB = [];
+      this.project.AB.forEach((table, idx) => {
+        projectToSend.AB[idx] = {
+          ...table,
+          line: null
         }
+        
+        // if (table.type == "big") {
+        //   if (table.line) {
+        //     table.line.destroy();
+        //     table.line = null;
+        //   }
+        // }
       });
       projectToSend.eGrafiks = [];
       

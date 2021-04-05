@@ -148,7 +148,7 @@ let projectModal = {
      
       
       
-        table.line = new Chart(ctx, {
+        table.lineProjectModal = new Chart(ctx, {
           type: 'line',
           data: {
               labels: table.range,
@@ -178,7 +178,7 @@ let projectModal = {
     destroyGrafiks() {
       if (!this.currentProject.AB) return;
       this.currentProject.AB.forEach((table) => {
-        if (table.type == 'big') table.line.destroy();
+        if (table.type == 'big' && table.lineProjectModal) {table.lineProjectModal.destroy(); table.lineProjectModal = null;}
       });
     },
     editProject() {
