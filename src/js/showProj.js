@@ -73,6 +73,9 @@ let showProj = {
     //     this.modal.modal.close();
     // }
   },
+  activated(){
+this.checkDeleted();
+  },
   methods: {
     resetFilter: function () {
       for (prop in this.filterSelect) {
@@ -95,6 +98,7 @@ let showProj = {
         );
       });
     },
+    
     sortChange(column) {
       if (this.sort.column == column) {
         if (this.sort.r == 1) {
@@ -147,6 +151,12 @@ let showProj = {
       this.$emit("edit-proj", project);
 
     },
+    checkDeleted(){
+      console.log('check deleted');
+      console.log(this.projects.length)
+      this.projects = this.projects.filter(project=>!project.deleted);
+      console.log(this.projects.length)
+    }
   },
   watch: {},
   computed: {

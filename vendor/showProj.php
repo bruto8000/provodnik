@@ -8,7 +8,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-if ($response = mysqli_query($connect, "SELECT * FROM `projects`")) {
+if ($response = mysqli_query($connect, "SELECT * FROM `projects` WHERE archived is null")) {
   $result = [];
   while ($obj = $response->fetch_object()) {
 
@@ -61,6 +61,13 @@ if ($response = mysqli_query($connect, "SELECT * FROM `projects`")) {
 
     if (!$obj->eGrafiks) {
       $obj->eGrafiks = [];
+    }
+
+
+    $obj->tags = json_decode($obj->tags, JSON_UNESCAPED_UNICODE);
+
+    if (!$obj->tags) {
+      $obj->tags = [];
     }
 
     array_push($result, $obj);

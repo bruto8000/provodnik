@@ -282,8 +282,9 @@ Vue.component("eGrafiksComponent", {
         eGrafik.range = this.dateRange(eGrafik.fdate, eGrafik.sdate, "/", 2);
 
         eGrafik.datasets = this.getValues(eGrafik);
+        this.addNagruzkasDataset(eGrafik)
       }
-      this.addNagruzkasDataset(eGrafik)
+     
       if (eGrafik.grafik) {
         this.updateGrafik(eGrafik);
         return;
@@ -296,10 +297,13 @@ Vue.component("eGrafiksComponent", {
     },
     addNagruzkasDataset(eGrafik){
 
-if(!eGrafik.nagruzkas) return;
+if(!eGrafik.nagruzkas || !this.validateNagruzkaDataset(eGrafik)) return;
       eGrafik.nagruzkas.forEach(nagruzka=>{
 
-
+if(!nagruzka.label || nagruzka.date || nagruzka.value){
+  M.toast({html:"Комментарий на графике заполнен не полностью"});
+  return false;
+}
 
         let  dataset = {
           label: nagruzka.label.replace(
@@ -332,8 +336,31 @@ eGrafik.datasets.push(dataset);
 
 
     },
-    createGrafik(eGrafik) {
+    validateNagruzkaDataset(eGrafik){
+    
+      if(   eGrafik.nagruzkas &&
+        
+      eGrafik.nagruzkas.find(nagruzka=>{
+return (!nagruzka.label || !nagruzka.date || !nagruzka.value);
+    })
+      ){
+        console.log(!nagruzka.label )
+        console.log(!nagruzka.date )
+        console.log(!nagruzka.value )
+        M.toast({html:'Комментарий на графике заполнен не полностью'});
+        return false;
+      }
+      return true;
+      // forEach(nagruzka=>{
 
+      //   if(!nagruzka.label || nagruzka.date || nagruzka.value){
+      //     M.toast({html:"Комментарий на графике заполнен не полностью"});
+      //   isValidated = false;
+      //     return;
+      //   }
+    },
+    createGrafik(eGrafik) {
+console.log('creating Egrafik', eGrafik)
       let ctx = document.getElementById(
         "eGrafik" + this.eGrafiks.indexOf(eGrafik)
       );
@@ -434,10 +461,10 @@ eGrafik.datasets.push(dataset);
         eGrafik.selectedIdx.forEach((idxOfSelected, idxOfArr) => {
         let currentRow = this.oJS[idxOfSelected + 2];
        let  employeeObject = {
-          label: this.selectValuesZapusk[idxOfSelected].label.replace(
-            '"',
-            '\"'
-          ).replace("'", "\'"),
+          label: this.selectValuesZapusk[idxOfSelected].label.replaceAll(
+            `"`,
+            `\"`
+          ).replaceAll("'", "\'"),
           data: [],
           fill: false,
           borderColor: this.colors[idxOfArr],
@@ -471,10 +498,10 @@ eGrafik.datasets.push(dataset);
 
 
      let  employeeObject = {
-        label: "Прогноз " + this.selectValuesPlanFact[eGrafik.selectedIdx].label.replace(
-          '"',
-          "'"
-        ),
+        label: "Прогноз " + this.selectValuesPlanFact[eGrafik.selectedIdx].label.replaceAll(
+          `"`,
+          `\"`
+        ).replaceAll("'", "\'"),
         data: [],
         fill: false,
         borderColor: 'red',
@@ -503,10 +530,10 @@ eGrafik.datasets.push(dataset);
 
   if(eGrafik.fact){
       employeeObject = {
-        label: "Факт " + this.selectValuesPlanFact[eGrafik.selectedIdx].label.replace(
-          '"',
-          "'"
-        ),
+        label: "Факт " + this.selectValuesPlanFact[eGrafik.selectedIdx].label.replaceAll(
+          `"`,
+          `\"`
+        ).replaceAll("'", "\'"),
         data: [],
         fill: false,
         borderColor: 'blue',
@@ -611,6 +638,14 @@ this.initDates(true,true,'.datepicker-nagruzka');
    deleteNagruzka(eGrafik){
     eGrafik.nagruzkas.pop();
    },
+   deleteEGrafik(eGrafik){
+     
+if(eGrafik.grafik){
+  eGrafik.grafik.destroy();
+ 
+}
+this.eGrafiks.splice(this.eGrafiks.indexOf(eGrafik),1)
+   },
     eGrafikClickHandler(e){
 //     console.log(  this.eGrafiks[0].grafik
 //       .getElementsAtEvent(e))
@@ -641,21 +676,26 @@ this.imageCopyModal.open();
     return;
   }
      eGrafik.grafik.destroy();
-     eGrafik.grafik = null;
+     eGrafik.grafik = undefined;
    })
  }
+
+
+  
 
         this.$nextTick().then(() => {
  
           this.eGrafiks.forEach((eGrafik) => {
             eGrafik.loadType = "db"; ///LOADED FROM DataBase
+           
+       
             this.initGrafik(eGrafik);
           });
 
           this.initDates();
           this.initSelect();
         });
-    
+
     }
   
   },
@@ -708,6 +748,19 @@ this.imageCopyModal.open();
         <span class="mdi mdi-content-copy"> </span>
       </button>
     </div>
+
+
+    <div class="mx-2">
+
+   
+    <button
+      @click="deleteEGrafik(eGrafik)"
+      class="button is-danger"
+     
+    >
+      <span class="mdi mdi-delete"> </span>
+    </button>
+  </div>
       <div v-if="eGrafik.loadType=='db'" class="mx-2">
         <button
           class="button is-primary"

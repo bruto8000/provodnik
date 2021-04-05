@@ -1,8 +1,5 @@
 // setTimeout(()=>location.reload(), 3000)
 
-
-
-
 Vue.component("editProj", {
   props: ["projectFromParent"],
   data() {
@@ -23,7 +20,6 @@ Vue.component("editProj", {
           reason: "",
         },
         AB: [
-
           // {
           // type: 'big',
           // range: [1,2,3,4],
@@ -35,20 +31,14 @@ Vue.component("editProj", {
           //   {type : "Смс-рассылка",
           //     inputs: [{value}]
           //   },
+        ],
 
-
-          ]
-
-
-
-        
-        ,
         statusZapusk: [],
         risks: [],
         audits: [],
-        difficulty: '',
+        difficulty: "",
         bugs: [],
-        dopinfo: ""
+        dopinfo: "",
         //  opisanieBody: "", Will added Automaticly
         //   opisanie: "", OLD
       },
@@ -90,19 +80,19 @@ Vue.component("editProj", {
         soprovod: "Сопровождающий",
         status: "Статус",
         zakazchik: "Заказчик",
-        difficulty: "Сложность"
+        difficulty: "Сложность",
       },
       buttonIsLoading: false,
       ABModal: {},
     };
   },
   mounted: function () {
-//     setTimeout(() => {
-//       M.Collapsible.init(document.querySelectorAll('.collapsible'));
- 
-// // this.addABtabel('big')
-  
-//     }, 1000);
+    //     setTimeout(() => {
+    //       M.Collapsible.init(document.querySelectorAll('.collapsible'));
+
+    // // this.addABtabel('big')
+
+    //     }, 1000);
     axios.get("../vendor/showEmployees.php").then((res) => {
       this.employees = res.data;
 
@@ -151,9 +141,8 @@ Vue.component("editProj", {
             "formatUL",
             "insertLink",
             "insertTable",
-     
-            "html"
 
+            "html",
           ],
         ],
 
@@ -162,10 +151,6 @@ Vue.component("editProj", {
       this.loadProject();
     });
 
-
-
- 
-
     this.$refs.sdate.dataset.tooltip = "Нажмите чтобы сделать неопределенной";
     this.$refs.sdate.dataset.position = "top";
     M.Tooltip.init(this.$refs.sdate);
@@ -173,8 +158,6 @@ Vue.component("editProj", {
   },
   methods: {
     loadProject() {
-    
-
       if (!this.projectFromParent.id) {
         M.toast({
           html: "Неверная ссылка,  перенаправление...",
@@ -201,7 +184,8 @@ Vue.component("editProj", {
           audits,
           difficulty,
           bugs,
-          eGrafiks
+          eGrafiks,
+          tags,
         }) => ({
           id,
           fdate,
@@ -220,45 +204,48 @@ Vue.component("editProj", {
           audits,
           difficulty,
           bugs,
-          eGrafiks
+          eGrafiks,
+          tags,
         }))(this.projectFromParent);
-     
 
         if (this.projectFromParent.opisanieBody)
           setTimeout(() => {
             this.editor.html.set(this.projectFromParent.opisanieBody);
           }, 200);
-          setTimeout(() => {
-            
-            this.dopeditor.html.set(this.projectFromParent.dopinfo);
-          }, 200);
+        setTimeout(() => {
+          this.dopeditor.html.set(this.projectFromParent.dopinfo);
+        }, 200);
         Vue.nextTick(function () {
-          console.log(this)
+          console.log(this);
           M.FormSelect.init(document.querySelectorAll("select"));
-          M.Collapsible.init(document.querySelectorAll('.collapsible'));
+          M.Collapsible.init(document.querySelectorAll(".collapsible"));
           this.initStatusZapusk();
           this.initDates();
-          this.project.audits.forEach(v => {
-
+          this.project.audits.forEach((v) => {
             this.createDonut(v);
-          })
+          });
 
-
-          this.project.AB.forEach(table=>{
-            if(table.type == "big"){
-              this.createGrafik(table)
+          this.project.AB.forEach((table) => {
+            if (table.type == "big") {
+              this.createGrafik(table);
             }
-          })
+          });
         }, this);
 
         this.initGrafikDates();
-      } 
+        this.initdeletingModal();
+      }
+    },
+    initdeletingModal(){
+      this.deletingModal = M.Modal.init(document.getElementById('deletingModal'));
+    },
+    openDeletingModal(){
+      this.deletingModal.open();
     },
     initDates() {
-
-      this.kalendar[0] = Kalendar.set({
-          showMonthBtn: true
-
+      this.kalendar[0] = Kalendar.set(
+        {
+          showMonthBtn: true,
         },
         "#sdate"
       );
@@ -274,7 +261,7 @@ Vue.component("editProj", {
 
         return;
       }
-      let   projectToSend = (({
+      let projectToSend = (({
         id,
         fdate,
         sdate,
@@ -292,7 +279,8 @@ Vue.component("editProj", {
         audits,
         difficulty,
         bugs,
-        eGrafiks
+        eGrafiks,
+        tags
       }) => ({
         id,
         fdate,
@@ -311,48 +299,59 @@ Vue.component("editProj", {
         audits,
         difficulty,
         bugs,
-        eGrafiks
+        eGrafiks,
+        tags
       }))(this.project);
-      console.log(projectToSend.eGrafiks === this.project.eGrafiks, 'FCOPY OBJ')
-    
+     
 
+      projectToSend.opisanieBody = this.editor.html.get().replace(/'/gi, '"');
+      projectToSend.dopinfo = this.dopeditor.html.get().replace(/'/gi, '"');
 
-
-
-   projectToSend.opisanieBody = this.editor.html.get().replace(/'/gi, '"');
-projectToSend.dopinfo = this.dopeditor.html.get().replace(/'/gi, '"');
-
-
-projectToSend.audits.forEach((audit, idx) => {
-  if(audit.donut){
-  audit.donut.destroy();
-        audit.donut = null;
-  }
+      projectToSend.audits.forEach((audit, idx) => {
+        if (audit.donut) {
+          audit.donut.destroy();
+          audit.donut = null;
+        }
       });
       projectToSend.AB.forEach((table, idx) => {
-      if(table.type == 'big'){
-        if(table.line){
+        if (table.type == "big") {
+          if (table.line) {
+            table.line.destroy();
+            table.line = null;
+          }
+        }
+      });
+      projectToSend.eGrafiks = [];
+      
+      this.project.eGrafiks.forEach((eGrafik, idx) => {
+        if (eGrafik.grafik) {
+          projectToSend.eGrafiks[idx] = 
+          { 
+            range :   this.project.eGrafiks[idx].range,
+            datasets :   this.project.eGrafiks[idx].datasets,
+            fact :   this.project.eGrafiks[idx].fact,
+            sdate :   this.project.eGrafiks[idx].sdate,
+            fdate :   this.project.eGrafiks[idx].fdate,
+            selectedIdx :   this.project.eGrafiks[idx].selectedIdx,
+            type :   this.project.eGrafiks[idx].type,
 
-    
-        table.line.destroy();
-        table.line = null;
-      }
-      }
-      });    
-      projectToSend.eGrafiks.forEach((eGrafik, idx) => {
-        if(eGrafik.grafik){
-        eGrafik.grafik.destroy();
-        eGrafik.grafik = null;
-  
+          }
         
-        
-    eGrafik.datasets.forEach(e=>{
-      e._meta = null;
-    delete  e._meta;
-    })
-  }
-      });       
-      console.log((projectToSend));
+          console.log(eGrafik);
+          // eGrafik.grafik.destroy();
+          // eGrafik.grafik = null;
+
+          projectToSend.eGrafiks[idx].datasets = eGrafik.datasets.map((e) => {
+       let returnable = {
+              ...e,
+              _meta : null
+            };
+            delete returnable._meta;
+            return returnable;
+          });
+        }
+      });
+      console.log(projectToSend);
 
       axios
         .post("../vendor/editProj.php", JSON.stringify(projectToSend))
@@ -365,6 +364,7 @@ projectToSend.audits.forEach((audit, idx) => {
             M.toast({
               html: "Проект изменен",
             });
+            this.projectFromParent = Object.assign(this.projectFromParent, this.project)
           } else {
             throw new Error(r.data);
           }
@@ -382,7 +382,7 @@ projectToSend.audits.forEach((audit, idx) => {
         this.buttonIsLoading = false;
       }
     },
-   
+
     undateZapusk: function () {
       this.undate = !this.undate;
       this.project.sdate = this.undate ? "Не определена" : "";
@@ -415,26 +415,26 @@ projectToSend.audits.forEach((audit, idx) => {
           if (audit.name.length < 3) {
             throw new Error(
               "Загаловок аудита не должен быть меньше 3х символов" +
-              " (аудит #" +
-              (idx + 1) +
-              ")"
+                " (аудит #" +
+                (idx + 1) +
+                ")"
             );
           }
 
           if (audit.subname.length < 3) {
             throw new Error(
               "Подзагаловок аудита не должен быть меньше 3х символов" +
-              " (аудит :" +
-              audit.name +
-              ")"
+                " (аудит :" +
+                audit.name +
+                ")"
             );
           }
           if (audit.type == "") {
             throw new Error(
               "Не выбран тип аудита (Public/Private)" +
-              " (аудит :" +
-              audit.name +
-              ")"
+                " (аудит :" +
+                audit.name +
+                ")"
             );
           }
           audit.rows.forEach((row) => {
@@ -477,29 +477,31 @@ projectToSend.audits.forEach((audit, idx) => {
       audit.donut = new Chart(ctx, {
         type: "doughnut",
         data: {
-          datasets: [{
-            data: data,
-            backgroundColor: [
-              "#c2185b",
-              "#3949ab",
-              "#2196f3",
-              "#00bcd",
-              "#009688",
-              "#66bb6a",
-              "#f4ff81",
-              "#f4511e",
-              "#00e676",
-            ].sort((v) => {
-              return Math.floor(Math.random() * 10) > 5 ? 1 : -1;
-            }),
-          }, ],
+          datasets: [
+            {
+              data: data,
+              backgroundColor: [
+                "#c2185b",
+                "#3949ab",
+                "#2196f3",
+                "#00bcd",
+                "#009688",
+                "#66bb6a",
+                "#f4ff81",
+                "#f4511e",
+                "#00e676",
+              ].sort((v) => {
+                return Math.floor(Math.random() * 10) > 5 ? 1 : -1;
+              }),
+            },
+          ],
         },
 
         // These labels appear in the legend and in the tooltips when hovering different arcs
       });
     },
     updateDonut(audit) {
-      if(!audit.donut){
+      if (!audit.donut) {
         this.createDonut(audit);
         return;
       }
@@ -540,10 +542,12 @@ projectToSend.audits.forEach((audit, idx) => {
       this.project.audits.push({
         name: "",
         subname: "",
-        rows: [{
-          propName: "",
-          propInt: 0,
-        }, ],
+        rows: [
+          {
+            propName: "",
+            propInt: 0,
+          },
+        ],
         type: "",
       });
       this.initSelectColor();
@@ -592,7 +596,9 @@ projectToSend.audits.forEach((audit, idx) => {
         this.validateStatusZapusk() &&
         this.validateRisks() &&
         this.validateBugs() &&
-        this.validateAB()
+        this.validateAB() &&
+        this.validateEGrafiks() 
+
       );
     },
     openABmodal() {
@@ -607,61 +613,58 @@ projectToSend.audits.forEach((audit, idx) => {
     },
     initStatusZapusk() {
       Vue.nextTick(() => {
-        Kalendar.set({
-          showClearBtn: true,
-          showMonthBtn: true,
-          showKvartalBtn: true,
-          container: document.getElementById("statusZapuskDate"),
-        }, '.statusZapuskDate');
+        Kalendar.set(
+          {
+            showClearBtn: true,
+            showMonthBtn: true,
+            showKvartalBtn: true,
+            container: document.getElementById("statusZapuskDate"),
+          },
+          ".statusZapuskDate"
+        );
 
         setTimeout(() => {
-          console.log(document.querySelectorAll('.statusZapuskInput'))
-       
-        M.Autocomplete.init(document.querySelectorAll('.statusZapuskInput'), {
-          minLength : 1,
-          data: {
-     
-            "Готовность в СУЗ" : null,
-"Ожидаются прайсы" : null,
-"Прайсы будут размещены" : null,
-"В IVR информация передана" : null,
-"IVR будет готов" : null,
-"FAQ в проработке" : null,
-"В чат-бот информация передана" : null,
-"Чат-бот будет готов" : null,
-"Тематики на согласовании" : null,
-"Тематики будут готовы " : null,
-"Ожидается прогноз нагрузки" : null,
-"Ожидается согласование ресурсов" : null,
-"КК" : null,
-"Анализ Дизайн" : null,
-"Полная готовность к запуска" : null,
-"Инициатива запустилась." : null,
-"Запрос отклика" : null,
-"Наблюдение за откликом" : null,
-"Ожидается решение по обучению" : null,
-"Обучение будет проводиться с" : null,
-"АО на согласовании" : null,
-"АО будет готов" : null,
-"СФ на согласовании" : null,
-"СФ будут готовы" : null,
-"Процедура в проработке" : null,
-"Процедура будет готова " : null,
-"Выдвинуты требования" : null,
-"Согласование экстренной схемы" : null,
-"Согласование маршрутизации/настройки сплитов" : null,
-"Тестирование" : null,
-"Согласование коммуникаций " : null,
-"Согласование лендинга" : null,
-"Согласование текста новости" : null
+          console.log(document.querySelectorAll(".statusZapuskInput"));
 
-
-            
-          }
-        })
-
-      }, 1000);
-
+          M.Autocomplete.init(document.querySelectorAll(".statusZapuskInput"), {
+            minLength: 1,
+            data: {
+              "Готовность в СУЗ": null,
+              "Ожидаются прайсы": null,
+              "Прайсы будут размещены": null,
+              "В IVR информация передана": null,
+              "IVR будет готов": null,
+              "FAQ в проработке": null,
+              "В чат-бот информация передана": null,
+              "Чат-бот будет готов": null,
+              "Тематики на согласовании": null,
+              "Тематики будут готовы ": null,
+              "Ожидается прогноз нагрузки": null,
+              "Ожидается согласование ресурсов": null,
+              КК: null,
+              "Анализ Дизайн": null,
+              "Полная готовность к запуска": null,
+              "Инициатива запустилась.": null,
+              "Запрос отклика": null,
+              "Наблюдение за откликом": null,
+              "Ожидается решение по обучению": null,
+              "Обучение будет проводиться с": null,
+              "АО на согласовании": null,
+              "АО будет готов": null,
+              "СФ на согласовании": null,
+              "СФ будут готовы": null,
+              "Процедура в проработке": null,
+              "Процедура будет готова ": null,
+              "Выдвинуты требования": null,
+              "Согласование экстренной схемы": null,
+              "Согласование маршрутизации/настройки сплитов": null,
+              Тестирование: null,
+              "Согласование коммуникаций ": null,
+              "Согласование лендинга": null,
+              "Согласование текста новости": null,
+            },
+          });
+        }, 1000);
       });
     },
     deleteStatusZapuskRow() {
@@ -694,7 +697,7 @@ projectToSend.audits.forEach((audit, idx) => {
         this.initSelectRisks();
       } else {
         M.toast({
-          html: "Вы достигли максимального количества срок '10'"
+          html: "Вы достигли максимального количества срок '10'",
         });
       }
     },
@@ -713,7 +716,7 @@ projectToSend.audits.forEach((audit, idx) => {
         });
       } catch (e) {
         M.toast({
-          html: e.message
+          html: e.message,
         });
 
         return false;
@@ -722,8 +725,8 @@ projectToSend.audits.forEach((audit, idx) => {
     },
     initSelectRisks() {
       this.$nextTick().then(() => {
-        M.FormSelect.init(document.querySelectorAll('.risk-select'))
-      })
+        M.FormSelect.init(document.querySelectorAll(".risk-select"));
+      });
     },
     destroyDonuts() {
       if (!this.project.audits) return;
@@ -732,7 +735,6 @@ projectToSend.audits.forEach((audit, idx) => {
       });
     },
     addBugsRow() {
-
       this.project.bugs.push({
         opisanie: "",
         soprovod: "",
@@ -741,11 +743,8 @@ projectToSend.audits.forEach((audit, idx) => {
         status: "",
       });
       this.initSelectBugs();
-
-
     },
     deleteBugsRow() {
-
       this.project.bugs.pop();
     },
     validateBugs() {
@@ -759,9 +758,8 @@ projectToSend.audits.forEach((audit, idx) => {
           }
         });
       } catch (e) {
-  
         M.toast({
-          html: e.message
+          html: e.message,
         });
 
         return false;
@@ -770,37 +768,31 @@ projectToSend.audits.forEach((audit, idx) => {
     },
     initSelectBugs() {
       this.$nextTick().then(() => {
-        M.FormSelect.init(document.querySelectorAll('.bug-select'))
-      })
+        M.FormSelect.init(document.querySelectorAll(".bug-select"));
+      });
     },
     validateDopinfo() {
-   this.project.dopinfo =   this.dopeditor.html.get().replace(/'/gi, '"');
-    }, 
-    addABtabel(type){
-      if(type=="small")
-      this.project.AB.push({
-        type : 'small',
-        FMC: "",
-        FTTB: "",
-        B2C: "",
-        B2B: "",
-        FIX: "",
-        PC: ""
-
-      });
-      if(type=="big"){
-       let table = {
-
-          type: 'big',
+      this.project.dopinfo = this.dopeditor.html.get().replace(/'/gi, '"');
+    },
+    addABtabel(type) {
+      if (type == "small")
+        this.project.AB.push({
+          type: "small",
+          FMC: "",
+          FTTB: "",
+          B2C: "",
+          B2B: "",
+          FIX: "",
+          PC: "",
+        });
+      if (type == "big") {
+        let table = {
+          type: "big",
           range: [],
-          TRs: [
-          
-          ]
-        
-         };
+          TRs: [],
+        };
 
-
-       table.colors = [
+        (table.colors = [
           "#c2185b",
           "#3949ab",
           "#2196f3",
@@ -812,73 +804,64 @@ projectToSend.audits.forEach((audit, idx) => {
           "#00e676",
         ].sort((v) => {
           return Math.floor(Math.random() * 10) > 5 ? 1 : -1;
-        }),
-        this.project.AB.push(table);
-         this.$nextTick().then(()=>{
-
-         
-    
-     this.initGrafikDates();
+        })),
+          this.project.AB.push(table);
+        this.$nextTick().then(() => {
+          this.initGrafikDates();
           this.createGrafik(table);
-    
-         })
-    }
-  
+        });
+      }
     },
-    async initGrafikDates(){
+    async initGrafikDates() {
       await this.$nextTick();
-      M.Dropdown.init(document.querySelectorAll(".dropdownTableRow"),{
+      M.Dropdown.init(document.querySelectorAll(".dropdownTableRow"), {
         constrainWidth: false,
-        hover: true
-       });
-       Kalendar.set({},'.table-date');
+        hover: true,
+      });
+      Kalendar.set({}, ".table-date");
     },
-    addTableTR(table,type){
-   
-    table.TRs.push({
-      type: type,
-      inputs: table.range.map(v=>{return {value:""}})
-    })
-    this.updateGrafik(table);
+    addTableTR(table, type) {
+      table.TRs.push({
+        type: type,
+        inputs: table.range.map((v) => {
+          return { value: "" };
+        }),
+      });
+      this.updateGrafik(table);
     },
-    deleteTableTR(table,type){
-   console.log(table, type)
-      let idxOfTR = table.TRs.indexOf(table.TRs.find(v=>v.type === type))
+    deleteTableTR(table, type) {
+      console.log(table, type);
+      let idxOfTR = table.TRs.indexOf(table.TRs.find((v) => v.type === type));
 
-      console.log(idxOfTR)
-      table.TRs.splice(idxOfTR,1);
+      console.log(idxOfTR);
+      table.TRs.splice(idxOfTR, 1);
       let color = table.colors[idxOfTR];
-      console.log(color)
-      table.colors.splice(idxOfTR,1);
+      console.log(color);
+      table.colors.splice(idxOfTR, 1);
       table.colors.push(color);
-      let idxOfLabel = table.line.data.datasets.indexOf(table.line.data.datasets.find(v=>v.label === type));
-      table.line.data.datasets.splice(idxOfLabel,1)
+      let idxOfLabel = table.line.data.datasets.indexOf(
+        table.line.data.datasets.find((v) => v.label === type)
+      );
+      table.line.data.datasets.splice(idxOfLabel, 1);
       this.updateGrafik(table);
       // this.usedTypes(table);
-      },
-    changeTableRange(table){
-
-if(table.fdate && table.sdate){
-  table.range = this.dateRange(table.fdate, table.sdate)
-}
-table.TRs.forEach(TR=>{
-
-    while(TR.inputs.length<table.range.length){
-      TR.inputs.push({value:""})
-    }
-    if(TR.inputs.length>table.range.length){
-      TR.inputs.splice(table.range.length)
-    }
-
-
-});
-
-// this.updateGrafik(table)
-
     },
-    dateRange (date1,date2) {
-      
+    changeTableRange(table) {
+      if (table.fdate && table.sdate) {
+        table.range = this.dateRange(table.fdate, table.sdate);
+      }
+      table.TRs.forEach((TR) => {
+        while (TR.inputs.length < table.range.length) {
+          TR.inputs.push({ value: "" });
+        }
+        if (TR.inputs.length > table.range.length) {
+          TR.inputs.splice(table.range.length);
+        }
+      });
 
+      // this.updateGrafik(table)
+    },
+    dateRange(date1, date2) {
       ///DATE
       let parts = date1.split(" ");
 
@@ -973,137 +956,186 @@ table.TRs.forEach(TR=>{
       return dates;
     },
     createGrafik(table) {
-      let idx = this.project.AB.indexOf(table)
-      let ctx = document.getElementById('line'+idx);
-       table.line = new Chart(ctx, {
-          type: 'line',
-          data: {
-              labels: table.range,
-              datasets: table.TRs.map((TR,idxOfTR)=>{
-                return {
-                  data: TR.inputs.map(input=>input.value),
-                  label: TR.type,
-                  fill: false,
-                  borderColor: table.colors[idxOfTR],
-                  backgroundColor : table.colors[idxOfTR]
-                }
-              })
-            
+      let idx = this.project.AB.indexOf(table);
+      let ctx = document.getElementById("line" + idx);
+      table.line = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: table.range,
+          datasets: table.TRs.map((TR, idxOfTR) => {
+            return {
+              data: TR.inputs.map((input) => input.value),
+              label: TR.type,
+              fill: false,
+              borderColor: table.colors[idxOfTR],
+              backgroundColor: table.colors[idxOfTR],
+            };
+          }),
+        },
+        options: {
+          scales: {
+            xAxes: [
+              {
+                gridLines: {
+                  display: false,
+                },
+              },
+            ],
+            yAxes: [
+              {
+                gridLines: {
+                  display: false,
+                },
+              },
+            ],
           },
-          options : {
-            scales: {
-              xAxes: [{
-                  gridLines: {
-                      display:false
-                  }
-              }],
-              yAxes: [{
-                  gridLines: {
-                      display:false
-                  }   
-              }]
-          }
-          }
-
+        },
       });
-  },
-    updateGrafik(table){
-      if(!table.line){
+    },
+    updateGrafik(table) {
+      if (!table.line) {
         this.createGrafik(table);
-        return
+        return;
       }
-      table.TRs.map((TR,idxOfTR)=>{
- 
-    TR.inputs.map((input,idxOfInput)=>{ 
-      if(!table.line.data.datasets[idxOfTR]){
-        table.line.data.datasets[idxOfTR] = {
-          label : TR.type,
-          data: [],
-          fill: false,
-          borderColor: table.colors[idxOfTR],
-          backgroundColor : table.colors[idxOfTR]
+      table.TRs.map((TR, idxOfTR) => {
+        TR.inputs.map((input, idxOfInput) => {
+          if (!table.line.data.datasets[idxOfTR]) {
+            table.line.data.datasets[idxOfTR] = {
+              label: TR.type,
+              data: [],
+              fill: false,
+              borderColor: table.colors[idxOfTR],
+              backgroundColor: table.colors[idxOfTR],
+            };
+          }
+          table.line.data.datasets[idxOfTR].data[idxOfInput] = input.value;
+        });
+
+        table.line.data.datasets[idxOfTR].label = TR.type;
+        console.log(table.line.data.datasets);
+
+        if (
+          table.line.data.datasets[idxOfTR] &&
+          table.range.length < table.line.data.datasets[idxOfTR].data.length
+        ) {
+          table.line.data.datasets[idxOfTR].data.splice(table.range.length - 1);
         }
+      });
+      if (table.TRs.length < table.line.data.datasets.length) {
+        table.line.data.datasets.splice(table.TRs.length - 1);
       }
-       table.line.data.datasets[idxOfTR].data[idxOfInput] = input.value
-       
-    })
-   
 
-    table.line.data.datasets[idxOfTR].label = TR.type;
-    console.log( table.line.data.datasets)
+      // table.line.data.datasets.forEach((dataset,idx)=>{
+      //   dataset.data.forEach((value,idxOfInput)=>{
+      //     table.line.data.datasets[idx].data[idxOfInput] = table.TRs[idx]?.inputs[idxOfInput]?.value;
 
-  if( table.line.data.datasets[idxOfTR] && (table.range.length <   table.line.data.datasets[idxOfTR].data.length)){
-    table.line.data.datasets[idxOfTR].data.splice(table.range.length-1)
-  }
-    
-      })
-if(table.TRs.length < table.line.data.datasets.length){
-  table.line.data.datasets.splice(table.TRs.length-1)
-}
-
-    // table.line.data.datasets.forEach((dataset,idx)=>{
-    //   dataset.data.forEach((value,idxOfInput)=>{
-    //     table.line.data.datasets[idx].data[idxOfInput] = table.TRs[idx]?.inputs[idxOfInput]?.value;
-     
-    //   })
-    // })
-    table.line.data.labels = table.range;
-    table.line.update()
-  },
-  deleteAB(table){
-    if(table.type =='big'){
-      table.line.destroy();
-    }
- this.project.AB = this.project.AB.filter(v=>v!=table);
-
- 
-  },
-  usedTypes(table){
-
-    return table.TRs.map(v=>v.type)
-  },
-  validateAB() {
-    try{
-    this.project.AB.forEach(table=>{
-      if(table.type =='big'){
-      if(!table.range.length){
-      
-        throw new Error('Не выбраны даты для таблицы в абонентской базе')
+      //   })
+      // })
+      table.line.data.labels = table.range;
+      table.line.update();
+    },
+    deleteAB(table) {
+      if (table.type == "big") {
+        table.line.destroy();
       }
-      if(!table.TRs.length){
-
-        throw new Error('Не выбраны действия для таблицы в абонентской базе')
+      this.project.AB = this.project.AB.filter((v) => v != table);
+    },
+    usedTypes(table) {
+      return table.TRs.map((v) => v.type);
+    },
+    validateAB() {
+      try {
+        this.project.AB.forEach((table) => {
+          if (table.type == "big") {
+            if (!table.range.length) {
+              throw new Error("Не выбраны даты для таблицы в абонентской базе");
+            }
+            if (!table.TRs.length) {
+              throw new Error(
+                "Не выбраны действия для таблицы в абонентской базе"
+              );
+            }
+          }
+        });
+      } catch (e) {
+        M.toast({ html: e.message });
+        return false;
       }
-        
-      }
-    })
-
-  }catch(e){
-    M.toast({html:e.message})
-    return false;
-  }
-  return true;
-     }, 
-     destroyAB() {
+      return true;
+    },
+    destroyAB() {
       if (!this.project.AB) return;
       this.project.AB.forEach((table) => {
         if (table.line) table.line.destroy();
       });
     },
+    validateEGrafiks(){
+      try {
+        this.project.eGrafiks.forEach((eGrafik, idx) => {
+       
+          if(
+            (eGrafik.nagruzkas && eGrafik.nagruzkas.find(nagruzka=>{
+      return (!nagruzka.label || !nagruzka.date || !nagruzka.value);
+          })
+           ) || (!eGrafik.sdate || !eGrafik.fdate) ||  (eGrafik.type == 'zapusk' && !eGrafik.selectedIdx.length) || (eGrafik.type != 'zapusk' && eGrafik.selectedIdx === '')){
+              throw new Error(
+                `Некорректно заполнены графики по план факту.`
+              );
+         
+            }
+
+
+              
+   
+        });
+      } catch (e) {
+        M.toast({
+          html: e.message,
+        });
+
+        return false;
+      }
+      return true;
     },
+    deleteProj(){
+      axios
+      .post("../vendor/deleteProj.php", JSON.stringify({
+        id: this.project.id
+      }))
+      .then((r) => {
+   
+
+        if (r.data == "OK") {
+          M.toast({
+            html: "Проект удален",
+          });
+          this.projectFromParent.deleted = true;
+          setTimeout(() => {
+            location.hash = "show-proj";
+          }, 1000);
+       
+        } else {
+          throw new Error(r.data);
+        }
+      })
+      .catch((e) => {
+        M.toast({
+          html: "Проект НЕ удален! " + e,
+        });
+      });
+    }
+  },
   watch: {
     projectFromParent: function (n, o) {
-
       this.loadProject();
     },
   },
-  deactivated(){
-    console.log('deactivated')
+  deactivated() {
+    console.log("deactivated");
 
-this.destroyDonuts();
-this.destroyAB();
+    this.destroyDonuts();
+    this.destroyAB();
   },
-  
 
   template: /*html*/ `<div class="container">
 
@@ -1901,7 +1933,18 @@ this.destroyAB();
       </div>
   </li>
 
+  <li>
+  <div class="collapsible-header">
+      <h3 class="title is-4">
 
+          Теги
+      </h3>
+  </div>
+  <div class="collapsible-body">
+
+     <tags-component :tags.sync='project.tags'></tags-component>
+  </div>
+</li>
 
 
 
@@ -1914,12 +1957,28 @@ this.destroyAB();
           Изменить проект
       </div>
   </div>
+  <div class="columns my-4">
+  <div @click="openDeletingModal" :disabled="buttonIsLoading" :class="{'is-loading': buttonIsLoading}"
+      class="button has-text-white is-large is-danger column is-12 black-text title is-3">
+     Удалить проект
+  </div>
+</div>
 
 
+<div class="modal" id='deletingModal'>
+<div class="modal-content">
+<h2 class='title is-2'>Вы уверены что хотите удлаить этот проект?</h2>
+<p>Проект уйдет в архив. Данные останутся но тянутся не будут.</p>
+</div>
+<div class="modal-footer">
+<button @click="deleteProj" class='button modal-close is-danger'>Да, удалить</button>
+<button class='button modal-close is-primary'>Нет, закрыть</button>
+
+</div>
+</div>
 
 </div>
 
 
-`
-  });
-
+`,
+});
