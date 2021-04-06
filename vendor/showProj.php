@@ -70,6 +70,12 @@ if ($response = mysqli_query($connect, "SELECT * FROM `projects` WHERE archived 
       $obj->tags = [];
     }
 
+    $obj->zamenas = json_decode($obj->zamenas, JSON_UNESCAPED_UNICODE);
+
+    if (!$obj->zamenas) {
+      $obj->zamenas = [];
+    }
+
     array_push($result, $obj);
   };
 

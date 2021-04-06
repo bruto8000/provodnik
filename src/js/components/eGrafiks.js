@@ -300,10 +300,7 @@ Vue.component("eGrafiksComponent", {
 if(!eGrafik.nagruzkas || !this.validateNagruzkaDataset(eGrafik)) return;
       eGrafik.nagruzkas.forEach(nagruzka=>{
 
-if(!nagruzka.label || nagruzka.date || nagruzka.value){
-  M.toast({html:"Комментарий на графике заполнен не полностью"});
-  return false;
-}
+
 
         let  dataset = {
           label: nagruzka.label.replace(
@@ -419,7 +416,7 @@ console.log('creating Egrafik', eGrafik)
       eGrafik.grafik.data.datasets = eGrafik.datasets.slice();
       eGrafik.grafik.update();
     },
-    async initDates(offMonth, offKvartal,datepickerClass ='.datepicker') {
+    async initDates(offMonth, offKvartal,datepickerClass ='.datepickerEGrafik') {
       await this.$nextTick();
       Kalendar.set({
         showMonthBtn: !offMonth,
@@ -856,7 +853,7 @@ this.imageCopyModal.open();
             <input
               type="text"
               v-model.lazy="eGrafik.fdate"
-              class="datepicker input"
+              class="datepicker  datepickerEGrafik input"
               :disabled="eGrafik.loadType == 'db'"
             />
           </div>
@@ -864,7 +861,7 @@ this.imageCopyModal.open();
             <input
               type="text"
               v-model.lazy="eGrafik.sdate"
-              class="datepicker input"
+              class="datepicker datepickerEGrafik  input"
               :disabled="eGrafik.loadType == 'db'"
             />
           </div>
@@ -983,7 +980,7 @@ this.imageCopyModal.open();
             <input
               type="text"
               v-model.lazy="eGrafik.fdate"
-              class="datepicker input"
+              class="datepicker datepickerEGrafik input"
               :disabled="eGrafik.loadType == 'db'"
             />
           </div>
@@ -991,7 +988,7 @@ this.imageCopyModal.open();
             <input
               type="text"
               v-model.lazy="eGrafik.sdate"
-              class="datepicker input"
+              class="datepicker datepickerEGrafik input"
               :disabled="eGrafik.loadType == 'db'"
             />
           </div>

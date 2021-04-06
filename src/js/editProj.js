@@ -187,6 +187,7 @@ Vue.component("editProj", {
           bugs,
           eGrafiks,
           tags,
+          zamenas
         }) => ({
           id,
           fdate,
@@ -207,6 +208,7 @@ Vue.component("editProj", {
           bugs : JSON.parse(JSON.stringify(bugs)) ,
           eGrafiks : JSON.parse(JSON.stringify(eGrafiks)) ,
           tags :  JSON.parse(JSON.stringify(tags)) ,
+          zamenas :  JSON.parse(JSON.stringify(zamenas)) ,
         }))(this.projectFromParent);
 
         if (this.projectFromParent.opisanieBody)
@@ -281,7 +283,8 @@ Vue.component("editProj", {
         difficulty,
         bugs,
         eGrafiks,
-        tags
+        tags,
+        zamenas
       }) => ({
         id,
         fdate,
@@ -301,7 +304,8 @@ Vue.component("editProj", {
         difficulty,
         bugs,
         eGrafiks,
-        tags
+        tags,
+        zamenas
       }))(this.project);
      
 
@@ -618,7 +622,8 @@ Vue.component("editProj", {
         this.validateRisks() &&
         this.validateBugs() &&
         this.validateAB() &&
-        this.validateEGrafiks() 
+        this.validateEGrafiks() &&
+        this.validateZamenas() 
 
       );
     },
@@ -732,6 +737,25 @@ Vue.component("editProj", {
             if (!risk[prop])
               throw new Error(
                 `Не введены данные в рисках, поле ${prop} в строке ${idx + 1}`
+              );
+          }
+        });
+      } catch (e) {
+        M.toast({
+          html: e.message,
+        });
+
+        return false;
+      }
+      return true;
+    },
+    validateZamenas() {
+      try {
+        this.project.zamenas.forEach((risk, idx) => {
+          for (prop in risk) {
+            if (!risk[prop])
+              throw new Error(
+                `Не введены данные в замещающих, в строке ${idx + 1}`
               );
           }
         });
@@ -1303,6 +1327,10 @@ Vue.component("editProj", {
       </div>
 
   </div>
+  <zamenas-component :allEmployees="employees" :mainEmployee="project.soprovod"
+  :zamenas.sync="project.zamenas"
+  
+  ></zamenas-component>
   <div class="columns">
 
       <div class="column is-12">

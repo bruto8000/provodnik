@@ -29,6 +29,7 @@ $risks = json_encode($_POST['risks'], JSON_UNESCAPED_UNICODE);
 $bugs = json_encode($_POST['bugs'], JSON_UNESCAPED_UNICODE);
 $eGrafiks = json_encode($_POST['eGrafiks'], JSON_UNESCAPED_UNICODE);
 $tags = json_encode($_POST['tags'], JSON_UNESCAPED_UNICODE);
+$zamenas = json_encode($_POST['zamenas'], JSON_UNESCAPED_UNICODE);
 $dopinfo = $_POST['dopinfo'];
 
 
@@ -44,7 +45,7 @@ if (mysqli_query($connect, "UPDATE  projects SET fdate='$fdate', difficulty ='$d
  sdate='$sdate', nazvanie='$nazvanie', AB='$AB', tags='$tags',statusZapusk='$statusZapusk', risks='$risks',
  bugs='$bugs',zakazchik='$zakazchik', ocenka='$ocenka', eGrafiks='$eGrafiks',  bizness='$bizness', zapusk='$zapusk',
   status='$status', soprovod='$soprovod', opisanieBody='$opisanieBody', dopinfo='$dopinfo',
-   flags='$flags', audits='$audits' WHERE id='$id'")) {
+   flags='$flags',  zamenas='$zamenas', audits='$audits' WHERE id='$id'")) {
 
 
 

@@ -161,63 +161,49 @@
     </div> -->
 
     <div class="container">
-
-
-      <div>
-        <div class="columns m-4 is-align-items-center">
-          <div class="mx-4"><h2 class="title is-2">Теги:</h2></div>
-          <div class="mx-4">
-            <button
-              data-target="tagDropDown"
-              class="dropdown-trigger button is-primary"
-            >
-              Выбрать
-            </button>
-          </div>
-        </div>
-
-        <div class="field is-grouped is-grouped-multiline">
-          <div v-for="tag in selectedTags" class="tags has-addons m-2">
-            <span
-              @click="editTagBody(tag)"
-              class="tag is-clickable is-medium"
-              data-position="bottom"
-              :data-tooltip="tag.label"
-              :class="{
-                'is-danger': tag.body,
-                'is-info': !tag.body,
-                'tooltippedTag' : tag.label.length > 20 
-              }"
-              >{{tag.label.length > 20 ? tag.label.slice(0,17) + '...' :
-              tag.label }}</span
-            >
-            <a class="tag is-delete is-medium" @click="deleteTag(tag)"></a>
-          </div>
-        </div>
-        <ul id="tagDropDown" class="dropdown-content">
-          <li
-            class="p-4"
-            v-for="(tag,i) in taglist"
-            :key="i"
-            @click="selectTag(tag)"
-          >
-            {{tag}}
+      <div >
+        <ul class="collapsible" id="zamensCollaps">
+          <li>
+            <div class="collapsible-header">
+              <h3 class="title is-3">Замещающие</h3>
+            </div>
+            <div class="collapsible-body">
+              <div class="columns">
+                <div class="m-2">
+                  <button class="button is-info" @click="addZamena">
+                    Добавить замещающего
+                  </button>
+                </div>
+              </div>
+              <div class="columns" v-for="(zamena,idx) in zamens" :key="idx">
+                <div class="column is-1">
+                  <button @click="deleteZamena(zamena)" class="button is-danger">Удалить<span class="mdi mdi-delete"></span></button>
+                </div>
+                <div class="column is-7 p-0">
+                  <select v-model="zamena.employee" class="zamenaSelect">
+                    <option :value="employee" v-for="employee in employees">
+                      {{employee}}
+                    </option>
+                  </select>
+                </div>
+                <div class="column is-2">
+                  <input
+                    type="text"
+                    class="datepicker zamenaDate input"
+                    v-model.lazy="zamena.fdate"
+                  />
+                </div>
+                <div class="column is-2">
+                  <input
+                    type="text"
+                    class="datepicker zamenaDate input"
+                    v-model.lazy="zamena.sdate"
+                  />
+                </div>
+              </div>
+            </div>
           </li>
         </ul>
-
-        <div class="modal" id="tagBodyModal">
-          <div class="modal-content">
-            <h3 class="is-title is-3">Введите тело</h3>
-            <textarea class="textarea" v-model="currentTag.body"> </textarea>
-          </div>
-
-          <div class="modal-footer">
-            <button class="is-danger button" @click="currentTag.body = ''">
-              Очистить
-            </button>
-            <button class="is-primary modal-close button">Закрыть</button>
-          </div>
-        </div>
       </div>
     </div>
     <script src="./vue.js"></script>
